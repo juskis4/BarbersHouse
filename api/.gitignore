@@ -1,27 +1,76 @@
-### DotnetCore ###
-# .NET Core build folders
+## .NET Core
 bin/
 obj/
+out/
+runtimeconfig.dev.json
+appsettings.development.json
 
-# Common node modules locations
-/node_modules
-/wwwroot/node_modules
+## ASP.NET Scaffolding
+ScaffoldingReadMe.txt
 
-### VisualStudioCode ###
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-!.vscode/*.code-snippets
+## Visual Studio Code
+.vscode/
+*.code-workspace
 
-# Local History for Visual Studio Code
+## User-specific files
+*.rsuser
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.pidb
+*.servicehub.log
+*.dbmdl
+*.db_schema
+*.jfm
+*.tlog
+*.log
+*.tmp
+*.tmp_proj
+*.cache
+*.bak
+*.swp
+*.[Cc]ache
+*.sav
+*.confluent
+*.csi
+*.csproj.DotSettings.user
+*.docstates
+
+## Project-specific
+*.dll
+*.exe
+*.pfx
+*.snk
+
+## Runtimes, SDKs, and libraries
+packages/
+**/[Pp]ackages/*
+**/node_modules/
+**/jspm_packages/
+
+## VS Code directories
 .history/
 
-# Built Visual Studio Code Extensions
-*.vsix
+## Tooling
+.project
+*.sln.ide
 
-### VisualStudioCode Patch ###
-# Ignore all local history of files
-.history
-.ionide
+## Miscellaneous
+.DS_Store
+AzureWebJobsPublish
+Thumbs.db
+*.swp
+*~$*
+*~
+
+## Logs and databases
+*.log
+*.sql
+
+## OS generated files
+ehthumbs.db
+Icon?
+[Tt]humbs.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
