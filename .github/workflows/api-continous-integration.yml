@@ -8,18 +8,18 @@ on:
 
 env:
   DOTNET_VERSION: '8.0.x'
+  API_PROJECT_PATH: 'api/api.csproj' # Adjust this to the path of your .NET API project or solution
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v4 # Check out the code from your repository
+        uses: actions/checkout@v4
 
       - name: Setup .NET 8
-        uses: actions/setup-dotnet@v3 # Set up the .NET environment 
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
           
@@ -32,10 +32,10 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Restore dependencies
-        run: dotnet restore # Restore project dependencies
+        run: dotnet restore ${{ env.API_PROJECT_PATH }} # Restore project dependencies for your API project
 
       - name: Clean
-        run: dotnet clean # Clean the solution
+        run: dotnet clean ${{ env.API_PROJECT_PATH }} --configuration Release # Clean the API project
 
       - name: Build app
-        run: dotnet build -c Release --no-restore # Build the project
+        run: dotnet build ${{ env.API_PROJECT_PATH }} -c Release --no-restore # Build the API project
