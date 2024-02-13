@@ -17,12 +17,12 @@ jobs:
       run:
         working-directory: frontend
     steps:
-    - name: List contents of the frontend directory
-      run: ls -la
-      
     - name: Check out repository
       uses: actions/checkout@v3
 
+    - name: List contents of the frontend directory
+      run: ls -la
+      
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
