@@ -18,7 +18,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4 # Check out the code from your repository
 
-      - name: Setup .NET 6
+      - name: Setup .NET 8
         uses: actions/setup-dotnet@v3 # Set up the .NET environment 
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
