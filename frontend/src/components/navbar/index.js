@@ -14,7 +14,7 @@ function NavBar() {
   return (
     <Navbar  expand="lg">  
       <Container fluid>   
-        <Navbar.Brand href="#">BarberHouse</Navbar.Brand> 
+        <Navbar.Brand href="/">BarberHouse</Navbar.Brand> 
         <Navbar.Toggle aria-controls="navbar-content" className="collapse-button">
           <a className="ellipsis-icon">
             <FontAwesomeIcon icon={faEllipsis} />
