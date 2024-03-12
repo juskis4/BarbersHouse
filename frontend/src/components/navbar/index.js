@@ -22,14 +22,14 @@ function NavBar() {
         </Navbar.Toggle> 
         <Navbar.Collapse className="justify-content-end">  
           <Nav className="mx-auto"> 
-            <Nav.Link href="#">Home</Nav.Link>
-            <Nav.Link href="#">Services</Nav.Link>
-            <Nav.Link href="#">Contacts</Nav.Link>
+            <Nav.Link href="/">Home</Nav.Link>
+            <Nav.Link href="/">Services</Nav.Link>
+            <Nav.Link href="/">Contacts</Nav.Link>
           </Nav>
 
           <div className="d-flex icons-container"> 
             <div className="me-3"> 
-              <a href="#" className="me-3 instagram-icon"> 
+              <a href="www.instagram.com" className="me-3 instagram-icon"> 
                 <FontAwesomeIcon icon={faInstagram} />
               </a>
             </div>
