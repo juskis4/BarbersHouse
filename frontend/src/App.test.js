@@ -1,8 +1,15 @@
-import { render, screen } from '@testing-library/react';
-import App from './App';
+import React from 'react';
+import { render, screen } from '@testing-library/react'; 
+import Navbar from './components/navbar'; 
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+test('renders the navbar with navigation links', () => {
+  render(<Navbar />); 
+
+  const homeLink = screen.getByText('Home'); // Assumes your links have text content
+  const servicesLink = screen.getByText('Services');
+  const contactsLink = screen.getByText('Contacts');
+
+  expect(homeLink).toBeInTheDocument();
+  expect(servicesLink).toBeInTheDocument();
+  expect(contactsLink).toBeInTheDocument();
 });
