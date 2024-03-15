@@ -1,6 +1,7 @@
 import React from 'react';
 import "./App.css";
 import NavBar from './components/navbar';
+import Barbers from './components/barbers'
 import CarouselBarber from './components/carousel';
 
 const App = () => {
@@ -8,6 +9,7 @@ const App = () => {
     <div>
       <NavBar />
       <CarouselBarber />
+      <Barbers />
     </div>
   );
 };

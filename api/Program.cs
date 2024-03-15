@@ -14,6 +14,12 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IBarbersRepository, BarbersRepository>(); 
 builder.Services.AddScoped<IBarbersService, BarbersService>();
 
+builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("AllowMyOrigin",
+            builder => builder.WithOrigins("http://localhost:3000"));
+    });
+
 Console.WriteLine("Connection String: " + builder.Configuration.GetConnectionString("DefaultConnection"));
 builder.Services.AddDbContext<DbDataContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -45,8 +51,11 @@ app.UseSwaggerUI(c =>
 
 app.UseHttpsRedirection();
 
+app.UseCors("AllowMyOrigin");
+
 app.UseAuthorization();
 
 app.MapControllers();
+
 
 app.Run();
