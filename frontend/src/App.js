@@ -6,7 +6,7 @@ import CarouselBarber from './components/carousel';
 
 const App = () => {
   return (
-    <div>
+    <div className='appBody'>
       <NavBar />
       <CarouselBarber />
       <Barbers />

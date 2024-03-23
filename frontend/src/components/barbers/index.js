@@ -10,6 +10,8 @@ import axios from 'axios';
 import { useState, useEffect } from 'react'; 
 
 function Barbers() {
+
+  const [expandedBarberId, setExpandedBarberId] = useState(null);
   const [barbers, setBarbers] = useState([]); 
   const [isLoading, setIsLoading] = useState(false); 
 
@@ -29,17 +31,38 @@ function Barbers() {
     getBarbersWithServices(); 
   }, []); 
 
+  // Function to handle card expansion
+  const handleCardExpand = (barberId) => {
+    setExpandedBarberId(barberId === expandedBarberId ? null : barberId);
+  };
+
+  const ExpandedCardContent = ({ barber }) => {
+    return (
+      <div>
+        <h4>Services:</h4>
+        <ul>
+          {barber.services.map((service) => (
+            <li key={service.serviceId}>
+              <strong>{service.title}</strong> ({service.duration} mins) - ${service.price}
+              <p>{service.description}</p> 
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  };
+
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap' }}> 
+    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
       {isLoading ? 
         <div style={{ width: '100%', textAlign: 'center', marginTop: 20 }}> 
           <CircularProgress />
         </div>
       :  
-        barbers.map((barber) => (
-          <Card sx={{ maxWidth: 345, margin: 2, flex: '1 0 30%' }} key={barber.barberId}> 
-            <CardActionArea>
-                <div className="image-placeholder">
+      barbers.map((barber) => (
+        <Card sx={{ maxWidth: 345, margin: 2, flex: '1 0 30%' }} key={barber.barberId}> 
+          <CardActionArea onClick={() => handleCardExpand(barber.barberId)}>
+          <div className="image-placeholder">
                     <CardMedia
                         component="img"
                         height="140"
@@ -56,10 +79,15 @@ function Barbers() {
                         {barber.bio} 
                     </Typography>
                     </CardContent>
-                </CardActionArea>
-          </Card>
-        ))
-      } 
+          </CardActionArea> 
+
+          {expandedBarberId === barber.barberId && (
+            <CardContent> 
+              <ExpandedCardContent barber={barber} />
+            </CardContent>
+          )} 
+        </Card>
+      ))}  
     </div>
   );
 }
