@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import * as React from 'react';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -7,179 +7,79 @@ import StepContent from '@mui/material/StepContent';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import Step1 from "./Step1";
-import Step2 from "./Step2";
-import Step3 from "./Step3";
-import axios from "axios";
-import Step4 from './Step4';
-import moment from "moment";
+
+const steps = [
+  {
+    label: 'Select a Barber',
+    description: `For each ad campaign that you create, you can control how much
+              you're willing to spend on clicks and conversions, which networks
+              and geographical locations you want your ads to show on, and more.`,
+  },
+  {
+    label: 'Select a Service',
+    description:
+      'An ad group contains one or more ads which target a shared set of keywords.',
+  },
+  {
+    label: 'Select Date & Time',
+    description: `Try out different ad text to see what brings in the most customers,
+              and learn how to enhance your ads using features like ad extensions.
+              If you run into any problems with your ads, find out how to tell if
+              they're running and how to resolve approval issues.`,
+  },
+  {
+    label: 'Contact Information',
+    description: `Try out different ad text to see what brings in the most customers,
+              and learn how to enhance your ads using features like ad extensions.
+              If you run into any problems with your ads, find out how to tell if
+              they're running and how to resolve approval issues.`,
+  },
+];
 
 export default function VerticalLinearStepper() {
+  const [activeStep, setActiveStep] = React.useState(0);
 
-  /*DATA AMD STATES*/
-  const [activeStep, setActiveStep] = useState(0);
-  const [selectedIndex, setSelectedIndex] = useState(null)
-  const [services, setServices] = useState([]);
-  const [selectedServiceName, setSelectedServiceName] = useState(null);
-  const [cFirstName, setCFirstName] = useState(null);
-  const [cLastName, setCLastName] = useState(null);
-  const [selectedTime, setSelectedTime] = useState(null);
-  const [selectedServiceId, setSelectedServiceId] = useState(null);
-  const [cPhone, setCPhone] = useState(null);
-  const [cEmail, setCEmail] = useState(null);
-  const [apptDate, setApptDate] = useState(moment(new Date).format("YYYY-MM-DD"))
-  const [selectedServiceLength, setSelectedServiceLength] = useState(null);
-  const [businessId, setBusinessId] = useState(null);
-  const[duplicateCheck, setDuplicateCheck] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  };
 
-  const getBusinessId = (id, itemIndex) =>{
-    setBusinessId(id);
-    setSelectedIndex(itemIndex)
-
-   }
-
-  /*FUNCTIONS*/
   const handleBack = () => {
-    setErrorMessage(null);
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    if(activeStep == 1){
-      setBusinessId(null);
-      setServices([]);
-      console.log('made it here')
-    }
-    if(activeStep == 2){
-      setSelectedServiceName(null);
-      setSelectedServiceId(null);
-
-    }
-    if(activeStep == 3){
-      setSelectedTime(null);
-    }
   };
-
-  const getServiceAndLengthMinutes = (name, serviceId, length) =>{
-    setSelectedServiceName(name);
-    setSelectedServiceId(serviceId);
-    setSelectedServiceLength(length);
-
-}
-
-const getFormValues = (firstName, lastName, phone, email) =>{
-  setCFirstName(firstName)
-  setCLastName(lastName);
-  setCPhone(phone);
-  setCEmail(email);
-}
-
-const getDateTime = (date, time) =>{
-  setApptDate(date);
-  setSelectedTime(time);
-}
-
-  const handleNext = async (index) => {
-    if(businessId === null ){
-      setErrorMessage("*Please select a business.")
-      return;
-    }
-    if(index === 1 &&  selectedServiceId == null){
-      setErrorMessage("*Please select a service from below.")
-
-      return;
-    }
-    if(index === 2 && selectedTime == null){
-      setErrorMessage("*Please select a time.");
-    }
-    else{
-      setErrorMessage(null);
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
-      if(index === 0){
-        await axios.get(`https://instabookapi.azurewebsites.net/api/business_services/{id}?businessId=${businessId}`)
-        .then((results) =>{
-          setServices(results.data);
-        })
-      }
-      if(index === 3){
-        //axios request to submit appointment
-        if(!cFirstName || !cLastName || !cPhone || !cEmail){
-          setErrorMessage("*Please fill out all fields")
-          setActiveStep(3);
-        }
-        else{
-          setErrorMessage(null);
-          const newAppt = {
-            firstName: cFirstName,
-            lastName: cLastName,
-            startTime:selectedTime,
-            endTime:"",
-            serviceId: selectedServiceId,
-            confirmed:1,
-            phoneNumber: cPhone,
-            email:cEmail,
-            apptDate: apptDate,
-            lengthMinutes: selectedServiceLength,
-            businessId: businessId
-          }
-
-          console.log(newAppt, 'APPOINTMENT INFO')
-          try {
-            await axios.post("https://instabookapi.azurewebsites.net/api/appt_confirmed", newAppt)
-            .then((results) =>{
-              setDuplicateCheck(results.data);
-            console.log(results.data);
-            })
-          } catch (error) {
-            console.log(error.response.data);
-          }
-   
-
-        }
-        return;
-    }
-  }
-
-  };
-
 
   const handleReset = () => {
     setActiveStep(0);
-    setCFirstName(null);
-    setCLastName(null);
-    setSelectedTime(null);
-    setBusinessId(null);
-    setServices([]);
-    setSelectedServiceId(null);
   };
-
-
-  const steps = [
-    {
-      label: 'Select a business',
-      description: <Step1 getBusinessId={getBusinessId}/>,
-    },
-    // {
-    //   label: 'What service would you like to make an appointment for?',
-    //   description:<Step2 businessId={businessId} services={services} getServiceAndLengthMinutes={getServiceAndLengthMinutes} />,
-    // },
-    // {
-    //   label: 'Select Date & Time',
-    //   description: <Step3 getDateTime={getDateTime} selectedServiceId={selectedServiceId} selectedServiceLength={selectedServiceLength} selectedServiceName={selectedServiceName}/>,
-    // },
-    // {
-    //   label:'Please enter contact information',
-    //   description: <Step4 getFormValues={getFormValues}/>
-    // }
-  ];
 
   return (
     <Box sx={{ maxWidth: 400 }}>
-      <Typography variant="h6" style={{color:'#ba000d'}}>{errorMessage}</Typography>
-      <Stepper activeStep={activeStep} orientation="vertical">
+      <Stepper activeStep={activeStep} orientation="vertical" sx={{
+        ".MuiStepLabel-iconContainer": {
+          ".Mui-active": {
+            color: "#99582a"
+          },
+          ".Mui-completed": {
+            color: "#432818"
+          },
+          ".Mui-disabled": {
+            color: "black"
+          },
+        },
+        
+        ".MuiButton-root":{
+          fontSize: '10px',
+          backgroundColor: "transparent", 
+          border: "2px solid #bc6c25",
+          color: "#bc6c25",
+          fontSize: "10px",
+          fontWeight: 'bold',
+        }
+      }}>
         {steps.map((step, index) => (
           <Step key={step.label}>
             <StepLabel
               optional={
-                index === 3 ? (
+                index === 2 ? (
                   <Typography variant="caption">Last step</Typography>
                 ) : null
               }
@@ -192,10 +92,10 @@ const getDateTime = (date, time) =>{
                 <div>
                   <Button
                     variant="contained"
-                    onClick={() =>handleNext(index)}
+                    onClick={handleNext}
                     sx={{ mt: 1, mr: 1 }}
                   >
-                    {index === steps.length - 1 ? 'Confirm' : 'Continue'}
+                    {index === steps.length - 1 ? 'Finish' : 'Continue'}
                   </Button>
                   <Button
                     disabled={index === 0}
@@ -212,13 +112,9 @@ const getDateTime = (date, time) =>{
       </Stepper>
       {activeStep === steps.length && (
         <Paper square elevation={0} sx={{ p: 3 }}>
-          
-          {duplicateCheck == 1 ? 
-          <Typography variant="h5" style={{color:"#009688"}}>You&apos;re appointment on {apptDate} at {selectedTime} for {selectedServiceName} as been confirmed!</Typography>:
-          <Typography variant="h5" style={{color:"#ba000d"}}>We're sorry, that appointment time slot is taken. Please select another time.</Typography>
-}
+          <Typography>All steps completed - you&apos;re finished</Typography>
           <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
-            Create Another Appointment
+            Book
           </Button>
         </Paper>
       )}

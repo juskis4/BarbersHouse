@@ -3,16 +3,44 @@ import "./App.css";
 import NavBar from './components/navbar';
 import Barbers from './components/barbers';
 import CarouselBarber from './components/carousel';
-import Button from '@mui/material/Button';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 
 const App = () => {
+  const theme = createTheme({
+    components: {
+      MuiButton: {
+        styleOverrides: {
+          root: {
+            backgroundColor: '#dda15e', 
+            color: 'white', 
+            fontWeight: 'bold', 
+            "&:hover": { 
+              backgroundColor: '#bc6c25', 
+              color: '#fefae0', 
+            }
+          },
+      MuiStepper: {
+        styleOverrides: {
+          root: {
+
+          }
+        }
+      }
+        }
+      }
+    }
+  });
+
   return (
-    <Box sx={{ width: "100vw", display: "flex", flexDirection: "column" }}>
-      <NavBar />
-      <CarouselBarber />  {/* Carousel positioned at the top */}
-      <Barbers />        {/* Barbers positioned below the carousel */}
-    </Box>
+    <ThemeProvider theme={theme}>
+      <Box sx={{ width: "100vw", display: "flex", flexDirection: "column" }}>
+        <NavBar />
+        <CarouselBarber />  
+        <Barbers />        
+      </Box>
+    </ThemeProvider>
+    
   );
 };
 

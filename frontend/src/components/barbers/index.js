@@ -53,7 +53,7 @@ function Barbers() {
   };
 
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: "center" }}>
       {isLoading ? 
         <div style={{ width: '100%', textAlign: 'center', marginTop: 20 }}> 
           <CircularProgress />
