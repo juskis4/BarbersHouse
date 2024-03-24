@@ -67,7 +67,6 @@ export default function VerticalLinearStepper() {
         },
         
         ".MuiButton-root":{
-          fontSize: '10px',
           backgroundColor: "transparent", 
           border: "2px solid #bc6c25",
           color: "#bc6c25",
