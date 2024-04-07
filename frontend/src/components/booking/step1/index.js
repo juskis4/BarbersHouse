@@ -1,54 +1,29 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import FormControl from '@mui/material/FormControl';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import CircularProgress from '@mui/material/CircularProgress';
 
-function Step1() {
-  const [selected, setSelected] = React.useState(' ');
-
+function Step1({ barbers, isLoading, selectedBarberId, onBarberChange }) {
   const handleChange = (event) => {
-    setSelected(event.target.name);
+    onBarberChange(event.target.value);
   };
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
-        <FormGroup>
-          <FormControlLabel
-            control={
-              <Checkbox 
-                checked={selected === 'gilad'} 
-                onChange={handleChange} 
-                name="gilad" 
-              />
-            }
-            label="Gilad Gray"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox 
-                checked={selected === 'jason'} 
-                onChange={handleChange} 
-                name="jason" 
-              />
-            }
-            label="Jason Killian"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox 
-                checked={selected === 'antoine'} 
-                onChange={handleChange} 
-                name="antoine" 
-              />
-            }
-            label="Antoine Llorca"
-          />
-        </FormGroup>
-      </FormControl>
-    </Box>
+    <div>
+      {isLoading ? (
+        <div style={{ width: '100%', textAlign: 'center', marginTop: 20 }}>
+          <CircularProgress />
+        </div>
+      ) : (
+        <Select value={selectedBarberId} onChange={handleChange}>
+          {barbers.map((barber) => (
+            <MenuItem key={barber.barberId} value={barber.barberId}>
+              {barber.name}
+            </MenuItem>
+          ))}
+        </Select>
+      )}
+    </div>
   );
 }
 

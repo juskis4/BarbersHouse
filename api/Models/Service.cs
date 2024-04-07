@@ -29,5 +29,5 @@ public class Service
     [Column("barber_id")]
     public int BarberId { get; set; }
 
-    public Barber Barber { get; set; }  
+    public virtual Barber Barber { get; set; }  
 }

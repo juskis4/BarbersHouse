@@ -1,18 +1,23 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
 using barbershouse.api.Services;
 using barbershouse.api.Data;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using barbershouse.api.Repositories;
+using barbershouse.api.Profiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
 builder.Services.AddControllers();
 
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
+
 builder.Services.AddScoped<IBarbersRepository, BarbersRepository>(); 
 builder.Services.AddScoped<IBarbersService, BarbersService>();
+builder.Services.AddScoped<IServicesRepository, ServicesRepository>(); 
+builder.Services.AddScoped<IServicesService, ServicesService>();
 
 builder.Services.AddCors(options =>
     {
