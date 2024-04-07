@@ -11,11 +11,16 @@ import axios from 'axios';
 import { useState, useEffect } from 'react'; 
 import Step1 from '../step1';
 import Step2 from '../step2';
+import Step3 from '../step3';
 
 export default function VerticalLinearStepper() {
   const [activeStep, setActiveStep] = React.useState(0);
   const numSteps = 2;
+
+  //const [selectedRows, setSelectedRows] = useState([]);
   const [selectedBarberId, setSelectedBarberId] = React.useState('');
+  const [selectedServices, setSelectedServices] = useState([]);
+
   const [barbers, setBarbers] = useState([]);
   const [services, setServices] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -37,7 +42,15 @@ export default function VerticalLinearStepper() {
     getBarbersWithServices(); 
   }, []);
 
+  const handleSelectedServiceChange = (serviceId) => {
+    setSelectedServices(prev => prev.includes(serviceId) ? prev.filter(id => id !== serviceId) : [...prev, serviceId]);
+  };
+
   const handleNext = () => {
+    if (activeStep === 1) { // from Step2 to Step3
+      const selectedServicesFiltered = services.filter(service => selectedServices.includes(service.serviceId));
+      setSelectedServices(selectedServicesFiltered);
+    }
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
@@ -86,14 +99,14 @@ export default function VerticalLinearStepper() {
               <div>
                 <Button
                   variant="contained"
-                  onClick={() => handleNext()} // Modified
+                  onClick={() => handleNext()} 
                   sx={{ mt: 1, mr: 1 }}
                 >
                   {activeStep === 1 ? 'Finish' : 'Continue'} 
                 </Button>
                 <Button
                   disabled={activeStep === 0}
-                  onClick={() => handleBack()} // Modified
+                  onClick={() => handleBack()} 
                   sx={{ mt: 1, mr: 1 }}
                 >
                   Back
@@ -107,7 +120,11 @@ export default function VerticalLinearStepper() {
         <Step key={'Select a Service'}>
           <StepLabel>Select a Service</StepLabel>
           <StepContent>
-            <Step2 services={services} selectedBarberId={selectedBarberId} /> 
+            <Step2 
+              services={services} 
+              selectedBarberId={selectedBarberId} 
+              onSelectedServiceChange={handleSelectedServiceChange}
+            /> 
             <Box sx={{ mb: 2 }}>
               <div>
                 <Button
@@ -120,6 +137,31 @@ export default function VerticalLinearStepper() {
                 <Button
                   disabled={activeStep === 0}
                   onClick={() => handleBack()} 
+                  sx={{ mt: 1, mr: 1 }}
+                >
+                  Back
+                </Button>
+              </div>
+            </Box>
+          </StepContent>
+        </Step>
+        {/* Step 3 */}
+        <Step key={'Review Selection'}> 
+          <StepLabel>Review Selection</StepLabel>
+          <StepContent>
+            <Step3 selectedServices={selectedServices} />
+            <Box sx={{ mb: 2 }}>
+              <div>
+                <Button
+                  variant="contained"
+                  onClick={handleNext}
+                  sx={{ mt: 1, mr: 1 }}
+                >
+                  {activeStep === 2 ? 'Finish' : 'Continue'} 
+                </Button>
+                <Button
+                  disabled={activeStep === 0}
+                  onClick={handleBack} 
                   sx={{ mt: 1, mr: 1 }}
                 >
                   Back

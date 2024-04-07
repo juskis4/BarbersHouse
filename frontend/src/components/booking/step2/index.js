@@ -3,13 +3,18 @@ import PropTypes from 'prop-types';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { Row } from './row'; 
 
-const Step2 = ({ services, selectedBarberId }) => {
+const Step2 = ({ services, selectedBarberId, onSelectedServiceChange }) => {
   const [selectedRows, setSelectedRows] = useState([]);
 
   const handleRowClick = (rowId) => {
     setSelectedRows(prev => prev.includes(rowId) ? prev.filter(id => id !== rowId) : [...prev, rowId]);
-  };
 
+    // Call onSelectedServiceChange prop
+    if (onSelectedServiceChange) { 
+      onSelectedServiceChange(rowId); // Pass the selected/deselected serviceId
+    }
+  };
+  
   const filteredServices = services.filter((service) => service.barberId === selectedBarberId);
 
   return (
