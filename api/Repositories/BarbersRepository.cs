@@ -15,4 +15,15 @@ public class BarbersRepository(DbDataContext context) : IBarbersRepository
                              .ToListAsync();
     }
 
+    public async Task<Barber?> GetBarberByIdAsync(int barberId)
+    {
+        return await _context.Barbers
+                             .Include(b => b.Services)
+                             .FirstOrDefaultAsync(b => b.BarberID == barberId);
+    }
+
+    public async Task SaveChangesAsync()
+    {
+        await _context.SaveChangesAsync();
+    }
 }

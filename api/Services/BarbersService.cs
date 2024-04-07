@@ -1,12 +1,14 @@
+using AutoMapper;
 using barbershouse.api.Models;
 using barbershouse.api.Repositories;
 using barbershouse.api.ViewModels;
 
 namespace barbershouse.api.Services;
 
-public class BarbersService(IBarbersRepository barbersRepository) : IBarbersService
+public class BarbersService(IBarbersRepository barbersRepository, IMapper mapper) : IBarbersService
 {
     private readonly IBarbersRepository _barbersRepository = barbersRepository;
+    private readonly IMapper _mapper = mapper;
 
     public async Task<IEnumerable<Barber>> GetBarbersAsync()
     {
@@ -16,25 +18,6 @@ public class BarbersService(IBarbersRepository barbersRepository) : IBarbersServ
     public async Task<IEnumerable<BarberViewModel>> GetAllBarbersWithServicesAsync()
     {
         var barbers = await _barbersRepository.GetAllBarbersWithServicesAsync();
-        return barbers.Select(b => MapToBarberViewModel(b)); 
+        return _mapper.Map<IEnumerable<BarberViewModel>>(barbers);
     }
-
-    private BarberViewModel MapToBarberViewModel(Barber barber)
-{
-    return new BarberViewModel
-    {
-        BarberId = barber.BarberID,
-        Name = barber.Name,
-        Bio = barber.Bio,
-        PhotoUrl = barber.PhotoUrl,
-        Services = barber.Services.Select(service => new ServiceViewModel
-        {
-            ServiceId = service.ServiceID,
-            Title = service.Title,
-            Description = service.Description,
-            Duration = service.Duration,
-            Price = service.Price
-        })
-    };
-}
 }

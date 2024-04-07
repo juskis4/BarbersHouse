@@ -7,36 +7,35 @@ import StepContent from '@mui/material/StepContent';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
+import axios from 'axios';
+import { useState, useEffect } from 'react'; 
 import Step1 from '../step1';
 import Step2 from '../step2';
 
-const steps = [
-  {
-    label: 'Select a Barber',
-    description: <Step1 />,
-  },
-  {
-    label: 'Select a Service',
-    description: <Step2 />,
-  },
-  {
-    label: 'Select Date & Time',
-    description: `Try out different ad text to see what brings in the most customers,
-              and learn how to enhance your ads using features like ad extensions.
-              If you run into any problems with your ads, find out how to tell if
-              they're running and how to resolve approval issues.`,
-  },
-  {
-    label: 'Contact Information',
-    description: `Try out different ad text to see what brings in the most customers,
-              and learn how to enhance your ads using features like ad extensions.
-              If you run into any problems with your ads, find out how to tell if
-              they're running and how to resolve approval issues.`,
-  },
-];
-
 export default function VerticalLinearStepper() {
   const [activeStep, setActiveStep] = React.useState(0);
+  const numSteps = 2;
+  const [selectedBarberId, setSelectedBarberId] = React.useState('');
+  const [barbers, setBarbers] = useState([]);
+  const [services, setServices] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const getBarbersWithServices = async () => {
+    try {
+      setIsLoading(true);
+      const res = await axios.get("http://localhost:5037/Barbers/Services");
+      setBarbers(res.data);
+      setServices(res.data.flatMap(barber => barber.services));  
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getBarbersWithServices(); 
+  }, []);
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -73,44 +72,66 @@ export default function VerticalLinearStepper() {
           fontWeight: 'bold',
         }
       }}>
-        {steps.map((step, index) => (
-          <Step key={step.label}>
-            <StepLabel
-              optional={
-                index === 2 ? (
-                  <Typography variant="caption">Last step</Typography>
-                ) : null
-              }
-            >
-              {step.label}
-            </StepLabel>
-            <StepContent>
-              <Typography>{step.description}</Typography>
-              <Box sx={{ mb: 2 }}>
-                <div>
-                  <Button
-                    variant="contained"
-                    onClick={handleNext}
-                    sx={{ mt: 1, mr: 1 }}
-                  >
-                    {index === steps.length - 1 ? 'Finish' : 'Continue'}
-                  </Button>
-                  <Button
-                    disabled={index === 0}
-                    onClick={handleBack}
-                    sx={{ mt: 1, mr: 1 }}
-                  >
-                    Back
-                  </Button>
-                </div>
-              </Box>
-            </StepContent>
-          </Step>
-        ))}
+       {/* Step 1 */}   
+        <Step key={'Select a Barber'}>
+          <StepLabel>Select a Barber</StepLabel>
+          <StepContent>
+            <Step1 
+              barbers={barbers} 
+              isLoading={isLoading} 
+              selectedBarberId={selectedBarberId}
+              onBarberChange={setSelectedBarberId}
+            />
+            <Box sx={{ mb: 2 }}>
+              <div>
+                <Button
+                  variant="contained"
+                  onClick={() => handleNext()} // Modified
+                  sx={{ mt: 1, mr: 1 }}
+                >
+                  {activeStep === 1 ? 'Finish' : 'Continue'} 
+                </Button>
+                <Button
+                  disabled={activeStep === 0}
+                  onClick={() => handleBack()} // Modified
+                  sx={{ mt: 1, mr: 1 }}
+                >
+                  Back
+                </Button>
+              </div>
+            </Box>
+          </StepContent>
+        </Step>
+
+        {/* Step 2 */}
+        <Step key={'Select a Service'}>
+          <StepLabel>Select a Service</StepLabel>
+          <StepContent>
+            <Step2 services={services} selectedBarberId={selectedBarberId} /> 
+            <Box sx={{ mb: 2 }}>
+              <div>
+                <Button
+                  variant="contained"
+                  onClick={() => handleNext()} 
+                  sx={{ mt: 1, mr: 1 }}
+                >
+                  {activeStep === 1 ? 'Finish' : 'Continue'} 
+                </Button>
+                <Button
+                  disabled={activeStep === 0}
+                  onClick={() => handleBack()} 
+                  sx={{ mt: 1, mr: 1 }}
+                >
+                  Back
+                </Button>
+              </div>
+            </Box>
+          </StepContent>
+        </Step>
       </Stepper>
-      {activeStep === steps.length && (
+      {activeStep === numSteps && (
         <Paper square elevation={0} sx={{ p: 3 }}>
-          <Typography>All steps completed - you&apos;re finished</Typography>
+          <Typography>All steps completed - you're finished</Typography>
           <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
             Book
           </Button>
