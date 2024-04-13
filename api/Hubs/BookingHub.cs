@@ -8,4 +8,6 @@ public class BookingHub : Hub
     {
         await Clients.All.SendAsync("ReceiveMessage", user, message);
     }
+
+    
 }

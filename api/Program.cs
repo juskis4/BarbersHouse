@@ -20,6 +20,8 @@ builder.Services.AddScoped<IBarbersRepository, BarbersRepository>();
 builder.Services.AddScoped<IBarbersService, BarbersService>();
 builder.Services.AddScoped<IServicesRepository, ServicesRepository>(); 
 builder.Services.AddScoped<IServicesService, ServicesService>();
+//builder.Services.AddScoped<IBookingService, BookingService>();
+
 
 // SignalR
 builder.Services.AddSignalR();
