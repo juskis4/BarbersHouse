@@ -5,6 +5,8 @@ using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using barbershouse.api.Repositories;
 using barbershouse.api.Profiles;
+using Microsoft.AspNetCore.ResponseCompression;
+using barbershouse.api.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,10 +21,22 @@ builder.Services.AddScoped<IBarbersService, BarbersService>();
 builder.Services.AddScoped<IServicesRepository, ServicesRepository>(); 
 builder.Services.AddScoped<IServicesService, ServicesService>();
 
+// SignalR
+builder.Services.AddSignalR();
+builder.Services.AddResponseCompression(opts =>
+{
+   opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+         new[] { "application/octet-stream" });
+});
+
 builder.Services.AddCors(options =>
     {
         options.AddPolicy("AllowMyOrigin",
-            builder => builder.WithOrigins("http://localhost:3000"));
+            builder => builder.WithOrigins("http://localhost:3000")
+                        .AllowAnyMethod() 
+                        .AllowAnyHeader()
+                        .AllowCredentials()
+                    );
     });
 
 Console.WriteLine("Connection String: " + builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -55,6 +69,10 @@ app.UseSwaggerUI(c =>
 });
 
 app.UseHttpsRedirection();
+
+// SignalR
+app.UseResponseCompression();
+app.MapHub<BookingHub>("/bookinghub");
 
 app.UseCors("AllowMyOrigin");
 
