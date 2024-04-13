@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import BookingTest from '../bookingtest';
 
 const Step3 = ({ selectedServices }) => {
   return (
@@ -15,6 +16,7 @@ const Step3 = ({ selectedServices }) => {
             ))}
         </ul>
         )}
+        <BookingTest />
     </div>
     );
 };
