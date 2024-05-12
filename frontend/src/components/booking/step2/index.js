@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { Row } from './row'; 
 
-const Step2 = ({ services, selectedBarberId, onSelectedServiceChange, setSelectedServices }) => {
-  const [selectedRows, setSelectedRows] = useState([]);
+const Step2 = ({ services, selectedBarberId, onSelectedServiceChange, setSelectedServices, selectedRows, setSelectedRows }) => {
+
+  useEffect(() => {
+    // When barberId changes, clear selectedServices and selectedRows
+    setSelectedRows([]);
+    setSelectedServices([]);
+  }, [selectedBarberId, setSelectedRows, setSelectedServices]); 
 
   const handleRowClick = (rowId) => {
     setSelectedRows(prev => {

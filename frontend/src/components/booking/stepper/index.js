@@ -20,6 +20,7 @@ export default function VerticalLinearStepper() {
   //const [selectedRows, setSelectedRows] = useState([]);
   const [selectedBarberId, setSelectedBarberId] = React.useState('');
   const [selectedServices, setSelectedServices] = useState([]);
+  const [selectedRows, setSelectedRows] = useState([]);
 
   const [barbers, setBarbers] = useState([]);
   const [services, setServices] = useState([]);
@@ -119,6 +120,8 @@ export default function VerticalLinearStepper() {
                 selectedBarberId={selectedBarberId}
                 selectedServices={selectedServices} 
                 setSelectedServices={setSelectedServices}
+                selectedRows={selectedRows} 
+                setSelectedRows={setSelectedRows} 
               /> 
               <Box sx={{ mb: 2 }}>
                 <div>
