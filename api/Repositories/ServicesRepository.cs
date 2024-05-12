@@ -8,6 +8,14 @@ public class ServicesRepository(DbDataContext context) : IServicesRepository
 {
     private readonly DbDataContext _context = context;
 
+    public async Task<IEnumerable<int>> GetDurationsForServicesAsync(IEnumerable<int> serviceIds)
+    {
+        return await _context.Services
+                 .Where(s => serviceIds.Contains(s.ServiceID))
+                 .Select(s => s.Duration)
+                 .ToListAsync(); 
+    }
+
     public async Task<Service?> GetServicesByIdAsync(int serviceId)
     {
         return await _context.Services
