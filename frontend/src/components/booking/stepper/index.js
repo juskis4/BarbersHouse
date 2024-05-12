@@ -42,15 +42,8 @@ export default function VerticalLinearStepper() {
     getBarbersWithServices(); 
   }, []);
 
-  const handleSelectedServiceChange = (serviceId) => {
-    setSelectedServices(prev => prev.includes(serviceId) ? prev.filter(id => id !== serviceId) : [...prev, serviceId]);
-  };
 
   const handleNext = () => {
-    if (activeStep === 1) { // from Step2 to Step3
-      const selectedServicesFiltered = services.filter(service => selectedServices.includes(service.serviceId));
-      setSelectedServices(selectedServicesFiltered);
-    }
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
@@ -117,39 +110,46 @@ export default function VerticalLinearStepper() {
         </Step>
 
         {/* Step 2 */}
-        <Step key={'Select a Service'}>
-          <StepLabel>Select a Service</StepLabel>
-          <StepContent>
-            <Step2 
-              services={services} 
-              selectedBarberId={selectedBarberId} 
-              onSelectedServiceChange={handleSelectedServiceChange}
-            /> 
-            <Box sx={{ mb: 2 }}>
-              <div>
-                <Button
-                  variant="contained"
-                  onClick={() => handleNext()} 
-                  sx={{ mt: 1, mr: 1 }}
-                >
-                  {activeStep === 1 ? 'Finish' : 'Continue'} 
-                </Button>
-                <Button
-                  disabled={activeStep === 0}
-                  onClick={() => handleBack()} 
-                  sx={{ mt: 1, mr: 1 }}
-                >
-                  Back
-                </Button>
-              </div>
-            </Box>
-          </StepContent>
-        </Step>
+        {selectedBarberId !== '' && ( 
+          <Step key={'Select a Service'}>
+            <StepLabel>Select a Service</StepLabel>
+            <StepContent>
+              <Step2 
+                services={services} 
+                selectedBarberId={selectedBarberId}
+                selectedServices={selectedServices} 
+                setSelectedServices={setSelectedServices}
+              /> 
+              <Box sx={{ mb: 2 }}>
+                <div>
+                  <Button
+                    variant="contained"
+                    onClick={() => handleNext()} 
+                    sx={{ mt: 1, mr: 1 }}
+                  >
+                    {activeStep === 1 ? 'Finish' : 'Continue'} 
+                  </Button>
+                  <Button
+                    disabled={activeStep === 0}
+                    onClick={() => handleBack()} 
+                    sx={{ mt: 1, mr: 1 }}
+                  >
+                    Back
+                  </Button>
+                </div>
+              </Box>
+            </StepContent>
+          </Step>
+        )}
+        
         {/* Step 3 */}
         <Step key={'Review Selection'}> 
           <StepLabel>Review Selection</StepLabel>
           <StepContent>
-            <Step3 selectedServices={selectedServices} />
+            <Step3 
+              selectedBarberId={selectedBarberId}
+              selectedServices={selectedServices} 
+            /> 
             <Box sx={{ mb: 2 }}>
               <div>
                 <Button

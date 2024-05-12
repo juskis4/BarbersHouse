@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import BookingTest from '../bookingtest';
 
-const Step3 = ({ selectedServices }) => {
+const Step3 = ({ selectedServices, selectedBarberId }) => {
   return (
     <div>
         {selectedServices.length === 0 ? (
@@ -16,7 +16,7 @@ const Step3 = ({ selectedServices }) => {
             ))}
         </ul>
         )}
-        <BookingTest />
+        <BookingTest selectedServices={selectedServices} selectedBarberId={selectedBarberId} />
     </div>
     );
 };

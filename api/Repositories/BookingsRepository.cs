@@ -23,13 +23,19 @@ public class BookingsRepository : IBookingsRepository
     public async Task<IEnumerable<Booking?>> GetBookingsForBarberByDateAsync(int barberId, DateTime date)
     {
         return await _context.Bookings
-                     .Where(b => b.BarberId == barberId && 
-                             b.BookingDateTime.Date.Year == date.Date.Year && 
-                             b.BookingDateTime.Date.Month == date.Date.Month && 
-                             b.BookingDateTime.Date.Day == date.Date.Day) 
-                     .Include(b => b.Customer)
-                     .Include(b => b.Service)
-                     .ToListAsync();
+                         .Where(b => b.BarberId == barberId && 
+                                     b.BookingDateTime.Date == date.Date)
+                         .Include(b => b.Customer)
+                         .Include(b => b.Service)
+                         .ToListAsync();
+        // return await _context.Bookings
+        //              .Where(b => b.BarberId == barberId && 
+        //                      b.BookingDateTime.Date.Year == date.Date.Year && 
+        //                      b.BookingDateTime.Date.Month == date.Date.Month && 
+        //                      b.BookingDateTime.Date.Day == date.Date.Day) 
+        //              .Include(b => b.Customer)
+        //              .Include(b => b.Service)
+        //              .ToListAsync();
     }
 
     public async Task<Booking?> GetBookingByIdAsync(int bookingId)

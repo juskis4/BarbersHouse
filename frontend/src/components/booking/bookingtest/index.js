@@ -1,69 +1,79 @@
 import React, { useState, useEffect, useRef } from 'react';
 import * as signalR from '@microsoft/signalr';
 
-const BookingTest = () => {
-    const connectionRef = useRef(null);
-    const [message, setMessage] = useState('');
-    const [messages, setMessages] = useState([]);
-    const [isConnected, setIsConnected] = useState(false);
+const BookingTest = ({ selectedBarberId, selectedServices }) => {
+  const connectionRef = useRef(null);
+  const [timeSlots, setTimeSlots] = useState([]);
+  const [error, setError] = useState(null);
 
-    useEffect(() => {
-        const establishConnection = async () => { 
-            const connection = new signalR.HubConnectionBuilder()
-                .withUrl("http://localhost:5037/bookinghub") 
-                .build();
+  useEffect(() => {
+    const establishConnection = async () => {
+      const connection = new signalR.HubConnectionBuilder()
+        .withUrl("http://localhost:5037/bookinghub")
+        .build();
 
-            connectionRef.current = connection; // Store in ref
-            
-            try {
-                await connection.start();
-                console.log('Connected!'); 
-                setIsConnected(true); 
-            } catch (err) {
-                console.error(err);
-            }
+      connectionRef.current = connection;
 
-            console.log("Setting up ReceiveMessage listener"); 
+      try {
+        await connection.start();
+        console.log('Connected!');
 
-            connection.on("ReceiveMessage", (user, message) => {
-                console.log("Message Received (Client):", user, message);
-                setMessages(prevMessages => [...prevMessages, { user, message }]);
-            });
-        };  
-
-        establishConnection(); // Start connection
-
-        return () => {
-            if (connectionRef.current) { // Cleanup function
-                connectionRef.current.stop();
-            }
-        }
-    }, []);
-
-    const handleSendMessage = () => {
-        if (!connectionRef.current) {
-            console.warn('Connection not yet established.');
-            return; 
-        }
-
-        connectionRef.current.invoke("SendMessage", "TestUser", message) 
-            .catch(err => console.error(err)); 
+        // listener for time slot responses
+        connection.on("ReceiveAvailableTimeSlots", (slots) => {
+          setTimeSlots(slots);
+        });
+      } catch (err) {
+        console.error(err);
+        setError('Error connecting to SignalR hub.');
+      }
     };
 
-    return (
-        <div>
-            <input type="text" value={message} onChange={e => setMessage(e.target.value)} />
-            <button onClick={handleSendMessage} disabled={!isConnected}>Send</button>
+    establishConnection();
 
-            <div className="message-list"> 
-                {messages.map((msg, index) => (
-                    <div key={index}>
-                        {msg.user}: {msg.message}
-                    </div>
-                ))}
-            </div>
-        </div>  
-    );
+    return () => {
+      if (connectionRef.current) {
+        connectionRef.current.stop();
+      }
+    };
+  }, []); // Empty dependency array ensures this runs only once
+
+  const handleGetTimeSlots = async () => {
+    if (!connectionRef.current) {
+      console.warn('Connection not yet established.');
+      return;
+    }
+
+    try {
+        console.log("Selected Barber ID:", selectedBarberId);
+        console.log("Selected service ID:", selectedServices);
+        console.log("Passed barber id:", parseInt(selectedBarberId, 10));
+        const serviceIds = selectedServices.map(service => service.serviceId);
+        console.log("Passed service id:", serviceIds);
+        await connectionRef.current.invoke("GetTimeSlots", parseInt(selectedBarberId, 10), serviceIds);
+    } 
+    catch (err) {
+      console.error(err);
+      setError('Error getting time slots.');
+    }
+  };
+
+  return (
+    <div>
+      <button onClick={handleGetTimeSlots } disabled={!selectedBarberId || !selectedServices.length} >
+        Get Time Slots
+      </button>
+
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      <div className="time-slot-list">
+        {timeSlots.map((slot, index) => (
+          <div key={index}>
+            {slot.startTime} - {slot.endTime}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 };
 
-export default BookingTest; 
+export default BookingTest;

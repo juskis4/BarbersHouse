@@ -3,19 +3,35 @@ import PropTypes from 'prop-types';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { Row } from './row'; 
 
-const Step2 = ({ services, selectedBarberId, onSelectedServiceChange }) => {
+const Step2 = ({ services, selectedBarberId, onSelectedServiceChange, setSelectedServices }) => {
   const [selectedRows, setSelectedRows] = useState([]);
 
   const handleRowClick = (rowId) => {
-    setSelectedRows(prev => prev.includes(rowId) ? prev.filter(id => id !== rowId) : [...prev, rowId]);
+    setSelectedRows(prev => {
+        if (prev.includes(rowId)) { // If it's already selected, deselect
+            return prev.filter(id => id !== rowId);
+        } else {  // If it's not selected, select
+            return [...prev, rowId];
+        }
+    });
+
+    setSelectedServices(prev => {
+        const selectedService = services.find(service => service.serviceId === rowId);
+        if (prev.includes(selectedService)) {  // If service is already selected, remove it
+            console.log("removed");
+            return prev.filter(s => s.serviceId !== rowId);
+        } else {  // If service is not selected, add it
+            console.log("Selected service ID:", selectedService.serviceId);
+            return [...prev, selectedService];
+        }
+    });
 
     // Call onSelectedServiceChange prop
-    if (onSelectedServiceChange) { 
-      onSelectedServiceChange(rowId); // Pass the selected/deselected serviceId
+    if (onSelectedServiceChange) {
+        onSelectedServiceChange(rowId);
     }
-  };
-  
-  const filteredServices = services.filter((service) => service.barberId === selectedBarberId);
+};
+  const filteredServices = services.filter((service) => service.barberId === selectedBarberId || selectedBarberId === null);
 
   return (
     <TableContainer component={Paper}>

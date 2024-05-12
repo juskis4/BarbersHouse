@@ -10,29 +10,38 @@ public class BookingHub(IBarbersService barbersService, IBookingService bookingS
     private readonly IBookingService _bookingService = bookingService;
     private readonly IServicesService _servicesService = servicesService;
 
-    public async Task SendMessage(string user, string message)
+    public async Task GetTimeSlots(int barberId, int[] selectedServices)
     {
         var request = new AvailableTimeSlotRequestViewModel
         {
-            SelectedDate = new DateTime(2024, 05, 16),
-            SelectedBarberId = 1,
-            SelectedServiceIds = [1]
+            SelectedDate = DateTime.Today.AddDays(3),
+            SelectedBarberId = barberId,
+            SelectedServiceIds = selectedServices
         };
-        await GetAvailableTimeSlots(request);
-        await Clients.All.SendAsync("ReceiveMessage", user, message);
+        var timeSlots = await CalculateTimeSlots(request); 
+
+        await Clients.Caller.SendAsync("ReceiveAvailableTimeSlots", timeSlots); 
     }
 
-    public async Task<List<AvailableTimeSlotViewModel>> GetAvailableTimeSlots(AvailableTimeSlotRequestViewModel request)
+    public async Task<List<AvailableTimeSlotViewModel>> CalculateTimeSlots(AvailableTimeSlotRequestViewModel request)
     {
         // workHours contains IEnumerable of BarberWorkHours
         var workHours = await _barbersService.GetWorkHoursByBarberIdAndDayOfWeekAsync(request.SelectedBarberId, request.SelectedDate.DayOfWeek);
+        if (workHours == null)
+        {
+            // barber doesn't work that day
+            return new List<AvailableTimeSlotViewModel>();
+        }
 
         // Calculate duration
         var totalServiceDuration = await _servicesService.GetTotalDurationForServicesAsync(request.SelectedServiceIds);
         var serviceDuration = TimeSpan.FromMinutes(totalServiceDuration);
 
+        //Add the time zone
+        var utcDate = new DateTime(request.SelectedDate.Year, request.SelectedDate.Month, request.SelectedDate.Day, 0, 0, 0, DateTimeKind.Utc);
+        
         // Get existing appointments for the barber
-        var appointments = await _bookingService.GetBookingsForBarberByDateAsync(request.SelectedBarberId, request.SelectedDate);
+        var appointments = await _bookingService.GetBookingsForBarberByDateAsync(request.SelectedBarberId, utcDate);
         if (appointments.Any() != false)
         {
             // Create Time Intervals (including those created by bookings)
