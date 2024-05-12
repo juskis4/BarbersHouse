@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import BookingTest from '../bookingtest';
+import DatePicker from './datePicker';
 
 const Step3 = ({ selectedServices, selectedBarberId }) => {
   return (
@@ -16,7 +16,12 @@ const Step3 = ({ selectedServices, selectedBarberId }) => {
             ))}
         </ul>
         )}
-        <BookingTest selectedServices={selectedServices} selectedBarberId={selectedBarberId} />
+        {selectedBarberId && selectedServices.length > 0 && (
+          <DatePicker 
+            selectedBarberId={selectedBarberId}
+            selectedServices={selectedServices} 
+          /> 
+        )}
     </div>
     );
 };
