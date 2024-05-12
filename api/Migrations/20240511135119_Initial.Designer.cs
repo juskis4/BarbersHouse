@@ -12,8 +12,8 @@ using barbershouse.api.Data;
 namespace api.Migrations
 {
     [DbContext(typeof(DbDataContext))]
-    [Migration("20240413133858_AddCustomersAndBookings")]
-    partial class AddCustomersAndBookings
+    [Migration("20240511135119_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -76,6 +76,38 @@ namespace api.Migrations
                     b.HasKey("BarberID");
 
                     b.ToTable("barbers", "public");
+                });
+
+            modelBuilder.Entity("barbershouse.api.Models.BarberWorkHours", b =>
+                {
+                    b.Property<int>("WorkHourID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("work_hour_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("WorkHourID"));
+
+                    b.Property<int>("BarberId")
+                        .HasColumnType("integer")
+                        .HasColumnName("barber_id");
+
+                    b.Property<int>("DayOfWeek")
+                        .HasColumnType("integer")
+                        .HasColumnName("day_of_week");
+
+                    b.Property<TimeSpan>("EndTime")
+                        .HasColumnType("interval")
+                        .HasColumnName("end_time");
+
+                    b.Property<TimeSpan>("StartTime")
+                        .HasColumnType("interval")
+                        .HasColumnName("start_time");
+
+                    b.HasKey("WorkHourID");
+
+                    b.HasIndex("BarberId");
+
+                    b.ToTable("barberWorkHours", "public");
                 });
 
             modelBuilder.Entity("barbershouse.api.Models.Booking", b =>
@@ -181,10 +213,21 @@ namespace api.Migrations
                     b.ToTable("services", "public");
                 });
 
+            modelBuilder.Entity("barbershouse.api.Models.BarberWorkHours", b =>
+                {
+                    b.HasOne("barbershouse.api.Models.Barber", "Barber")
+                        .WithMany("BarberWorkHours")
+                        .HasForeignKey("BarberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Barber");
+                });
+
             modelBuilder.Entity("barbershouse.api.Models.Booking", b =>
                 {
                     b.HasOne("barbershouse.api.Models.Barber", "Barber")
-                        .WithMany()
+                        .WithMany("Bookings")
                         .HasForeignKey("BarberId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -221,6 +264,10 @@ namespace api.Migrations
 
             modelBuilder.Entity("barbershouse.api.Models.Barber", b =>
                 {
+                    b.Navigation("BarberWorkHours");
+
+                    b.Navigation("Bookings");
+
                     b.Navigation("Services");
                 });
 #pragma warning restore 612, 618

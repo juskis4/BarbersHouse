@@ -34,7 +34,7 @@ public class ServicesService(IServicesRepository servicesRepository, IBarbersRep
         await _barbersRepository.SaveChangesAsync();
     }
 
-    public async Task<int> GetServicesDuration(IEnumerable<int> serviceIds)
+    public async Task<int> GetTotalDurationForServicesAsync(IEnumerable<int> serviceIds)
     {
         var durations = await _servicesRepository.GetDurationsForServicesAsync(serviceIds); 
         return durations.Sum();

@@ -9,6 +9,6 @@ public interface IServicesService {
 
     Task AddServiceForBarberAsync(int barberId, Service service);
 
-    Task<int> GetServicesDuration(IEnumerable<int> serviceIds);
+    Task<int> GetTotalDurationForServicesAsync(IEnumerable<int> serviceIds);
 
 }

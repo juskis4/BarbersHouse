@@ -10,7 +10,7 @@ namespace barbershouse.api.Controllers;
 public class BarbersController(IBarbersService barbersService) : ControllerBase
 {
     private readonly IBarbersService _barbersService = barbersService;
-
+    
     [HttpGet(Name = "Barbers")]
     public async Task<IEnumerable<Barber>> GetBarbersAsync()
     {
@@ -23,4 +23,22 @@ public class BarbersController(IBarbersService barbersService) : ControllerBase
         return await _barbersService.GetAllBarbersWithServicesAsync();
     }
 
+    [HttpPost("{barberId}/workhours")]
+    public async Task<IActionResult> AddBarberWorkHoursAsync(int barberId, [FromBody] AddBarberWorkHoursViewModel workHours)
+    {
+        try
+        {
+            await _barbersService.AddBarberWorkHoursAsync(barberId, workHours);
+
+            return Ok(); 
+        }
+        catch (ArgumentException ex) 
+        {
+            return BadRequest(ex.Message);
+        }  
+        catch (Exception ex) 
+        {
+            return StatusCode(500, $"Internal server error. {ex.Message}"); 
+        }
+    }
 }

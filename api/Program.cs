@@ -1,12 +1,11 @@
-using Microsoft.AspNetCore.Builder;
 using barbershouse.api.Services;
 using barbershouse.api.Data;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using barbershouse.api.Repositories;
-using barbershouse.api.Profiles;
 using Microsoft.AspNetCore.ResponseCompression;
 using barbershouse.api.Hubs;
+using Microsoft.OpenApi.Any;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,12 +14,12 @@ builder.Services.AddControllers();
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
-
 builder.Services.AddScoped<IBarbersRepository, BarbersRepository>(); 
 builder.Services.AddScoped<IBarbersService, BarbersService>();
 builder.Services.AddScoped<IServicesRepository, ServicesRepository>(); 
 builder.Services.AddScoped<IServicesService, ServicesService>();
-//builder.Services.AddScoped<IBookingService, BookingService>();
+builder.Services.AddScoped<IBookingsRepository, BookingsRepository>(); 
+builder.Services.AddScoped<IBookingService, BookingService>();
 
 
 // SignalR
@@ -48,7 +47,13 @@ builder.Services.AddDbContext<DbDataContext>(options =>
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+    c.MapType<TimeSpan>(() => new OpenApiSchema
+	{
+		Type = "string",
+		Example = new OpenApiString("00:00:00")
+	});
 });
+
 // builder.Services.AddSwaggerGen(c => {
 //     c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
 //     c.IgnoreObsoleteActions();
