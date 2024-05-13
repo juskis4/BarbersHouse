@@ -50,10 +50,6 @@ export default function VerticalLinearStepper() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleReset = () => {
-    setActiveStep(0);
-  };
-
   return (
     <Box sx={{ maxWidth: 400 }}>
       <Stepper activeStep={activeStep} orientation="vertical" sx={{
@@ -186,6 +182,7 @@ export default function VerticalLinearStepper() {
               selectedBarberId={selectedBarberId}
               selectedServices={selectedServices}
               selectedTimeSlot={selectedTimeSlot}  
+              handleNext={handleNext}
             /> 
             <Box sx={{ mb: 2 }}>
               <div>
@@ -204,10 +201,8 @@ export default function VerticalLinearStepper() {
       </Stepper>
       {activeStep === numSteps && (
         <Paper square elevation={0} sx={{ p: 3 }}>
-          <Typography>All steps completed - you're finished</Typography>
-          <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
-            Book
-          </Button>
+          <Typography>You Booking was successful</Typography>
+          <Typography>See you soon!</Typography>
         </Paper>
       )}
     </Box>

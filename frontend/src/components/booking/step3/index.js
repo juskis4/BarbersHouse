@@ -8,7 +8,6 @@ import dayjs from "dayjs";
 import PropTypes from "prop-types";
 import CalendarCarousel from "./calendarCarousel";
 
-
 const Step3 = ({ selectedServices, selectedBarberId, selectedTimeSlot, onSlotSelected }) => {
   const connectionRef = useRef(null);
   const [connectionEstablished, setConnectionEstablished] = useState(false);
@@ -133,7 +132,7 @@ const Step3 = ({ selectedServices, selectedBarberId, selectedTimeSlot, onSlotSel
                 onClick={() => handleTimeSlotClick(slot)}
                 variant={selectedTimeSlot === slot ? "contained" : "outlined"} 
               >
-                {dayjs(slot.startTime).format("HH:mm")}
+                {dayjs(slot.startTime).utc().format("HH:mm")}
               </Button>
             ))}
           </ButtonGroup>

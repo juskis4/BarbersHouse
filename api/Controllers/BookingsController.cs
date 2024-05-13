@@ -18,6 +18,7 @@ public class BookingsController(IBookingService bookingService) : ControllerBase
         {
             await _bookingService.AddBookingAsync(booking);
             // notify the hub that a booking has been made to remove the booked time slot
+            //  await Clients.Caller.SendAsync("ReceiveBookingConfirmation");
             return Ok(); 
         }
         catch (ArgumentException ex) 

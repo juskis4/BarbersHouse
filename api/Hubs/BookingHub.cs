@@ -55,6 +55,7 @@ public class BookingHub(IBarbersService barbersService, IBookingService bookingS
 
         // Get existing appointments for the barber
         var appointments = await _bookingService.GetBookingsForBarberByDateAsync(request.SelectedBarberId, utcDate);
+        appointments = appointments.OrderBy(a => a.BookingDateTime).ToList(); // <-- Sort here
         if (appointments.Any() != false)
         {
             // Create Time Intervals (including those created by bookings)

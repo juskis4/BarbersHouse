@@ -1,21 +1,27 @@
 import React, { useState } from 'react';
 import { TextField, Box, Button } from '@mui/material';
+import { createBooking } from '../../../services/bookingService'
 
-function Step4({ selectedBarberId, selectedServices, selectedTimeSlot }) {
+function Step4({ selectedBarberId, selectedServices, selectedTimeSlot, handleNext }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
 
-  const handleConfirmBooking = () => {
-    
-    console.log("Booking confirmed:", {
-      barberId: selectedBarberId,
-      services: selectedServices,
-      timeSlot: selectedTimeSlot,
-      customer: { name, email }
-    });
+  const handleConfirmBooking = async () => {
+    try {
+      const [firstService] = selectedServices;  
+      const serviceId = firstService?.serviceId;
+      const bookingData = {
+        BarberId: selectedBarberId,
+        CustomerId: 1, 
+        ServiceId: serviceId, 
+        StartTime: selectedTimeSlot.startTime,
+      };
 
-    // Reset the stepper or perform any other necessary actions
-    //onBookingConfirmed(); 
+      await createBooking(bookingData);
+      handleNext(); 
+    } catch (error) {
+      console.error("Error creating booking:", error.message); 
+    }
   };
 
   return (
