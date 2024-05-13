@@ -17,7 +17,7 @@ public class BookingsController(IBookingService bookingService) : ControllerBase
         try
         {
             await _bookingService.AddBookingAsync(booking);
-
+            // notify the hub that a booking has been made to remove the booked time slot
             return Ok(); 
         }
         catch (ArgumentException ex) 

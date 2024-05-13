@@ -7,11 +7,12 @@ import StepContent from '@mui/material/StepContent';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import axios from 'axios';
 import { useState, useEffect } from 'react'; 
+import { getBarbersWithServices } from '../../../services/bookingService';
 import Step1 from '../step1';
 import Step2 from '../step2';
 import Step3 from '../step3';
+import Step4 from '../step4';
 
 export default function VerticalLinearStepper() {
   const [activeStep, setActiveStep] = React.useState(0);
@@ -25,23 +26,21 @@ export default function VerticalLinearStepper() {
   const [services, setServices] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const getBarbersWithServices = async () => {
-    try {
-      setIsLoading(true);
-      const res = await axios.get("http://localhost:5037/Barbers/Services");
-      setBarbers(res.data);
-      setServices(res.data.flatMap(barber => barber.services));  
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
-    getBarbersWithServices(); 
+    const fetchBarbersAndServices = async () => {
+      setIsLoading(true);
+      try {
+        const data = await getBarbersWithServices(); 
+        setBarbers(data);
+        setServices(data.flatMap(barber => barber.services));
+      } catch (err) {
+        console.error("Error fetching data:", err); 
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchBarbersAndServices();
   }, []);
-
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -97,8 +96,9 @@ export default function VerticalLinearStepper() {
                   variant="contained"
                   onClick={() => handleNext()} 
                   sx={{ mt: 1, mr: 1 }}
+                  disabled={selectedBarberId === ''}
                 >
-                  {activeStep === 1 ? 'Finish' : 'Continue'} 
+                  Continue
                 </Button>
                 <Button
                   disabled={activeStep === 0}
@@ -113,7 +113,6 @@ export default function VerticalLinearStepper() {
         </Step>
 
         {/* Step 2 */}
-        {selectedBarberId !== '' && ( 
           <Step key={'Select a Service'}>
             <StepLabel>Select a Service</StepLabel>
             <StepContent>
@@ -131,8 +130,9 @@ export default function VerticalLinearStepper() {
                     variant="contained"
                     onClick={() => handleNext()} 
                     sx={{ mt: 1, mr: 1 }}
-                  >
-                    {activeStep === 1 ? 'Finish' : 'Continue'} 
+                    disabled={selectedServices.length === 0}
+                    >
+                    Continue
                   </Button>
                   <Button
                     disabled={activeStep === 0}
@@ -145,11 +145,10 @@ export default function VerticalLinearStepper() {
               </Box>
             </StepContent>
           </Step>
-        )}
         
         {/* Step 3 */}
-        <Step key={'Review Selection'}> 
-          <StepLabel>Review Selection</StepLabel>
+        <Step key={'Pick a date and time'}> 
+          <StepLabel>Pick a date and time</StepLabel>
           <StepContent>
             <Step3 
               selectedBarberId={selectedBarberId}
@@ -163,8 +162,9 @@ export default function VerticalLinearStepper() {
                   variant="contained"
                   onClick={handleNext}
                   sx={{ mt: 1, mr: 1 }}
+                  disabled={selectedTimeSlot === null} 
                 >
-                  {activeStep === 2 ? 'Finish' : 'Continue'} 
+                  Continue
                 </Button>
                 <Button   
                   disabled={activeStep === 0}
@@ -177,6 +177,30 @@ export default function VerticalLinearStepper() {
             </Box>
           </StepContent>
         </Step>
+
+        {/* Step 4 */}
+        <Step key={'Enter Details'}> 
+          <StepLabel>Enter Details</StepLabel>
+          <StepContent>
+            <Step4 
+              selectedBarberId={selectedBarberId}
+              selectedServices={selectedServices}
+              selectedTimeSlot={selectedTimeSlot}  
+            /> 
+            <Box sx={{ mb: 2 }}>
+              <div>
+                <Button   
+                  disabled={activeStep === 0}
+                  onClick={handleBack} 
+                  sx={{ mt: 1, mr: 1 }}
+                >
+                  Back
+                </Button>
+              </div>
+            </Box>
+          </StepContent>
+        </Step>
+
       </Stepper>
       {activeStep === numSteps && (
         <Paper square elevation={0} sx={{ p: 3 }}>
