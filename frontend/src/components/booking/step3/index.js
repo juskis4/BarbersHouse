@@ -1,30 +1,131 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import DatePicker from './datePicker';
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { Typography } from "@mui/material";
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import CircularProgress from '@mui/material/CircularProgress';
+import * as signalR from '@microsoft/signalr';
+import dayjs from "dayjs";
+import PropTypes from "prop-types";
+import CalendarCarousel from "./calendarCarousel";
+
 
 const Step3 = ({ selectedServices, selectedBarberId }) => {
+  const connectionRef = useRef(null);
+  const [connectionEstablished, setConnectionEstablished] = useState(false);
+  const [timeSlots, setTimeSlots] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(dayjs()); 
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  // SignalR connection
+  const establishConnection = useCallback(async () => { 
+    const connection = new signalR.HubConnectionBuilder()
+      .withUrl("http://localhost:5037/bookinghub")
+      .build();
+
+    connectionRef.current = connection; 
+
+    try {
+      await connection.start();
+      console.log('Connected!'); 
+      setConnectionEstablished(true);
+
+      connection.on("ReceiveAvailableTimeSlots", setTimeSlots); 
+    } 
+    catch (err) {
+      console.error(err);
+      setError('Error connecting to SignalR hub.');
+    } 
+  }, []); 
+
+  useEffect(() => {
+    const timer = setTimeout(establishConnection, 1000); // 1 second delay 
+    return () => clearTimeout(timer); // Cleanup
+  }, [establishConnection]);  
+
+  // Function to call the GetTimeSlotsForDate from the webapi signalR hub
+  const handleGetTimeSlots = useCallback(async () => {
+    if (!connectionRef.current) return;
+
+    try {
+      setIsLoading(true); 
+      const serviceIds = selectedServices.map(service => service.serviceId);
+      const formattedDate = selectedDate.format("YYYY-MM-DD"); 
+      await connectionRef.current.invoke("GetTimeSlotsForDate", parseInt(selectedBarberId, 10), serviceIds, formattedDate);
+    } 
+    catch (err) {
+      console.error(err);
+      setError('Error getting time slots.');
+    } 
+    finally {
+      setIsLoading(false); 
+    }
+  }, [selectedBarberId, selectedServices, selectedDate]);
+
+  useEffect(() => {
+    if (connectionEstablished && selectedServices.length > 0) {
+      handleGetTimeSlots();
+    }
+  }, [connectionEstablished, selectedServices, handleGetTimeSlots]);
+
+  // date update
+  const handleDateSelected = (date) => {
+    setSelectedDate(date); 
+    handleGetTimeSlots();
+  };
+
   return (
     <div>
-        {selectedServices.length === 0 ? (
+      {selectedServices.length === 0 ? (
         <p>No services selected.</p>
-        ) : (
+      ) : (
         <ul>
-            {selectedServices.map((service) => (
+          {selectedServices.map((service) => (
             <li key={service.serviceId}>
-                {service.title} - ${service.price} ({service.duration} min)
+              {service.title} - ${service.price} ({service.duration} min)
             </li>
-            ))}
+          ))}
         </ul>
-        )}
-        {selectedBarberId && selectedServices.length > 0 && (
-          <DatePicker 
-            selectedBarberId={selectedBarberId}
-            selectedServices={selectedServices} 
-          /> 
-        )}
+      )}
+      {connectionEstablished ? (
+        <CalendarCarousel 
+          onDateSelected={handleDateSelected}
+        />
+      ) : (
+        <Typography variant="body2">{error || "Connecting..."}</Typography>
+      )}
+
+      {isLoading ? ( 
+        <CircularProgress />
+      ) : timeSlots != null ? (
+          <ButtonGroup
+            variant="outline"
+            aria-label="available time slots"
+            sx={{
+              marginTop: 2,
+              marginBottom: 2,
+              display: 'flex', 
+              flexWrap: 'wrap',  
+              justifyContent: 'center', 
+              '& .MuiButton-root': { 
+                minWidth: 0, 
+                margin: '0 4px 4px 0', 
+              },
+            }}
+          >
+            {timeSlots.map((slot) => (
+              <Button key={slot.startTime} className="time-slot-button">
+                {dayjs(slot.startTime).format("HH:mm")}
+              </Button>
+            ))}
+          </ButtonGroup>
+      ) : (
+        <Typography variant="body2">No available slots</Typography>
+      )}
     </div>
-    );
+  );
 };
+
 
 Step3.propTypes = {
   selectedServices: PropTypes.arrayOf(PropTypes.shape({

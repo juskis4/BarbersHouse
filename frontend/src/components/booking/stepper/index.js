@@ -17,7 +17,6 @@ export default function VerticalLinearStepper() {
   const [activeStep, setActiveStep] = React.useState(0);
   const numSteps = 2;
 
-  //const [selectedRows, setSelectedRows] = useState([]);
   const [selectedBarberId, setSelectedBarberId] = React.useState('');
   const [selectedServices, setSelectedServices] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);

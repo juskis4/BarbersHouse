@@ -18,9 +18,22 @@ public class BookingHub(IBarbersService barbersService, IBookingService bookingS
             SelectedBarberId = barberId,
             SelectedServiceIds = selectedServices
         };
-        var timeSlots = await CalculateTimeSlots(request); 
+        var timeSlots = await CalculateTimeSlots(request);
 
-        await Clients.Caller.SendAsync("ReceiveAvailableTimeSlots", timeSlots); 
+        await Clients.Caller.SendAsync("ReceiveAvailableTimeSlots", timeSlots);
+    }
+
+    public async Task GetTimeSlotsForDate(int barberId, int[] selectedServices, DateTime date)
+    {
+        var request = new AvailableTimeSlotRequestViewModel
+        {
+            SelectedDate = date,
+            SelectedBarberId = barberId,
+            SelectedServiceIds = selectedServices
+        };
+        var timeSlots = await CalculateTimeSlots(request);
+
+        await Clients.Caller.SendAsync("ReceiveAvailableTimeSlots", timeSlots);
     }
 
     public async Task<List<AvailableTimeSlotViewModel>> CalculateTimeSlots(AvailableTimeSlotRequestViewModel request)
@@ -39,7 +52,7 @@ public class BookingHub(IBarbersService barbersService, IBookingService bookingS
 
         //Add the time zone
         var utcDate = new DateTime(request.SelectedDate.Year, request.SelectedDate.Month, request.SelectedDate.Day, 0, 0, 0, DateTimeKind.Utc);
-        
+
         // Get existing appointments for the barber
         var appointments = await _bookingService.GetBookingsForBarberByDateAsync(request.SelectedBarberId, utcDate);
         if (appointments.Any() != false)
