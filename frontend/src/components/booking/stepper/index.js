@@ -51,7 +51,7 @@ export default function VerticalLinearStepper() {
   };
 
   return (
-    <Box sx={{ maxWidth: 400 }}>
+    <Box sx={{ minWidth: 400 }}>
       <Stepper activeStep={activeStep} orientation="vertical" sx={{
         ".MuiStepLabel-iconContainer": {
           ".Mui-active": {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Typography } from "@mui/material";
+import { Typography, Box } from "@mui/material";
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -81,7 +81,7 @@ const Step3 = ({ selectedServices, selectedBarberId, selectedTimeSlot, onSlotSel
   };
 
   return (
-    <div>
+    <Box sx={{ maxWidth: 400 }}>
       {selectedServices.length === 0 ? (
         <p>No services selected.</p>
       ) : (
@@ -108,6 +108,7 @@ const Step3 = ({ selectedServices, selectedBarberId, selectedTimeSlot, onSlotSel
             variant="outline"
             aria-label="available time slots"
             sx={{
+              maxWidth: 400,
               marginTop: 2,
               marginBottom: 2,
               display: 'flex', 
@@ -139,7 +140,7 @@ const Step3 = ({ selectedServices, selectedBarberId, selectedTimeSlot, onSlotSel
       ) : (
         <Typography variant="body2">No available slots</Typography>
       )}
-    </div>
+    </Box>
   );
 };
 

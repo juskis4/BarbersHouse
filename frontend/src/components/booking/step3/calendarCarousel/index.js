@@ -18,7 +18,8 @@ function CalendarCarousel({ onDateSelected }) {
       onChange={handleDateChange}
       navButtonsAlwaysVisible={true}
       autoPlay={false}
-      sx={{ "& .MuiPaper-root": { padding: "16px", textAlign: "center" } }}
+      sx={{ 
+        "& .MuiPaper-root": { padding: "16px", textAlign: "center" } }}
     >
       {/* TODO change to render the whole month */}
       {[...Array(7)].map((_, index) => {

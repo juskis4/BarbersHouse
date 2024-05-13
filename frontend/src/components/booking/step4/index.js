@@ -25,7 +25,7 @@ function Step4({ selectedBarberId, selectedServices, selectedTimeSlot, handleNex
   };
 
   return (
-    <Box>
+    <Box sx={{ maxWidth: 400 }}>
       <TextField
         label="Name"
         variant="outlined"
