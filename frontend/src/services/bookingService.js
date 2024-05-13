@@ -18,7 +18,6 @@ export async function getBarbersWithServices() {
 
 export async function createBooking(bookingData) {
   try {
-    console.log(bookingData.StartTime);
     const bookingDataWithUtcTime = {
       ...bookingData,
       StartTime: dayjs(bookingData.StartTime).utc().toISOString(),

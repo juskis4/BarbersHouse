@@ -23,10 +23,8 @@ const Step2 = ({ services, selectedBarberId, onSelectedServiceChange, setSelecte
     setSelectedServices(prev => {
         const selectedService = services.find(service => service.serviceId === rowId);
         if (prev.includes(selectedService)) {  // If service is already selected, remove it
-            console.log("removed");
             return prev.filter(s => s.serviceId !== rowId);
         } else {  // If service is not selected, add it
-            console.log("Selected service ID:", selectedService.serviceId);
             return [...prev, selectedService];
         }
     });
