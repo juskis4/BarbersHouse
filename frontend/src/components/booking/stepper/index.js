@@ -15,12 +15,12 @@ import Step3 from '../step3';
 
 export default function VerticalLinearStepper() {
   const [activeStep, setActiveStep] = React.useState(0);
-  const numSteps = 2;
+  const numSteps = 4;
 
   const [selectedBarberId, setSelectedBarberId] = React.useState('');
   const [selectedServices, setSelectedServices] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
-
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
   const [barbers, setBarbers] = useState([]);
   const [services, setServices] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -76,6 +76,9 @@ export default function VerticalLinearStepper() {
           color: "#bc6c25",
           fontSize: "10px",
           fontWeight: 'bold',
+          "&:hover": {
+            borderColor: "#bc6c25"
+          }
         }
       }}>
        {/* Step 1 */}   
@@ -150,7 +153,9 @@ export default function VerticalLinearStepper() {
           <StepContent>
             <Step3 
               selectedBarberId={selectedBarberId}
-              selectedServices={selectedServices} 
+              selectedServices={selectedServices}
+              selectedTimeSlot={selectedTimeSlot}
+              onSlotSelected={setSelectedTimeSlot}  
             /> 
             <Box sx={{ mb: 2 }}>
               <div>
@@ -161,7 +166,7 @@ export default function VerticalLinearStepper() {
                 >
                   {activeStep === 2 ? 'Finish' : 'Continue'} 
                 </Button>
-                <Button
+                <Button   
                   disabled={activeStep === 0}
                   onClick={handleBack} 
                   sx={{ mt: 1, mr: 1 }}

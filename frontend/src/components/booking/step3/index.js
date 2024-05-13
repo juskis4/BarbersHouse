@@ -9,7 +9,7 @@ import PropTypes from "prop-types";
 import CalendarCarousel from "./calendarCarousel";
 
 
-const Step3 = ({ selectedServices, selectedBarberId }) => {
+const Step3 = ({ selectedServices, selectedBarberId, selectedTimeSlot, onSlotSelected }) => {
   const connectionRef = useRef(null);
   const [connectionEstablished, setConnectionEstablished] = useState(false);
   const [timeSlots, setTimeSlots] = useState([]);
@@ -74,6 +74,13 @@ const Step3 = ({ selectedServices, selectedBarberId }) => {
     handleGetTimeSlots();
   };
 
+
+  // Time slot selection
+  const handleTimeSlotClick = (slot) => {
+    selectedTimeSlot = slot;
+    onSlotSelected(slot); 
+  };
+
   return (
     <div>
       {selectedServices.length === 0 ? (
@@ -114,7 +121,18 @@ const Step3 = ({ selectedServices, selectedBarberId }) => {
             }}
           >
             {timeSlots.map((slot) => (
-              <Button key={slot.startTime} className="time-slot-button">
+              <Button 
+                sx={{
+                  ".MuiButton-root&:focus":{
+                    color: "white",
+                    backgroundColor: "#bc6c25", 
+                  }
+                }}
+                key={slot.startTime} 
+                className="time-slot-button"
+                onClick={() => handleTimeSlotClick(slot)}
+                variant={selectedTimeSlot === slot ? "contained" : "outlined"} 
+              >
                 {dayjs(slot.startTime).format("HH:mm")}
               </Button>
             ))}
