@@ -34,9 +34,3 @@ jobs:
           channelId: live
           projectId: barbershouseproject-419414
           entryPoint:  "./frontend"
-
-      - name: Check outputs
-        run: |
-          echo urls ${{steps.firebase_hosting.outputs.url}}
-          echo details_url ${{steps.firebase_hosting.outputs.details_url}}
-
