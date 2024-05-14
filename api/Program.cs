@@ -38,6 +38,7 @@ builder.Services.AddCors(options =>
             var allowedOrigins = new List<string> { "http://localhost:3000" }; 
 
             var firebaseUrl = Environment.GetEnvironmentVariable("FIREBASE_URL");
+            Console.WriteLine(firebaseUrl);
             if (!string.IsNullOrEmpty(firebaseUrl))
             {
                 allowedOrigins.Add(firebaseUrl);
