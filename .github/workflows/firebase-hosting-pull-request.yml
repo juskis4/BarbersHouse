@@ -41,3 +41,9 @@ jobs:
           echo urls ${{steps.firebase_hosting_preview.outputs.url}}
           echo expire_time ${{steps.firebase_hosting_preview.outputs.expire_time}}
           echo details_url ${{steps.firebase_hosting_preview.outputs.details_url}}
+
+      - name: Set Preview URL as Secret
+        run: |
+          gh secret set FIREBASE_PREVIEW_URL --body "${{ steps.deploy.outputs.details_url }}" --repo "$GITHUB_REPOSITORY"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
