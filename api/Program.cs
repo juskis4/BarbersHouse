@@ -22,7 +22,7 @@ builder.Services.AddScoped<IBookingsRepository, BookingsRepository>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 
 
-// SignalR
+//  SignalR
 builder.Services.AddSignalR().AddJsonProtocol(); 
 builder.Services.AddResponseCompression(opts =>
 {
