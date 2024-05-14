@@ -37,10 +37,10 @@ builder.Services.AddCors(options =>
         {
             var allowedOrigins = new List<string> { "http://localhost:3000" }; 
 
-            var firebasePreviewBaseUrl = Environment.GetEnvironmentVariable("FIREBASE_PREVIEW_BASE_URL");
-            if (!string.IsNullOrEmpty(firebasePreviewBaseUrl))
+            var firebaseUrl = Environment.GetEnvironmentVariable("FIREBASE_URL");
+            if (!string.IsNullOrEmpty(firebaseUrl))
             {
-                allowedOrigins.Add(firebasePreviewBaseUrl);
+                allowedOrigins.Add(firebaseUrl);
             }
 
             builder.WithOrigins(allowedOrigins.ToArray()) 
