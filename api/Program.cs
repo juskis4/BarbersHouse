@@ -31,10 +31,10 @@ builder.Services.AddResponseCompression(opts =>
 });
 
 // Getting the client url
-var firebaseUrl = Environment.GetEnvironmentVariable("FIREBASE_URL"); 
+var firebaseUrl = Environment.GetEnvironmentVariable("FirebaseUrl"); 
 if (string.IsNullOrEmpty(firebaseUrl))
 {
-    throw new InvalidOperationException("The 'FIREBASE_URL' environment variable is not set.");
+    throw new InvalidOperationException("The 'FirebaseUrl' environment variable is not set.");
 }
 builder.Services.AddCors(options =>
 {
