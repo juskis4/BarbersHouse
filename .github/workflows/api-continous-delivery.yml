@@ -30,3 +30,4 @@ jobs:
           region: europe-west1
           env_vars: |
             DefaultConnection=${{ secrets.CONNECTION_STRING }}
+            FirebaseUrl=${{ secrets.FIREBASE_URL }}
