@@ -24,6 +24,7 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_BARBERSHOUSEPROJECT_419414 }}
           channelId: live
           projectId: barbershouseproject-419414
+          entryPoint:  frontend
 
       - name: Set Preview URL as Secret
         run: |
