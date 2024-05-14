@@ -36,11 +36,16 @@ jobs:
       - name: Print Preview URL
         run: | 
           echo "Preview URL: ${{ steps.deploy.outputs.details_url }}"
-        
+
+      - name: Set step summary
+        run: echo '🚀[Preview URL](${{ steps.deploy.outputs.details_url }})' >> $GITHUB_STEP_SUMMARY
+         
       - name: Set Preview URL as Secret
         run: |
           gh secret set FIREBASE_PREVIEW_URL --body "${{ steps.deploy.outputs.details_url }}" --repo "$GITHUB_REPOSITORY"
-
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
       - name: Print Preview URL
         run: | 
           echo "Preview URL: ${{ secrets.FIREBASE_PREVIEW_URL }}"
