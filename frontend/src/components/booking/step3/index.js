@@ -19,7 +19,7 @@ const Step3 = ({ selectedServices, selectedBarberId, selectedTimeSlot, onSlotSel
   // SignalR connection
   const establishConnection = useCallback(async () => { 
     const connection = new signalR.HubConnectionBuilder()
-      .withUrl("http://localhost:5037/bookinghub")
+      .withUrl("https://api-zdmjnhdz7q-ew.a.run.app/bookinghub")
       .build();
 
     connectionRef.current = connection; 

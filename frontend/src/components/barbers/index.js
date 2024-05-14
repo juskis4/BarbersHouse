@@ -18,7 +18,7 @@ function Barbers() {
   const getBarbersWithServices = async () => {
     try {
       setIsLoading(true);
-      const res = await axios.get("http://localhost:5037/Barbers/Services");
+      const res = await axios.get("https://api-zdmjnhdz7q-ew.a.run.app/Barbers/Services");
       setBarbers(res.data);
     } catch (err) {
       console.log(err);
