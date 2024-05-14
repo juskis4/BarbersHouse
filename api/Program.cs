@@ -53,7 +53,7 @@ builder.Services.AddDbContext<DbDataContext>(options =>
     
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Barber House API", Version = "v1" });
     c.MapType<TimeSpan>(() => new OpenApiSchema
 	{
 		Type = "string",
