@@ -5,7 +5,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 function Step1({ barbers, isLoading, selectedBarberId, onBarberChange }) {
   const handleChange = (event) => {
-    onBarberChange(event.target.value);
+    const newBarberId = event.target.value;
+    onBarberChange(newBarberId);
   };
 
   return (

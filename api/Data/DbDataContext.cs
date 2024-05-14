@@ -8,6 +8,9 @@ public class DbDataContext : DbContext
     public DbSet<Admins> Admins { get; set; }
     public DbSet<Service> Services { get; set; }
     public DbSet<Barber> Barbers { get; set; }
+    public DbSet<Customer> Customers { get; set; }
+    public DbSet<Booking> Bookings { get; set; } 
+    public DbSet<BarberWorkHours> BarberWorkHours { get; set; }
 
     public DbDataContext()
     {

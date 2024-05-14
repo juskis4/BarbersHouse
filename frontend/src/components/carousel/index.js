@@ -56,7 +56,7 @@ function CarouselBarber() {
           left: '50%', 
           transform: 'translate(-50%, -50%)',
           zIndex: 10, 
-          fontSize: '20px' 
+          fontSize: '16px' 
         }}
        onClick={handleClickOpen}
       >
@@ -69,7 +69,7 @@ function CarouselBarber() {
           <Booking />  
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleClose}>Close</Button>
         </DialogActions>
       </Dialog>
     </div>

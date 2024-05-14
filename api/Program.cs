@@ -1,12 +1,11 @@
-using Microsoft.AspNetCore.Builder;
 using barbershouse.api.Services;
 using barbershouse.api.Data;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using barbershouse.api.Repositories;
-using barbershouse.api.Profiles;
 using Microsoft.AspNetCore.ResponseCompression;
 using barbershouse.api.Hubs;
+using Microsoft.OpenApi.Any;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,14 +14,16 @@ builder.Services.AddControllers();
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
-
 builder.Services.AddScoped<IBarbersRepository, BarbersRepository>(); 
 builder.Services.AddScoped<IBarbersService, BarbersService>();
 builder.Services.AddScoped<IServicesRepository, ServicesRepository>(); 
 builder.Services.AddScoped<IServicesService, ServicesService>();
+builder.Services.AddScoped<IBookingsRepository, BookingsRepository>(); 
+builder.Services.AddScoped<IBookingService, BookingService>();
+
 
 // SignalR
-builder.Services.AddSignalR();
+builder.Services.AddSignalR().AddJsonProtocol(); 
 builder.Services.AddResponseCompression(opts =>
 {
    opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
@@ -39,14 +40,30 @@ builder.Services.AddCors(options =>
                     );
     });
 
-Console.WriteLine("Connection String: " + builder.Configuration.GetConnectionString("DefaultConnection"));
-builder.Services.AddDbContext<DbDataContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Console.WriteLine("Connection String: " + builder.Configuration.GetConnectionString("DefaultConnection"));
+// builder.Services.AddDbContext<DbDataContext>(options =>
+//     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Database Configuration (using environment variable)
+var connectionString = Environment.GetEnvironmentVariable("DefaultConnection"); 
 
+if (string.IsNullOrEmpty(connectionString))
+{
+    throw new InvalidOperationException("The 'DefaultConnection' environment variable is not set.");
+}
+
+builder.Services.AddDbContext<DbDataContext>(options =>
+    options.UseNpgsql(connectionString));
+    
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+    c.MapType<TimeSpan>(() => new OpenApiSchema
+	{
+		Type = "string",
+		Example = new OpenApiString("00:00:00")
+	});
 });
+
 // builder.Services.AddSwaggerGen(c => {
 //     c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
 //     c.IgnoreObsoleteActions();
