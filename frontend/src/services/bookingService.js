@@ -8,14 +8,21 @@ const apiUrl = "https://api-zdmjnhdz7q-ew.a.run.app";
 
 export async function getBarbersWithServices() {
   try {
-    const res = await axios.get(`${apiUrl}/Barbers/Services`);
-    return res.data;
-  } catch (err) {
-    console.error("Error fetching barbers and services:", err);
-    throw err; 
+      const res = await axios.get(`${apiUrl}/Barbers/Services`);
+      return res.data;
+  } 
+  catch (err) {
+      console.error("Error fetching barbers and services:", err);
+      if (err.response) {
+          throw new Error(
+              `Server responded with ${err.response.status}: ${
+                  err.response.data.message || err.response.data }`
+          );
+      } else {
+          throw new Error("Network Error: Unable to reach the API server.");
+      }
   }
 }
-
 export async function createBooking(bookingData) {
   try {
     const bookingDataWithUtcTime = {
