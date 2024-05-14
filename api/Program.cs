@@ -30,12 +30,18 @@ builder.Services.AddResponseCompression(opts =>
          new[] { "application/octet-stream" });
 });
 
+// Getting the client url
+var firebaseUrl = Environment.GetEnvironmentVariable("FIREBASE_URL"); 
+if (string.IsNullOrEmpty(firebaseUrl))
+{
+    throw new InvalidOperationException("The 'FIREBASE_URL' environment variable is not set.");
+}
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowMyOrigin",
         builder =>
         {
-            builder.WithOrigins("http://localhost:3000", "https://barbershouseproject-419414.web.app") 
+            builder.WithOrigins("http://localhost:3000", firebaseUrl) 
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials();
