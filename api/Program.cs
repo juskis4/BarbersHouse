@@ -40,9 +40,6 @@ builder.Services.AddCors(options =>
                     );
     });
 
-// Console.WriteLine("Connection String: " + builder.Configuration.GetConnectionString("DefaultConnection"));
-// builder.Services.AddDbContext<DbDataContext>(options =>
-//     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 // Database Configuration (using environment variable)
 var connectionString = Environment.GetEnvironmentVariable("DefaultConnection"); 
 
@@ -82,7 +79,7 @@ if (app.Environment.IsDevelopment())
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Barber House API");
 });
 
 app.UseHttpsRedirection();
