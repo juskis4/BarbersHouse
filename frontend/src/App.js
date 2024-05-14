@@ -35,7 +35,7 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ width: "100vw", display: "flex", flexDirection: "column" }}>
-        <NavBar />
+        <NavBar /> 
         <CarouselBarber />  
         <Barbers />        
       </Box>
