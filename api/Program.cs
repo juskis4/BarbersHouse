@@ -31,14 +31,24 @@ builder.Services.AddResponseCompression(opts =>
 });
 
 builder.Services.AddCors(options =>
-    {
-        options.AddPolicy("AllowMyOrigin",
-            builder => builder.WithOrigins("http://localhost:3000")
-                        .AllowAnyMethod() 
-                        .AllowAnyHeader()
-                        .AllowCredentials()
-                    );
-    });
+{
+    options.AddPolicy("AllowMyOrigin",
+        builder =>
+        {
+            var allowedOrigins = new List<string> { "http://localhost:3000" }; 
+
+            var firebasePreviewBaseUrl = Environment.GetEnvironmentVariable("FIREBASE_PREVIEW_BASE_URL");
+            if (!string.IsNullOrEmpty(firebasePreviewBaseUrl))
+            {
+                allowedOrigins.Add(firebasePreviewBaseUrl);
+            }
+
+            builder.WithOrigins(allowedOrigins.ToArray()) 
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials();
+        });
+});
 
 // Database Configuration (using environment variable)
 var connectionString = Environment.GetEnvironmentVariable("DefaultConnection"); 
