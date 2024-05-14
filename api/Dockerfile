@@ -1,19 +1,26 @@
-# Build Stage
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /source
 
-# Copy everything and build the project
-COPY . ./
-RUN dotnet restore "api.csproj" --disable-parallel
-# All of the artifacts will end up in the /app
-RUN dotnet publish "api.csproj" -c Release -o /app --no-restore
-
-# Serve Stage
-FROM mcr.microsoft.com/dotnet/aspnet:8.0	
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
-COPY --from=build /app ./
+EXPOSE 80
+EXPOSE 443
+    
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+COPY ["api.csproj", "./"]
+RUN dotnet restore "./api.csproj"
+COPY . .
+WORKDIR "/src/."
+RUN dotnet build "api.csproj" -c Release -o /app/build
+RUN dotnet clean
 
-# The application will use the port defined in the PORT environment variable
-EXPOSE $PORT
+FROM build AS publish
+RUN dotnet publish "api.csproj" -c Release -o /app/publish
+    
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 CMD curl -f http://localhost/health || exit 1
 
 ENTRYPOINT ["dotnet", "api.dll"]

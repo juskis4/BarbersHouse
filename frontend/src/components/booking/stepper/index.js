@@ -7,50 +7,42 @@ import StepContent from '@mui/material/StepContent';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import axios from 'axios';
 import { useState, useEffect } from 'react'; 
+import { getBarbersWithServices } from '../../../services/bookingService';
 import Step1 from '../step1';
 import Step2 from '../step2';
 import Step3 from '../step3';
+import Step4 from '../step4';
 
 export default function VerticalLinearStepper() {
   const [activeStep, setActiveStep] = React.useState(0);
-  const numSteps = 2;
+  const numSteps = 4;
 
-  //const [selectedRows, setSelectedRows] = useState([]);
   const [selectedBarberId, setSelectedBarberId] = React.useState('');
   const [selectedServices, setSelectedServices] = useState([]);
-
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
   const [barbers, setBarbers] = useState([]);
   const [services, setServices] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const getBarbersWithServices = async () => {
-    try {
-      setIsLoading(true);
-      const res = await axios.get("http://localhost:5037/Barbers/Services");
-      setBarbers(res.data);
-      setServices(res.data.flatMap(barber => barber.services));  
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
-    getBarbersWithServices(); 
+    const fetchBarbersAndServices = async () => {
+      setIsLoading(true);
+      try {
+        const data = await getBarbersWithServices(); 
+        setBarbers(data);
+        setServices(data.flatMap(barber => barber.services));
+      } catch (err) {
+        console.error("Error fetching data:", err); 
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchBarbersAndServices();
   }, []);
 
-  const handleSelectedServiceChange = (serviceId) => {
-    setSelectedServices(prev => prev.includes(serviceId) ? prev.filter(id => id !== serviceId) : [...prev, serviceId]);
-  };
-
   const handleNext = () => {
-    if (activeStep === 1) { // from Step2 to Step3
-      const selectedServicesFiltered = services.filter(service => selectedServices.includes(service.serviceId));
-      setSelectedServices(selectedServicesFiltered);
-    }
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
@@ -58,12 +50,8 @@ export default function VerticalLinearStepper() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleReset = () => {
-    setActiveStep(0);
-  };
-
   return (
-    <Box sx={{ maxWidth: 400 }}>
+    <Box sx={{ minWidth: 400 }}>
       <Stepper activeStep={activeStep} orientation="vertical" sx={{
         ".MuiStepLabel-iconContainer": {
           ".Mui-active": {
@@ -83,6 +71,9 @@ export default function VerticalLinearStepper() {
           color: "#bc6c25",
           fontSize: "10px",
           fontWeight: 'bold',
+          "&:hover": {
+            borderColor: "#bc6c25"
+          }
         }
       }}>
        {/* Step 1 */}   
@@ -101,8 +92,9 @@ export default function VerticalLinearStepper() {
                   variant="contained"
                   onClick={() => handleNext()} 
                   sx={{ mt: 1, mr: 1 }}
+                  disabled={selectedBarberId === ''}
                 >
-                  {activeStep === 1 ? 'Finish' : 'Continue'} 
+                  Continue
                 </Button>
                 <Button
                   disabled={activeStep === 0}
@@ -117,49 +109,60 @@ export default function VerticalLinearStepper() {
         </Step>
 
         {/* Step 2 */}
-        <Step key={'Select a Service'}>
-          <StepLabel>Select a Service</StepLabel>
-          <StepContent>
-            <Step2 
-              services={services} 
-              selectedBarberId={selectedBarberId} 
-              onSelectedServiceChange={handleSelectedServiceChange}
-            /> 
-            <Box sx={{ mb: 2 }}>
-              <div>
-                <Button
-                  variant="contained"
-                  onClick={() => handleNext()} 
-                  sx={{ mt: 1, mr: 1 }}
-                >
-                  {activeStep === 1 ? 'Finish' : 'Continue'} 
-                </Button>
-                <Button
-                  disabled={activeStep === 0}
-                  onClick={() => handleBack()} 
-                  sx={{ mt: 1, mr: 1 }}
-                >
-                  Back
-                </Button>
-              </div>
-            </Box>
-          </StepContent>
-        </Step>
+          <Step key={'Select a Service'}>
+            <StepLabel>Select a Service</StepLabel>
+            <StepContent>
+              <Step2 
+                services={services} 
+                selectedBarberId={selectedBarberId}
+                selectedServices={selectedServices} 
+                setSelectedServices={setSelectedServices}
+                selectedRows={selectedRows} 
+                setSelectedRows={setSelectedRows} 
+              /> 
+              <Box sx={{ mb: 2 }}>
+                <div>
+                  <Button
+                    variant="contained"
+                    onClick={() => handleNext()} 
+                    sx={{ mt: 1, mr: 1 }}
+                    disabled={selectedServices.length === 0}
+                    >
+                    Continue
+                  </Button>
+                  <Button
+                    disabled={activeStep === 0}
+                    onClick={() => handleBack()} 
+                    sx={{ mt: 1, mr: 1 }}
+                  >
+                    Back
+                  </Button>
+                </div>
+              </Box>
+            </StepContent>
+          </Step>
+        
         {/* Step 3 */}
-        <Step key={'Review Selection'}> 
-          <StepLabel>Review Selection</StepLabel>
+        <Step key={'Pick a date and time'}> 
+          <StepLabel>Pick a date and time</StepLabel>
           <StepContent>
-            <Step3 selectedServices={selectedServices} />
+            <Step3 
+              selectedBarberId={selectedBarberId}
+              selectedServices={selectedServices}
+              selectedTimeSlot={selectedTimeSlot}
+              onSlotSelected={setSelectedTimeSlot}  
+            /> 
             <Box sx={{ mb: 2 }}>
               <div>
                 <Button
                   variant="contained"
                   onClick={handleNext}
                   sx={{ mt: 1, mr: 1 }}
+                  disabled={selectedTimeSlot === null} 
                 >
-                  {activeStep === 2 ? 'Finish' : 'Continue'} 
+                  Continue
                 </Button>
-                <Button
+                <Button   
                   disabled={activeStep === 0}
                   onClick={handleBack} 
                   sx={{ mt: 1, mr: 1 }}
@@ -170,13 +173,36 @@ export default function VerticalLinearStepper() {
             </Box>
           </StepContent>
         </Step>
+
+        {/* Step 4 */}
+        <Step key={'Enter Details'}> 
+          <StepLabel>Enter Details</StepLabel>
+          <StepContent>
+            <Step4 
+              selectedBarberId={selectedBarberId}
+              selectedServices={selectedServices}
+              selectedTimeSlot={selectedTimeSlot}  
+              handleNext={handleNext}
+            /> 
+            <Box sx={{ mb: 2 }}>
+              <div>
+                <Button   
+                  disabled={activeStep === 0}
+                  onClick={handleBack} 
+                  sx={{ mt: 1, mr: 1 }}
+                >
+                  Back
+                </Button>
+              </div>
+            </Box>
+          </StepContent>
+        </Step>
+
       </Stepper>
       {activeStep === numSteps && (
         <Paper square elevation={0} sx={{ p: 3 }}>
-          <Typography>All steps completed - you're finished</Typography>
-          <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
-            Book
-          </Button>
+          <Typography>You Booking was successful</Typography>
+          <Typography>See you soon!</Typography>
         </Paper>
       )}
     </Box>
