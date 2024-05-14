@@ -22,7 +22,7 @@ builder.Services.AddScoped<IBookingsRepository, BookingsRepository>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 
 
-//  SignalR
+// SignalR
 builder.Services.AddSignalR().AddJsonProtocol(); 
 builder.Services.AddResponseCompression(opts =>
 {
@@ -35,16 +35,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowMyOrigin",
         builder =>
         {
-            var allowedOrigins = new List<string> { "http://localhost:3000" }; 
-
-            var firebaseUrl = Environment.GetEnvironmentVariable("FIREBASE_URL");
-            Console.WriteLine(firebaseUrl);
-            if (!string.IsNullOrEmpty(firebaseUrl))
-            {
-                allowedOrigins.Add(firebaseUrl);
-            }
-
-            builder.WithOrigins(allowedOrigins.ToArray()) 
+            builder.WithOrigins("http://localhost:3000", "https://barbershouseproject-419414.web.app") 
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials();
