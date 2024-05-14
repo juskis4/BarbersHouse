@@ -1,0 +1,32 @@
+name: API CD Pipeline
+
+on:
+  push:
+    branches: [ "master" ]
+    paths:
+      - 'api/**'
+
+jobs:
+  deploy-cloud-run:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
+      - name: Deploy to Google Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: api
+          source: api/
+          region: europe-west1
+          env_vars: |
+            DefaultConnection=${{ secrets.CONNECTION_STRING }}
