@@ -25,5 +25,15 @@ jobs:
           channelId: live
           projectId: barbershouseproject-419414
 
-      - name: Print Preview URL
-        run: echo "details_url=${{ steps.deploy.outputs.details_url }}" >> $GITHUB_OUTPUT
+      - name: Set Preview URL as Secret
+        run: |
+          gh secret set FIREBASE_PREVIEW_URL --body "${{ steps.deploy.outputs.details_url }}" --repo "$GITHUB_REPOSITORY"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Output Preview URL   
+        id: output_preview_url
+        run: echo "🚀[Preview URL](${{ steps.deploy.outputs.details_url }})" >> $GITHUB_STEP_SUMMARY
+
+      - name: Print Preview URL from Secret  
+        run: echo "Preview URL: ${{ secrets.FIREBASE_PREVIEW_URL }}"
