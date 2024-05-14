@@ -33,6 +33,14 @@ jobs:
           projectId: barbershouseproject-419414
           entryPoint:  frontend
 
+      - name: Print Preview URL
+        run: | 
+          echo "Preview URL: ${{ steps.deploy.outputs.details_url }}"
+        
       - name: Set Preview URL as Secret
         run: |
           gh secret set FIREBASE_PREVIEW_URL --body "${{ steps.deploy.outputs.details_url }}" --repo "$GITHUB_REPOSITORY"
+
+      - name: Print Preview URL
+        run: | 
+          echo "Preview URL: ${{ secrets.FIREBASE_PREVIEW_URL }}"
