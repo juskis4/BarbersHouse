@@ -26,26 +26,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: npm ci && npm run build
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+      - name: Deploy to Firebase Hosting preview channel
+        id: firebase_hosting_preview
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_BARBERSHOUSEPROJECT_419414 }}
+          expires: 3d
           projectId: barbershouseproject-419414
-          entryPoint:  frontend
+          entryPoint:  "./frontend"
 
-      - name: Print Preview URL
-        run: | 
-          echo "Preview URL: ${{ steps.deploy.outputs.details_url }}"
-
-      - name: Set step summary
-        run: echo '🚀[Preview URL](${{ steps.deploy.outputs.details_url }})' >> $GITHUB_STEP_SUMMARY
-         
-      - name: Set Preview URL as Secret
+      - name: Check outputs
         run: |
-          gh secret set FIREBASE_PREVIEW_URL --body "${{ steps.deploy.outputs.details_url }}" --repo "$GITHUB_REPOSITORY"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
-      - name: Print Preview URL
-        run: | 
-          echo "Preview URL: ${{ secrets.FIREBASE_PREVIEW_URL }}"
+          echo urls ${{steps.firebase_hosting_preview.outputs.url}}
+          echo expire_time ${{steps.firebase_hosting_preview.outputs.expire_time}}
+          echo details_url ${{steps.firebase_hosting_preview.outputs.details_url}}
