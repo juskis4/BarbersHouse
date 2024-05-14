@@ -12,7 +12,6 @@ permissions:
   checks: write
   contents: read
   pull-requests: write
-  secrets: write 
 
 jobs:
   build_and_deploy:
@@ -26,24 +25,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: npm ci && npm run build
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+      - name: Deploy to Firebase Hosting
+        id: firebase_hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_BARBERSHOUSEPROJECT_419414 }}
           channelId: live
           projectId: barbershouseproject-419414
-          entryPoint:  frontend
+          entryPoint:  "./frontend"
 
-      - name: Set Preview URL as Secret
+      - name: Check outputs
         run: |
-          gh secret set FIREBASE_PREVIEW_URL --body "${{ steps.deploy.outputs.details_url }}" --repo "$GITHUB_REPOSITORY"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          echo urls ${{steps.firebase_hosting.outputs.url}}
+          echo details_url ${{steps.firebase_hosting.outputs.details_url}}
 
-      - name: Output Preview URL   
-        id: output_preview_url
-        run: echo "🚀[Preview URL](${{ steps.deploy.outputs.details_url }})" >> $GITHUB_STEP_SUMMARY
-
-      - name: Print Preview URL from Secret  
-        run: |
-          echo "Preview URL: ${{ secrets.FIREBASE_PREVIEW_URL }}"
