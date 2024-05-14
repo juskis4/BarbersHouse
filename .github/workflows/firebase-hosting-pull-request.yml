@@ -34,6 +34,5 @@ jobs:
           entryPoint:  frontend
 
       - name: Set Preview URL as Secret
-        if: success() && steps.deploy.outcome == 'success'
         run: |
           gh secret set FIREBASE_PREVIEW_URL --body "${{ steps.deploy.outputs.details_url }}" --repo "$GITHUB_REPOSITORY"
