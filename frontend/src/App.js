@@ -1,13 +1,13 @@
 import "./App.css";
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import PublicPage from '../src/components/public';
-import AdminLogin from '../src/components/admin/login';
+import PublicPage from './components/public';
+import AdminLogin from './components/admin/login';
 import ProtectedRoute from './components/admin/protectedRoute';
 import { AuthProvider } from './context/AuthContext.js';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
-const AdminPage = lazy(() => import('../src/components/admin'));
+const AdminPage = lazy(() => import('./components/admin'));
 
 const App = () => {
   const theme = createTheme({
