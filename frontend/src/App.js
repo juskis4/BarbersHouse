@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { Suspense, lazy } from 'react';
+import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import PublicPage from './components/public';
 import AdminPage from './components/admin';
