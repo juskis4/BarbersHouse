@@ -5,7 +5,7 @@ namespace barbershouse.api.Data;
 
 public class DbDataContext : DbContext
 {
-    public DbSet<Admins> Admins { get; set; }
+    public DbSet<Admin> Admins { get; set; }
     public DbSet<Service> Services { get; set; }
     public DbSet<Barber> Barbers { get; set; }
     public DbSet<Customer> Customers { get; set; }
