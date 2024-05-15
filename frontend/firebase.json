@@ -1,12 +1,6 @@
 {
   "hosting": {
     "public": "build",
-    "rewrites": [
-      {
-        "source": "!/admin/login**",
-        "destination": "/index.html"
-      }
-    ],
     "ignore": [
       "firebase.json",
       "**/.*",
