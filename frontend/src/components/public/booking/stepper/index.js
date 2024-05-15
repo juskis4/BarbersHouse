@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { useState, useEffect } from 'react'; 
-import { getBarbersWithServices } from '../../../services/bookingService';
+import { getBarbersWithServices } from '../../../../services/bookingService';
 import Step1 from '../step1';
 import Step2 from '../step2';
 import Step3 from '../step3';

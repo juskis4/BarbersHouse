@@ -1,10 +1,9 @@
 import React from 'react';
 import "./App.css";
-import NavBar from './components/navbar';
-import Barbers from './components/barbers';
-import CarouselBarber from './components/carousel';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import PublicPage from '../src/components/public';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
+
 
 const App = () => {
   const theme = createTheme({
@@ -34,13 +33,12 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ width: "100vw", display: "flex", flexDirection: "column" }}>
-        <NavBar /> 
-        <CarouselBarber />  
-        <Barbers />        
-      </Box>
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<PublicPage />} />
+            </Routes>
+        </BrowserRouter>
     </ThemeProvider>
-    
   );
 };
 

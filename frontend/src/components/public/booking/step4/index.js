@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TextField, Box, Button } from '@mui/material';
-import { createBooking } from '../../../services/bookingService'
+import { createBooking } from '../../../../services/bookingService'
 
 function Step4({ selectedBarberId, selectedServices, selectedTimeSlot, handleNext }) {
   const [name, setName] = useState('');
