@@ -1,6 +1,6 @@
 import "./App.css";
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import PublicPage from './components/public';
 import AdminPage from './components/admin';
 import AdminLogin from './components/admin/login/index.js';
@@ -39,23 +39,26 @@ const App = () => {
     }
   });
 
+  const router = createBrowserRouter([
+    {
+      path:"/",
+      element:<PublicPage></PublicPage>
+    },
+    {
+      path:"/admin",
+      element:<ProtectedRoute><AdminPage/></ProtectedRoute>
+    },
+    {
+      path:"/admin/login",
+      element:<AdminLogin></AdminLogin>
+    }
+  ])
+
+
   return (
     <ThemeProvider theme={theme}>
       <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<PublicPage />} />
-            <Route path="/admin/login" element={<AdminLogin />} />
-            <Route
-              path="/admin"
-              element={
-                  <ProtectedRoute>
-                    <AdminPage />
-                  </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </BrowserRouter>
+        <RouterProvider router={router}></RouterProvider>
       </AuthProvider>
     </ThemeProvider>
   );
