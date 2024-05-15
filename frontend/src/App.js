@@ -1,6 +1,6 @@
 import "./App.css";
 import React, { Suspense, lazy } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import PublicPage from '../src/components/public';
 import AdminLogin from '../src/components/admin/login';
 import ProtectedRoute from './components/admin/protectedRoute';
@@ -11,6 +11,11 @@ const AdminPage = lazy(() => import('../src/components/admin'));
 
 const App = () => {
   const theme = createTheme({
+    palette: {
+      secondary: {
+        main: '#bc6c25', 
+      },
+    },
     components: {
       MuiButton: {
         styleOverrides: {
@@ -38,7 +43,6 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <AuthProvider>
-        {/* Wrap the entire app with AuthProvider */}
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<PublicPage />} />
