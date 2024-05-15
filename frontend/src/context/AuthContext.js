@@ -12,6 +12,8 @@ function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
 
     const login = (user) => {
+        setIsAuthenticated(true);
+        setUser("Admin");
         // update isAuthenticated, setUser
     };
 
