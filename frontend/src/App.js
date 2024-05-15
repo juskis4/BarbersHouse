@@ -2,12 +2,11 @@ import "./App.css";
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import PublicPage from './components/public';
+import AdminPage from './components/admin';
 import AdminLogin from './components/admin/login';
 import ProtectedRoute from './components/admin/protectedRoute';
 import { AuthProvider } from './context/AuthContext.js';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-
-const AdminPage = lazy(() => import('./components/admin'));
 
 const App = () => {
   const theme = createTheme({
@@ -50,11 +49,9 @@ const App = () => {
             <Route
               path="/admin"
               element={
-                <Suspense fallback={<div>Loading...</div>}>
                   <ProtectedRoute>
                     <AdminPage />
                   </ProtectedRoute>
-                </Suspense>
               }
             />
           </Routes>
