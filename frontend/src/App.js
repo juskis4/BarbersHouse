@@ -2,11 +2,12 @@ import "./App.css";
 import React from 'react';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import PublicPage from './components/public';
-import AdminPage from './components/admin';
 import AdminLogin from './components/admin/login/index.js';
 import ProtectedRoute from './components/admin/protectedRoute';
 import { AuthProvider } from './context/AuthContext.js';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+
+const AdminPage = lazy(() => import('./components/admin'));
 
 const App = () => {
   const theme = createTheme({
