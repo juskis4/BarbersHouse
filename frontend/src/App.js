@@ -48,7 +48,7 @@ const App = () => {
     {
       path:"/admin",
       element:(
-        <Suspense fallback={<div>Loading...</div>}> {/* Wrap in Suspense */}
+        <Suspense fallback={<div>Loading...</div>}> 
           <ProtectedRoute>
             <AdminPage /> 
           </ProtectedRoute>
