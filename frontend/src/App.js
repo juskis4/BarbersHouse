@@ -1,13 +1,13 @@
 import "./App.css";
 import React, { Suspense, lazy } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import PublicPage from '../src/components/public';
-import AdminLogin from '../src/components/admin/login';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import PublicPage from './components/public';
+import AdminLogin from './components/admin/login/index.js';
 import ProtectedRoute from './components/admin/protectedRoute';
 import { AuthProvider } from './context/AuthContext.js';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
-const AdminPage = lazy(() => import('../src/components/admin'));
+const AdminPage = lazy(() => import('./components/admin'));
 
 const App = () => {
   const theme = createTheme({
@@ -40,25 +40,32 @@ const App = () => {
     }
   });
 
+  const router = createBrowserRouter([
+    {
+      path:"/",
+      element:<PublicPage></PublicPage>
+    },
+    {
+      path:"/admin",
+      element:(
+        <Suspense fallback={<div>Loading...</div>}> 
+          <ProtectedRoute>
+            <AdminPage /> 
+          </ProtectedRoute>
+        </Suspense>
+      )
+    },
+    {
+      path:"/admin/login",
+      element:<AdminLogin></AdminLogin>
+    }
+  ])
+
+
   return (
     <ThemeProvider theme={theme}>
       <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<PublicPage />} />
-            <Route path="/admin/login" element={<AdminLogin />} />
-            <Route
-              path="/admin"
-              element={
-                <Suspense fallback={<div>Loading...</div>}>
-                  <ProtectedRoute>
-                    <AdminPage />
-                  </ProtectedRoute>
-                </Suspense>
-              }
-            />
-          </Routes>
-        </BrowserRouter>
+        <RouterProvider router={router}></RouterProvider>
       </AuthProvider>
     </ThemeProvider>
   );
