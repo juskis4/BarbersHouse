@@ -31,3 +31,4 @@ jobs:
           env_vars: |
             DefaultConnection=${{ secrets.CONNECTION_STRING }}
             FirebaseUrl=${{ secrets.FIREBASE_URL }}
+            jwt=${{ secrets.JWT_SECRET }}
