@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace barbershouse.api.Models;
 
 [Table("admins", Schema = "public")]
-public class Admins
+public class Admin
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
