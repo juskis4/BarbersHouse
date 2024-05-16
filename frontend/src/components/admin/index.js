@@ -1,10 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext.js";
+import { ColorModeContext, useMode } from "../../theme.js";
 
 import * as React from "react";
 import { useEffect, useContext } from "react";
 import { ListItem, ListItemIcon, ListItemText } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { styled, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiDrawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
@@ -68,6 +69,8 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 function AdminPage() {
+  const [theme, colorMode] = useMode();
+
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
@@ -88,123 +91,131 @@ function AdminPage() {
   };
 
   return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      <AppBar position="absolute" open={open}>
-        <Toolbar
-          sx={{
-            pr: "24px",
-          }}
-        >
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            onClick={toggleDrawer}
-            sx={{
-              marginRight: "36px",
-              ...(open && { display: "none" }),
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            component="h1"
-            variant="h6"
-            color="inherit"
-            noWrap
-            sx={{ flexGrow: 1 }}
-          >
-            Dashboard
-          </Typography>
-          <IconButton color="inherit" onClick={handleLogout}>
-            <Badge badgeContent={0} color="secondary">
-              Logout
-            </Badge>
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-      <Drawer variant="permanent" open={open}>
-        <Toolbar
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "flex-end",
-            px: [1],
-          }}
-        >
-          <IconButton onClick={toggleDrawer}>
-            <ChevronLeftIcon />
-          </IconButton>
-        </Toolbar>
-        <Divider />
-        <List component="nav">
-          <List component="nav">
-            <ListItem button>
-              <ListItemIcon>A</ListItemIcon>
-              <ListItemText primary="First" />
-            </ListItem>
-            <Divider sx={{ my: 1 }} />
-            <ListItem button>
-              <ListItemIcon>B</ListItemIcon>
-              <ListItemText primary="Second" />
-            </ListItem>
-            <Divider sx={{ my: 1 }} />
-            <ListItem button>
-              <ListItemIcon>C</ListItemIcon>
-              <ListItemText primary="Third" />
-            </ListItem>
-          </List>
-        </List>
-      </Drawer>
-      <Box
-        component="main"
-        sx={{
-          backgroundColor: (theme) =>
-            theme.palette.mode === "light"
-              ? theme.palette.grey[100]
-              : theme.palette.grey[900],
-          flexGrow: 1,
-          height: "100vh",
-          overflow: "auto",
-        }}
-      >
-        <Toolbar />
-        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={8} lg={9}>
-              <Paper
+    isAuthenticated && (
+      <ColorModeContext.Provider value={colorMode}>
+        <ThemeProvider theme={theme}>
+          <Box sx={{ display: "flex" }}>
+            <CssBaseline />
+            <AppBar position="absolute" open={open}>
+              <Toolbar
                 sx={{
-                  p: 2,
-                  display: "flex",
-                  flexDirection: "column",
-                  height: 240,
+                  pr: "24px",
                 }}
               >
-                {/* 3/4 */}
-              </Paper>
-            </Grid>
-            <Grid item xs={12} md={4} lg={3}>
-              <Paper
+                <IconButton
+                  edge="start"
+                  color="inherit"
+                  aria-label="open drawer"
+                  onClick={toggleDrawer}
+                  sx={{
+                    marginRight: "36px",
+                    ...(open && { display: "none" }),
+                  }}
+                >
+                  <MenuIcon />
+                </IconButton>
+                <Typography
+                  component="h1"
+                  variant="h6"
+                  color="inherit"
+                  noWrap
+                  sx={{ flexGrow: 1 }}
+                >
+                  Dashboard
+                </Typography>
+                <IconButton color="inherit" onClick={handleLogout}>
+                  <Badge badgeContent={0} color="secondary">
+                    Logout
+                  </Badge>
+                </IconButton>
+              </Toolbar>
+            </AppBar>
+            <Drawer variant="permanent" open={open}>
+              <Toolbar
                 sx={{
-                  p: 2,
                   display: "flex",
-                  flexDirection: "column",
-                  height: 240,
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                  px: [1],
                 }}
               >
-                {/* 1/4 */}
-              </Paper>
-            </Grid>
-            <Grid item xs={12}>
-              <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-                {/* full row*/}
-              </Paper>
-            </Grid>
-          </Grid>
-        </Container>
-      </Box>
-    </Box>
+                <IconButton onClick={toggleDrawer}>
+                  <ChevronLeftIcon />
+                </IconButton>
+              </Toolbar>
+              <Divider />
+              <List component="nav">
+                <List component="nav">
+                  <ListItem button>
+                    <ListItemIcon>A</ListItemIcon>
+                    <ListItemText primary="First" />
+                  </ListItem>
+                  <Divider sx={{ my: 1 }} />
+                  <ListItem button>
+                    <ListItemIcon>B</ListItemIcon>
+                    <ListItemText primary="Second" />
+                  </ListItem>
+                  <Divider sx={{ my: 1 }} />
+                  <ListItem button>
+                    <ListItemIcon>C</ListItemIcon>
+                    <ListItemText primary="Third" />
+                  </ListItem>
+                </List>
+              </List>
+            </Drawer>
+            <Box
+              component="main"
+              sx={{
+                backgroundColor: (theme) =>
+                  theme.palette.mode === "light"
+                    ? theme.palette.grey[100]
+                    : theme.palette.grey[900],
+                flexGrow: 1,
+                height: "100vh",
+                overflow: "auto",
+              }}
+            >
+              <Toolbar />
+              <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} md={8} lg={9}>
+                    <Paper
+                      sx={{
+                        p: 2,
+                        display: "flex",
+                        flexDirection: "column",
+                        height: 240,
+                      }}
+                    >
+                      {/* 3/4 */}
+                    </Paper>
+                  </Grid>
+                  <Grid item xs={12} md={4} lg={3}>
+                    <Paper
+                      sx={{
+                        p: 2,
+                        display: "flex",
+                        flexDirection: "column",
+                        height: 240,
+                      }}
+                    >
+                      {/* 1/4 */}
+                    </Paper>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Paper
+                      sx={{ p: 2, display: "flex", flexDirection: "column" }}
+                    >
+                      {/* full row*/}
+                    </Paper>
+                  </Grid>
+                </Grid>
+              </Container>
+            </Box>
+          </Box>
+        </ThemeProvider>
+      </ColorModeContext.Provider>
+    )
   );
 }
 
