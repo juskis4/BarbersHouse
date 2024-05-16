@@ -36,7 +36,11 @@ public class AdminAuthService(IConfiguration configuration, IAdminRepository adm
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Subject = new ClaimsIdentity([new Claim("id", admin.AdminID.ToString())]),
+            Subject = new ClaimsIdentity(
+            [
+                new Claim("id", admin.AdminID.ToString()),
+                new Claim("isAdmin", "true")
+            ]),
             Expires = DateTime.UtcNow.AddDays(3),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };

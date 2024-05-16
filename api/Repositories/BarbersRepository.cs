@@ -29,6 +29,12 @@ public class BarbersRepository(DbDataContext context) : IBarbersRepository
         await SaveChangesAsync();
     }
 
+    public async Task<IEnumerable<Barber>> GetAllBarbersAsync()
+    {
+        return await _context.Barbers
+                             .ToListAsync();
+    }
+
     public async Task<IEnumerable<Barber>> GetAllBarbersWithServicesAsync()
     {
         return await _context.Barbers
@@ -57,6 +63,18 @@ public class BarbersRepository(DbDataContext context) : IBarbersRepository
         return await _context.BarberWorkHours
                              .Where(wh => wh.BarberId == barberId)
                              .ToListAsync();
+    }
+
+    public async Task DeleteWorkHoursAsync(IEnumerable<BarberWorkHours> workHours)
+    {
+        _context.BarberWorkHours.RemoveRange(workHours);
+        await SaveChangesAsync();
+    }
+
+    public async Task DeleteBarberAsync(Barber barber)
+    {
+        _context.Barbers.Remove(barber);
+        await _context.SaveChangesAsync();
     }
 
     public async Task SaveChangesAsync()

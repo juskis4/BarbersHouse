@@ -10,9 +10,10 @@ public class BarbersService(IBarbersRepository barbersRepository, IMapper mapper
     private readonly IBarbersRepository _barbersRepository = barbersRepository;
     private readonly IMapper _mapper = mapper;
 
-    public async Task<IEnumerable<Barber>> GetBarbersAsync()
+    public async Task<IEnumerable<BarberResultViewModel>> GetAllBarbersAsync()
     {
-        return await _barbersRepository.GetAllBarbersWithServicesAsync();
+        var barbers = await _barbersRepository.GetAllBarbersAsync();
+        return _mapper.Map<IEnumerable<BarberResultViewModel>>(barbers);
     }
 
     public async Task<IEnumerable<BarberViewModel>> GetAllBarbersWithServicesAsync()
@@ -23,7 +24,7 @@ public class BarbersService(IBarbersRepository barbersRepository, IMapper mapper
 
     public async Task AddBarberWorkHoursAsync(int barberId, AddBarberWorkHoursViewModel workHours)
     {
-        var barberWorkHours  = _mapper.Map<BarberWorkHours>(workHours);
+        var barberWorkHours = _mapper.Map<BarberWorkHours>(workHours);
         barberWorkHours.BarberId = barberId;
 
         await _barbersRepository.AddWorkHoursToBarberAsync(barberWorkHours);
@@ -31,15 +32,30 @@ public class BarbersService(IBarbersRepository barbersRepository, IMapper mapper
 
     public async Task<IEnumerable<BarberWorkHours>> GetWorkHoursByBarberIdAsync(int barberId)
     {
-        var barberWorkHours = await _barbersRepository.GetWorkHoursByBarberIdAsync(barberId); 
-        
-        return barberWorkHours; 
+        var barberWorkHours = await _barbersRepository.GetWorkHoursByBarberIdAsync(barberId);
+
+        return barberWorkHours;
     }
 
     public async Task<BarberWorkHours> GetWorkHoursByBarberIdAndDayOfWeekAsync(int barberId, DayOfWeek dayOfWeek)
     {
-        var barberWorkHours = await _barbersRepository.GetWorkHoursByBarberIdAndDayOfWeekAsync(barberId, dayOfWeek); 
-        
-        return barberWorkHours; 
+        var barberWorkHours = await _barbersRepository.GetWorkHoursByBarberIdAndDayOfWeekAsync(barberId, dayOfWeek);
+
+        return barberWorkHours;
+    }
+
+    public async Task DeleteBarberAsync(int barberId)
+    {
+        var barber = await _barbersRepository.GetBarberByIdAsync(barberId);
+
+        if (barber == null)
+        {
+            throw new ArgumentException("Barber not found.");
+        }
+
+        var workHours = await _barbersRepository.GetWorkHoursByBarberIdAsync(barberId);
+        await _barbersRepository.DeleteWorkHoursAsync(workHours);
+
+        await _barbersRepository.DeleteBarberAsync(barber);
     }
 }

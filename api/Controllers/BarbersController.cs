@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using barbershouse.api.Services;
-using barbershouse.api.Models;
 using barbershouse.api.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace barbershouse.api.Controllers;
 
@@ -10,11 +10,11 @@ namespace barbershouse.api.Controllers;
 public class BarbersController(IBarbersService barbersService) : ControllerBase
 {
     private readonly IBarbersService _barbersService = barbersService;
-    
+
     [HttpGet(Name = "Barbers")]
-    public async Task<IEnumerable<Barber>> GetBarbersAsync()
+    public async Task<IEnumerable<BarberResultViewModel>> GetBarbersAsync()
     {
-        return await _barbersService.GetBarbersAsync();
+        return await _barbersService.GetAllBarbersAsync();
     }
 
     [HttpGet("Services", Name = "GetBarbersWithServices")]
@@ -30,15 +30,35 @@ public class BarbersController(IBarbersService barbersService) : ControllerBase
         {
             await _barbersService.AddBarberWorkHoursAsync(barberId, workHours);
 
-            return Ok(); 
+            return Ok();
         }
-        catch (ArgumentException ex) 
+        catch (ArgumentException ex)
         {
             return BadRequest(ex.Message);
-        }  
-        catch (Exception ex) 
+        }
+        catch (Exception ex)
         {
-            return StatusCode(500, $"Internal server error. {ex.Message}"); 
+            return StatusCode(500, $"Internal server error. {ex.Message}");
+        }
+    }
+
+    [HttpDelete("{barberId}")]
+    [Authorize(Policy = "IsAdmin")] 
+    public async Task<IActionResult> DeleteBarber(int barberId)
+    {
+        try
+        {
+            await _barbersService.DeleteBarberAsync(barberId);
+
+            return NoContent(); 
+        }
+        catch (ArgumentException ex)
+        {
+            return NotFound(ex.Message); 
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
         }
     }
 }
