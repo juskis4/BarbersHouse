@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using barbershouse.api.Services;
-using barbershouse.api.Models;
 using barbershouse.api.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 
@@ -13,9 +12,9 @@ public class BarbersController(IBarbersService barbersService) : ControllerBase
     private readonly IBarbersService _barbersService = barbersService;
 
     [HttpGet(Name = "Barbers")]
-    public async Task<IEnumerable<Barber>> GetBarbersAsync()
+    public async Task<IEnumerable<BarberResultViewModel>> GetBarbersAsync()
     {
-        return await _barbersService.GetBarbersAsync();
+        return await _barbersService.GetAllBarbersAsync();
     }
 
     [HttpGet("Services", Name = "GetBarbersWithServices")]

@@ -29,6 +29,12 @@ public class BarbersRepository(DbDataContext context) : IBarbersRepository
         await SaveChangesAsync();
     }
 
+    public async Task<IEnumerable<Barber>> GetAllBarbersAsync()
+    {
+        return await _context.Barbers
+                             .ToListAsync();
+    }
+
     public async Task<IEnumerable<Barber>> GetAllBarbersWithServicesAsync()
     {
         return await _context.Barbers

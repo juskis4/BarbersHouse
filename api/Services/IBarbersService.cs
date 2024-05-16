@@ -5,7 +5,7 @@ namespace barbershouse.api.Services;
 
 public interface IBarbersService {
 
-    Task<IEnumerable<Barber>> GetBarbersAsync();
+    Task<IEnumerable<BarberResultViewModel>> GetAllBarbersAsync();
 
     Task<IEnumerable<BarberViewModel>> GetAllBarbersWithServicesAsync();
 

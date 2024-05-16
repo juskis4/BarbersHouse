@@ -11,5 +11,11 @@ public class BarberProfile : Profile
         CreateMap<Barber, BarberViewModel>()
             .ForMember(dest => dest.BarberId, opt => opt.MapFrom(src => src.BarberID))
             .ForMember(dest => dest.Services, opt => opt.MapFrom(src => src.Services));
+
+        CreateMap<Barber, BarberResultViewModel>()
+        .ForMember(dest => dest.BarberId, opt => opt.MapFrom(src => src.BarberID))
+        .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+        .ForMember(dest => dest.Bio, opt => opt.MapFrom(src => src.Bio))
+        .ForMember(dest => dest.PhotoUrl, opt => opt.MapFrom(src => src.PhotoUrl));
     }
 }

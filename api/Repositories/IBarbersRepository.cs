@@ -4,6 +4,7 @@ namespace barbershouse.api.Repositories;
 
 public interface IBarbersRepository
 {
+    Task<IEnumerable<Barber>> GetAllBarbersAsync();
     Task<IEnumerable<Barber>> GetAllBarbersWithServicesAsync();
     Task<Barber?> GetBarberByIdAsync(int barberId);
     Task<IEnumerable<BarberWorkHours>> GetWorkHoursByBarberIdAsync(int barberId);
