@@ -9,6 +9,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import { useMode, ColorModeContext } from "./theme.js";
 
 const AdminPage = lazy(() => import("./components/admin"));
+const Barbers = lazy(() => import("./components/admin/barbers"));
 
 const App = () => {
   const [theme, colorMode] = useMode();
@@ -27,6 +28,18 @@ const App = () => {
           </ProtectedRoute>
         </Suspense>
       ),
+      children: [
+        // Nested routes for admin sections
+        {
+          path: "barbers",
+          element: (
+            <Suspense fallback={<div>Loading...</div>}>
+              <Barbers />
+            </Suspense>
+          ),
+        },
+        // ... add other admin sections (e.g., /admin/appointments) as needed
+      ],
     },
     {
       path: "/admin/login",

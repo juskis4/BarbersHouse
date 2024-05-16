@@ -4,6 +4,7 @@ import { ColorModeContext, useMode } from "../../theme.js";
 
 import * as React from "react";
 import { useEffect, useContext } from "react";
+import { Outlet, Link } from "react-router-dom";
 import { ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import { styled, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -146,9 +147,9 @@ function AdminPage() {
               <Divider />
               <List component="nav">
                 <List component="nav">
-                  <ListItem button>
-                    <ListItemIcon>A</ListItemIcon>
-                    <ListItemText primary="First" />
+                  <ListItem button component={Link} to="/admin/barbers">
+                    <ListItemIcon>B</ListItemIcon>
+                    <ListItemText primary="Barbers" />
                   </ListItem>
                   <Divider sx={{ my: 1 }} />
                   <ListItem button>
@@ -176,6 +177,10 @@ function AdminPage() {
               }}
             >
               <Toolbar />
+              <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+                <Outlet />{" "}
+                {/* Render the content of the nested route (Barbers) */}
+              </Container>
               <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
                 <Grid container spacing={3}>
                   <Grid item xs={12} md={8} lg={9}>
@@ -205,9 +210,7 @@ function AdminPage() {
                   <Grid item xs={12}>
                     <Paper
                       sx={{ p: 2, display: "flex", flexDirection: "column" }}
-                    >
-                      {/* full row*/}
-                    </Paper>
+                    ></Paper>
                   </Grid>
                 </Grid>
               </Container>
