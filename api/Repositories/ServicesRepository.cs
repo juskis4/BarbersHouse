@@ -13,13 +13,19 @@ public class ServicesRepository(DbDataContext context) : IServicesRepository
         return await _context.Services
                  .Where(s => serviceIds.Contains(s.ServiceID))
                  .Select(s => s.Duration)
-                 .ToListAsync(); 
+                 .ToListAsync();
     }
 
     public async Task<Service?> GetServicesByIdAsync(int serviceId)
     {
         return await _context.Services
             .FirstOrDefaultAsync(s => s.ServiceID == serviceId);
+    }
+
+    public async Task DeleteServicesAsync(IEnumerable<Service> services)
+    {
+        _context.Services.RemoveRange(services);
+        await SaveChangesAsync();
     }
 
     public async Task SaveChangesAsync()

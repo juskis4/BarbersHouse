@@ -59,6 +59,18 @@ public class BarbersRepository(DbDataContext context) : IBarbersRepository
                              .ToListAsync();
     }
 
+    public async Task DeleteWorkHoursAsync(IEnumerable<BarberWorkHours> workHours)
+    {
+        _context.BarberWorkHours.RemoveRange(workHours);
+        await SaveChangesAsync();
+    }
+
+    public async Task DeleteBarberAsync(Barber barber)
+    {
+        _context.Barbers.Remove(barber);
+        await _context.SaveChangesAsync();
+    }
+
     public async Task SaveChangesAsync()
     {
         await _context.SaveChangesAsync();

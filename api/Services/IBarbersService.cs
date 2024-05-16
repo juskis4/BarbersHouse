@@ -14,4 +14,6 @@ public interface IBarbersService {
     Task<IEnumerable<BarberWorkHours>> GetWorkHoursByBarberIdAsync(int barberId);  
 
     Task<BarberWorkHours> GetWorkHoursByBarberIdAndDayOfWeekAsync(int barberId, DayOfWeek dayOfWeek);
+
+    Task DeleteBarberAsync(int barberId);
 }

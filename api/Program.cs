@@ -7,7 +7,10 @@ using Microsoft.AspNetCore.ResponseCompression;
 using barbershouse.api.Hubs;
 using Microsoft.OpenApi.Any;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using barbershouse.api.Models;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -61,6 +64,38 @@ builder.Services.AddCors(options =>
         });
 });
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("IsAdmin", policy =>
+    {
+        policy.RequireClaim("isAdmin", "true"); 
+    });
+});
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    var jwtKey = Environment.GetEnvironmentVariable("jwt"); 
+    if (string.IsNullOrEmpty(jwtKey))
+    {
+        throw new InvalidOperationException("The JWT Key environment variable is not set.");
+    }
+    
+    // JWT validation parameters
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtKey)),
+        ValidateIssuer = false,  // Set this to true if you want to validate the issuer of the token
+        ValidateAudience = false, // Set this to true if you want to validate the audience of the token
+        ClockSkew = TimeSpan.Zero // Set this to a reasonable value if you need clock skew tolerance
+    };
+});
+
 // Database Configuration (using environment variable)
 var connectionString = Environment.GetEnvironmentVariable("DefaultConnection");
 
@@ -110,6 +145,8 @@ app.UseResponseCompression();
 app.MapHub<BookingHub>("/bookinghub");
 
 app.UseCors("AllowMyOrigin");
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
