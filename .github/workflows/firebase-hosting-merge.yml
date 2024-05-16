@@ -2,14 +2,17 @@ name: React CD for Prodution
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ["master"]
     paths:
-      - 'frontend/**'
+      - "frontend/**"
 
 permissions:
   checks: write
   contents: read
   pull-requests: write
+
+env:
+  REACT_APP_API_KEY: ${{secrets.REACT_APP_API_KEY}}
 
 jobs:
   build_and_deploy:
@@ -29,4 +32,4 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_BARBERSHOUSEPROJECT_419414 }}
           channelId: live
           projectId: barbershouseproject-419414
-          entryPoint:  "./frontend"
+          entryPoint: "./frontend"

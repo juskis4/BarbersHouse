@@ -1,26 +1,26 @@
-import axios from 'axios';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
+import axios from "axios";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 
 dayjs.extend(utc);
 
-const apiUrl = "https://api-zdmjnhdz7q-ew.a.run.app"; 
+const apiUrl = process.env.REACT_APP_API_KEY;
 
 export async function getBarbersWithServices() {
   try {
-      const res = await axios.get(`${apiUrl}/Barbers/Services`);
-      return res.data;
-  } 
-  catch (err) {
-      console.error("Error fetching barbers and services:", err);
-      if (err.response) {
-          throw new Error(
-              `Server responded with ${err.response.status}: ${
-                  err.response.data.message || err.response.data }`
-          );
-      } else {
-          throw new Error("Network Error: Unable to reach the API server.");
-      }
+    const res = await axios.get(`${apiUrl}/Barbers/Services`);
+    return res.data;
+  } catch (err) {
+    console.error("Error fetching barbers and services:", err);
+    if (err.response) {
+      throw new Error(
+        `Server responded with ${err.response.status}: ${
+          err.response.data.message || err.response.data
+        }`,
+      );
+    } else {
+      throw new Error("Network Error: Unable to reach the API server.");
+    }
   }
 }
 export async function createBooking(bookingData) {
@@ -32,24 +32,23 @@ export async function createBooking(bookingData) {
 
     const response = await axios.post(
       `${apiUrl}/Bookings/${bookingData.BarberId}/bookings`,
-      bookingDataWithUtcTime
+      bookingDataWithUtcTime,
     );
 
     if (response.status === 200) {
-      return response.data; 
+      return response.data;
     } else {
       const errorData = response.data;
       throw new Error(errorData.message || "Error creating booking");
     }
-  } catch (error) {
-    console.error("Error creating booking:", error);
-
-    if (error.response) {
-      throw new Error(`Server responded with ${error.response.status}: ${error.response.data.message || error.response.data}`);
-    } else if (error.request) {
-      throw new Error("No response received from the server");
+  } catch (err) {
+    console.error("Error while creating a booking:", err);
+    if (err.response) {
+      throw new Error(
+        `Server responded with ${err.response.status}: ${err.response.data.message || err.response.data}`,
+      );
     } else {
-      throw new Error("Error setting up the request");
+      throw new Error("Network Error: Unable to reach the API server.");
     }
   }
 }
