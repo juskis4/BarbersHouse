@@ -1,5 +1,3 @@
-import { tokens } from "../theme";
-
 export const mockDataBarbers = [
   {
     barber_id: 1,

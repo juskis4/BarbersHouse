@@ -3,7 +3,6 @@ import { DataGrid } from "@mui/x-data-grid";
 import { mockDataBarbers } from "../../../data/mockData.js";
 
 const Barbers = () => {
-  const theme = useTheme();
   const columns = [
     { field: "barber_id", headerName: "ID" },
     {
