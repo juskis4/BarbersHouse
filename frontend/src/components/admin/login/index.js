@@ -55,7 +55,7 @@ export default function AdminLogin() {
 
       if (response.success) {
         const token = response.data;
-        contextLogin(null);
+        contextLogin(username);
         localStorage.setItem("token", token);
         navigate("/admin");
       } else {

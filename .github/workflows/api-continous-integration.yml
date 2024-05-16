@@ -12,7 +12,7 @@ on:
 
 env:
   DOTNET_VERSION: '8.0.x'
-  API_PROJECT_PATH: 'api/api.csproj' # Adjust this to the path of your .NET API project or solution
+  API_PROJECT_PATH: 'api/api.csproj' 
 
 jobs:
   build:
