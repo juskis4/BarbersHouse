@@ -20,6 +20,9 @@ export const tokens = (mode) => ({
           default: "#1F2A40",
           paper: "#292929",
         },
+        greenAccent: {
+          main: "#148000",
+        },
       }
     : {
         // Light mode colors
@@ -34,8 +37,11 @@ export const tokens = (mode) => ({
           secondary: "#6c757d",
         },
         background: {
-          default: "#f8f9fa",
+          default: "#F8F4E1",
           paper: "#fff",
+        },
+        greenAccent: {
+          main: "#148000",
         },
       }),
 });

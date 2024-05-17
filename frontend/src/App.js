@@ -10,6 +10,9 @@ import { useMode, ColorModeContext } from "./theme.js";
 
 const AdminPage = lazy(() => import("./components/admin"));
 const Barbers = lazy(() => import("./components/admin/barbers"));
+const BarberProfile = lazy(
+  () => import("./components/admin/barbers/barberProfile"),
+);
 
 const App = () => {
   const [theme, colorMode] = useMode();
@@ -38,7 +41,22 @@ const App = () => {
             </Suspense>
           ),
         },
-        // ... add other admin sections (e.g., /admin/appointments) as needed
+        {
+          path: "barbers/:barberId",
+          element: (
+            <Suspense fallback={<div>Loading...</div>}>
+              <BarberProfile />
+            </Suspense>
+          ),
+        },
+        {
+          path: "services/:serviceId",
+          element: (
+            <Suspense fallback={<div>Loading...</div>}>
+              <BarberProfile />
+            </Suspense>
+          ),
+        },
       ],
     },
     {
