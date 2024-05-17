@@ -6,42 +6,6 @@ dayjs.extend(utc);
 
 const apiUrl = process.env.REACT_APP_API_KEY;
 
-export async function getBarbersWithServices() {
-  try {
-    const res = await axios.get(`${apiUrl}/Barbers/Services`);
-    return res.data;
-  } catch (err) {
-    console.error("Error fetching barbers and services:", err);
-    if (err.response) {
-      throw new Error(
-        `Server responded with ${err.response.status}: ${
-          err.response.data.message || err.response.data
-        }`,
-      );
-    } else {
-      throw new Error("Network Error: Unable to reach the API server.");
-    }
-  }
-}
-
-export async function getAllBarbers() {
-  try {
-    const res = await axios.get(`${apiUrl}/Barbers`);
-    return res.data;
-  } catch (err) {
-    console.error("Error fetching barbers:", err);
-    if (err.response) {
-      throw new Error(
-        `Server responded with ${err.response.status}: ${
-          err.response.data.message || err.response.data
-        }`,
-      );
-    } else {
-      throw new Error("Network Error: Unable to reach the API server.");
-    }
-  }
-}
-
 export async function createBooking(bookingData) {
   try {
     const bookingDataWithUtcTime = {

@@ -1,0 +1,53 @@
+import axios from "axios";
+
+const apiUrl = process.env.REACT_APP_API_KEY;
+
+export async function getBarbersWithServices() {
+  try {
+    const response = await axios.get(`${apiUrl}/Barbers/Services`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching barbers and services:", error);
+    throw error;
+  }
+}
+
+export async function getAllBarbers() {
+  try {
+    const response = await axios.get(`${apiUrl}/Barbers`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching barbers:", error);
+    throw error;
+  }
+}
+
+export async function updateBarber(barberId, updatedBarber) {
+  try {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      const patchOperations = Object.keys(updatedBarber).map((key) => ({
+        op: "replace",
+        path: `/${key}`,
+        value: updatedBarber[key],
+      }));
+
+      const response = await axios.patch(
+        `${apiUrl}/Barbers/${barberId}`,
+        patchOperations,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json-patch+json",
+          },
+        },
+      );
+
+      return response.data;
+    }
+  } catch (error) {
+    console.error("Error updating barber:", error);
+    throw error;
+  }
+}

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Box, CircularProgress, Typography, Button } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 
-import { getAllBarbers } from "../../../services/bookingService.js";
+import { getAllBarbers } from "../../../services/barberService.js";
 
 const Barbers = () => {
   const [rows, setRows] = useState([]);

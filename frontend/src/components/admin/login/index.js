@@ -8,7 +8,7 @@ import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
+import Grid from "@mui/material/Unstable_Grid2";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
@@ -54,7 +54,7 @@ export default function AdminLogin() {
       const response = await login(username, password);
 
       if (response.success) {
-        const token = response.data;
+        const token = response.token;
         contextLogin(username);
         localStorage.setItem("token", token);
         navigate("/admin");
@@ -123,7 +123,7 @@ export default function AdminLogin() {
             Sign In
           </Button>
           <Grid container>
-            <Grid item xs>
+            <Grid xs>
               <Link href="#" variant="body2">
                 Forgot password?
               </Link>
