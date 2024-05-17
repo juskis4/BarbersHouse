@@ -11,12 +11,16 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using barbershouse.api.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
-builder.Services.AddControllers();
-
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
+    {
+        options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+    });
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
@@ -47,7 +51,7 @@ builder.Services.AddResponseCompression(opts =>
 });
 
 // Getting the client url
-var firebaseUrl = Environment.GetEnvironmentVariable("FirebaseUrl");
+var firebaseUrl = "localhost:3040";//Environment.GetEnvironmentVariable("FirebaseUrl");
 if (string.IsNullOrEmpty(firebaseUrl))
 {
     throw new InvalidOperationException("The 'FirebaseUrl' environment variable is not set.");
@@ -79,7 +83,7 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    var jwtKey = Environment.GetEnvironmentVariable("jwt"); 
+    var jwtKey = "dU81b1lCQ294RkVjU3c2cFl1aVhuRzd3b3hZRGFUQT09";//Environment.GetEnvironmentVariable("jwt"); 
     if (string.IsNullOrEmpty(jwtKey))
     {
         throw new InvalidOperationException("The JWT Key environment variable is not set.");
@@ -97,7 +101,7 @@ builder.Services.AddAuthentication(options =>
 });
 
 // Database Configuration (using environment variable)
-var connectionString = Environment.GetEnvironmentVariable("DefaultConnection");
+var connectionString = "Server=34.79.124.165;Database=postgres;Port=5432;UserId=postgres;Password=brainrot";//Environment.GetEnvironmentVariable("DefaultConnection");
 
 if (string.IsNullOrEmpty(connectionString))
 {

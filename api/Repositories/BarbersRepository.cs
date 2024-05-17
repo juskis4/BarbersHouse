@@ -77,6 +77,30 @@ public class BarbersRepository(DbDataContext context) : IBarbersRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task UpdateBarberAsync(Barber barber)
+    {
+        _context.Entry(barber).State = EntityState.Modified;
+
+        try
+        {
+            await _context.SaveChangesAsync(); 
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+            // handling concurrency conflicts 
+            var entry = ex.Entries.Single();
+            var databaseValues = entry.GetDatabaseValues();
+
+            if (databaseValues == null)
+            {
+                // The entity has been deleted since it was fetched
+                throw new ArgumentException("Barber not found.");
+            }
+
+            throw new DbUpdateConcurrencyException("The barber was updated by another user. Please try again.");
+        }
+    }
+
     public async Task SaveChangesAsync()
     {
         await _context.SaveChangesAsync();
