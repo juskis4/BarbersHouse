@@ -51,7 +51,7 @@ builder.Services.AddResponseCompression(opts =>
 });
 
 // Getting the client url
-var firebaseUrl = "localhost:3040";//Environment.GetEnvironmentVariable("FirebaseUrl");
+var firebaseUrl = Environment.GetEnvironmentVariable("FirebaseUrl");
 if (string.IsNullOrEmpty(firebaseUrl))
 {
     throw new InvalidOperationException("The 'FirebaseUrl' environment variable is not set.");
@@ -83,7 +83,7 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    var jwtKey = "dU81b1lCQ294RkVjU3c2cFl1aVhuRzd3b3hZRGFUQT09";//Environment.GetEnvironmentVariable("jwt"); 
+    var jwtKey = Environment.GetEnvironmentVariable("jwt"); 
     if (string.IsNullOrEmpty(jwtKey))
     {
         throw new InvalidOperationException("The JWT Key environment variable is not set.");
@@ -101,7 +101,7 @@ builder.Services.AddAuthentication(options =>
 });
 
 // Database Configuration (using environment variable)
-var connectionString = "Server=34.79.124.165;Database=postgres;Port=5432;UserId=postgres;Password=brainrot";//Environment.GetEnvironmentVariable("DefaultConnection");
+var connectionString = Environment.GetEnvironmentVariable("DefaultConnection");
 
 if (string.IsNullOrEmpty(connectionString))
 {
