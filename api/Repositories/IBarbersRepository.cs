@@ -12,6 +12,7 @@ public interface IBarbersRepository
     Task AddWorkHoursToBarberAsync(BarberWorkHours workHours);
     Task DeleteWorkHoursAsync(IEnumerable<BarberWorkHours> workHours);
     Task DeleteBarberAsync(Barber barber);
+    Task UpdateBarberAsync(Barber barber);
 
     Task SaveChangesAsync();
 }

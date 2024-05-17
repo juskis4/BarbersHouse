@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using barbershouse.api.Services;
 using barbershouse.api.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using barbershouse.api.Models;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace barbershouse.api.Controllers;
 
@@ -43,18 +45,37 @@ public class BarbersController(IBarbersService barbersService) : ControllerBase
     }
 
     [HttpDelete("{barberId}")]
-    [Authorize(Policy = "IsAdmin")] 
+    [Authorize(Policy = "IsAdmin")]
     public async Task<IActionResult> DeleteBarber(int barberId)
     {
         try
         {
             await _barbersService.DeleteBarberAsync(barberId);
 
-            return NoContent(); 
+            return NoContent();
         }
         catch (ArgumentException ex)
         {
-            return NotFound(ex.Message); 
+            return NotFound(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
+
+    [HttpPatch("{barberId}")]
+    [Authorize(Policy = "IsAdmin")]
+    public async Task<IActionResult> UpdateBarber(int barberId, [FromBody] JsonPatchDocument<Barber> patchDoc)
+    {
+        try
+        {
+            await _barbersService.UpdateBarberAsync(barberId, patchDoc);
+            return NoContent();
+        }
+        catch (ArgumentException ex)
+        {
+            return NotFound(ex.Message);
         }
         catch (Exception ex)
         {

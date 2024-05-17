@@ -1,7 +1,11 @@
+
+using System.Linq.Expressions;
 using AutoMapper;
 using barbershouse.api.Models;
 using barbershouse.api.Repositories;
 using barbershouse.api.ViewModels;
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.JsonPatch.Operations;
 
 namespace barbershouse.api.Services;
 
@@ -57,5 +61,40 @@ public class BarbersService(IBarbersRepository barbersRepository, IMapper mapper
         await _barbersRepository.DeleteWorkHoursAsync(workHours);
 
         await _barbersRepository.DeleteBarberAsync(barber);
+    }
+
+    public async Task UpdateBarberAsync(int barberId, JsonPatchDocument<Barber> patchDoc)
+    {
+        var barber = await _barbersRepository.GetBarberByIdAsync(barberId);
+
+        if (barber == null)
+        {
+            throw new ArgumentException("Barber not found.");
+        }
+
+        var allowedProperties = new Dictionary<string, Expression<Func<Barber, object>>>()
+        {
+            { "/Name", b => b.Name },
+            { "/Email", b => b.Email },
+            { "/Bio", b => b.Bio }
+        };
+
+        // Filter and validate the patch operations
+        var filteredPatchDoc = new JsonPatchDocument<Barber>();
+        foreach (var op in patchDoc.Operations)
+        {
+            if (allowedProperties.TryGetValue(op.path, out var propertyExpression) && op.OperationType == OperationType.Replace)
+            {
+                filteredPatchDoc.Add(propertyExpression, op.value);
+            }
+            else
+            {
+                throw new ArgumentException($"Invalid patch operation: {op.OperationType} on {op.path} is not allowed.");
+            }
+        }
+
+        filteredPatchDoc.ApplyTo(barber); 
+
+        await _barbersRepository.UpdateBarberAsync(barber);
     }
 }

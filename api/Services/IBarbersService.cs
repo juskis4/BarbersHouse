@@ -1,5 +1,6 @@
 using barbershouse.api.Models;
 using barbershouse.api.ViewModels;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace barbershouse.api.Services;
 
@@ -14,6 +15,7 @@ public interface IBarbersService {
     Task<IEnumerable<BarberWorkHours>> GetWorkHoursByBarberIdAsync(int barberId);  
 
     Task<BarberWorkHours> GetWorkHoursByBarberIdAndDayOfWeekAsync(int barberId, DayOfWeek dayOfWeek);
+    Task UpdateBarberAsync(int barberId, JsonPatchDocument<Barber> patchDoc);
 
     Task DeleteBarberAsync(int barberId);
 }
