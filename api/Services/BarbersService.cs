@@ -20,10 +20,23 @@ public class BarbersService(IBarbersRepository barbersRepository, IMapper mapper
         return _mapper.Map<IEnumerable<BarberResultViewModel>>(barbers);
     }
 
+    public async Task<Barber?> GetBarberByIdAsync(int barberId)
+    {
+        return await _barbersRepository.GetBarberByIdAsync(barberId);
+    }
+
     public async Task<IEnumerable<BarberViewModel>> GetAllBarbersWithServicesAsync()
     {
         var barbers = await _barbersRepository.GetAllBarbersWithServicesAsync();
         return _mapper.Map<IEnumerable<BarberViewModel>>(barbers);
+    }
+
+    public async Task<Barber> AddBarberAsync(AddBarberViewModel model)
+    {
+        var barber = _mapper.Map<Barber>(model); 
+
+        await _barbersRepository.AddBarberAsync(barber);
+        return barber;
     }
 
     public async Task AddBarberWorkHoursAsync(int barberId, AddBarberWorkHoursViewModel workHours)
@@ -93,7 +106,7 @@ public class BarbersService(IBarbersRepository barbersRepository, IMapper mapper
             }
         }
 
-        filteredPatchDoc.ApplyTo(barber); 
+        filteredPatchDoc.ApplyTo(barber);
 
         await _barbersRepository.UpdateBarberAsync(barber);
     }

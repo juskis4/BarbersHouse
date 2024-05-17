@@ -13,6 +13,13 @@ public class BarbersController(IBarbersService barbersService) : ControllerBase
 {
     private readonly IBarbersService _barbersService = barbersService;
 
+    [HttpGet("{barberId}", Name = "GetBarberById")] 
+    public async Task<ActionResult<Barber>> GetBarberById(int barberId) 
+    {
+        var barber = await _barbersService.GetBarberByIdAsync(barberId);
+        return barber;
+    }
+
     [HttpGet(Name = "Barbers")]
     public async Task<IEnumerable<BarberResultViewModel>> GetBarbersAsync()
     {
@@ -23,6 +30,26 @@ public class BarbersController(IBarbersService barbersService) : ControllerBase
     public async Task<IEnumerable<BarberViewModel>> GetBarbersWithServicesAsyncAAA()
     {
         return await _barbersService.GetAllBarbersWithServicesAsync();
+    }
+
+    [HttpPost]
+    //[Authorize(Policy = "IsAdmin")] // Restrict to admin users
+    public async Task<IActionResult> AddBarber([FromBody] AddBarberViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        try
+        {
+            var newBarber = await _barbersService.AddBarberAsync(model);
+            return CreatedAtAction(nameof(GetBarberById), new { barberId = newBarber.BarberID }, newBarber);
+        }
+        catch (Exception ex) 
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
     }
 
     [HttpPost("{barberId}/workhours")]

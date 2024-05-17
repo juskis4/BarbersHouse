@@ -10,6 +10,7 @@ public interface IBarbersRepository
     Task<IEnumerable<BarberWorkHours>> GetWorkHoursByBarberIdAsync(int barberId);
     Task<BarberWorkHours> GetWorkHoursByBarberIdAndDayOfWeekAsync(int barberId, DayOfWeek dayOfWeek);
     Task AddWorkHoursToBarberAsync(BarberWorkHours workHours);
+    Task AddBarberAsync(Barber barber);
     Task DeleteWorkHoursAsync(IEnumerable<BarberWorkHours> workHours);
     Task DeleteBarberAsync(Barber barber);
     Task UpdateBarberAsync(Barber barber);
