@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Grid from "@mui/material/Unstable_Grid2";
 import ContentCutIcon from "@mui/icons-material/ContentCut";
+import PaidIcon from "@mui/icons-material/Paid";
 import Container from "@mui/material/Container";
 import { Typography, TextField, Button, Paper, Avatar } from "@mui/material";
 import { getBarbersWithServices } from "../../../../services/bookingService.js";
@@ -16,6 +17,7 @@ const BarberProfile = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [editedName, setEditedName] = useState("");
+  const [editedEmail, setEditedEmail] = useState("");
   const [editedBio, setEditedBio] = useState("");
 
   const handleSave = () => {
@@ -34,6 +36,7 @@ const BarberProfile = () => {
         );
         setBarber(foundBarber);
         setServices(foundBarber?.services || []);
+        setEditedEmail(foundBarber?.email || "");
         setEditedName(foundBarber?.name || "");
         setEditedBio(foundBarber?.bio || "");
       } catch (error) {
@@ -79,7 +82,7 @@ const BarberProfile = () => {
               variant="rounded"
               alt="User Profile"
               src={barber.photoUrl}
-              sx={{ width: 100, height: 110, mb: 2, mt: 2 }}
+              sx={{ width: 150, height: 150, mb: 1, mt: 1 }}
             />
             <Typography variant="subtitle1" align="center">
               {barber.name}
@@ -103,6 +106,22 @@ const BarberProfile = () => {
               }
             />
           </Paper>
+          <Paper
+            sx={{
+              p: 2,
+              mt: 2,
+              display: "flex",
+              flexDirection: "column",
+              height: 60,
+              alignItems: "center",
+            }}
+          >
+            <StatBox
+              title="DKK"
+              bookings="53200"
+              icon={<PaidIcon sx={{ color: "secondary", fontSize: "32px" }} />}
+            />
+          </Paper>
         </Grid>
         <Grid item xs={12} md={8} lg={9}>
           <Paper
@@ -110,7 +129,7 @@ const BarberProfile = () => {
               p: 2,
               display: "flex",
               flexDirection: "column",
-              height: 325,
+              height: 405,
             }}
           >
             <Typography variant="h6" fontWeight="bold" align="left">
@@ -122,6 +141,15 @@ const BarberProfile = () => {
               variant="outlined"
               value={editedName}
               onChange={(e) => setEditedName(e.target.value)}
+              fullWidth
+              margin="normal"
+            />
+
+            <TextField
+              label="Email"
+              variant="outlined"
+              value={editedEmail}
+              onChange={(e) => setEditedEmail(e.target.value)}
               fullWidth
               margin="normal"
             />

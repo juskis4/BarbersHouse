@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 
 const Services = ({ services }) => {
   const columns = [
-    { field: "service_id", headerName: "ID", type: "number" },
+    { field: "service_id", headerName: "ID" },
     {
       field: "title",
       headerName: "Title",
@@ -14,12 +14,16 @@ const Services = ({ services }) => {
     },
     {
       field: "duration",
+      headerAlign: "left",
+      align: "left",
       headerName: "Duration (min.)",
       type: "number",
     },
     {
       field: "price",
-      headerName: "Price",
+      headerAlign: "left",
+      align: "left",
+      headerName: "Price (DKK)",
       type: "number",
     },
     {

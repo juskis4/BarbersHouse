@@ -19,9 +19,10 @@ const Barbers = () => {
       cellClassName: "name-column--cell",
     },
     {
-      field: "bio",
-      headerName: "Bio",
-      type: "number",
+      field: "email",
+      flex: 1,
+      headerName: "Email",
+      type: "string",
     },
     {
       field: "action",
