@@ -4,8 +4,18 @@ import Grid from "@mui/material/Unstable_Grid2";
 import ContentCutIcon from "@mui/icons-material/ContentCut";
 import PaidIcon from "@mui/icons-material/Paid";
 import Container from "@mui/material/Container";
-import { Typography, TextField, Button, Paper, Avatar } from "@mui/material";
-import { getBarbersWithServices } from "../../../../services/bookingService.js";
+import {
+  Typography,
+  TextField,
+  Button,
+  Paper,
+  Avatar,
+  Alert,
+} from "@mui/material";
+import {
+  updateBarber,
+  getBarbersWithServices,
+} from "../../../../services/barberService.js";
 import StatBox from "../statBox/index.jsx";
 import Services from "./services/index.jsx";
 
@@ -15,14 +25,36 @@ const BarberProfile = () => {
   const [services, setServices] = useState(null);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
 
   const [editedName, setEditedName] = useState("");
   const [editedEmail, setEditedEmail] = useState("");
   const [editedBio, setEditedBio] = useState("");
 
-  const handleSave = () => {
-    // TODO: Send updated data (editedName, editedBio) to your API
-    // ... (your update logic here)
+  const handleSave = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const updatedBarber = {
+        Email: editedEmail,
+        Name: editedName,
+        Bio: editedBio,
+      };
+
+      await updateBarber(barber.barberId, updatedBarber);
+
+      setBarber({
+        ...barber,
+        ...updatedBarber,
+      });
+
+      setSaveSuccess(true);
+    } catch (error) {
+      console.error("Error updating barber:", error);
+      setError("Error updating barber. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -59,7 +91,7 @@ const BarberProfile = () => {
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       {error && <Typography color="error">{error}</Typography>}
       <Grid container spacing={4}>
-        <Grid item xs={12} md={4} lg={3}>
+        <Grid xs={12} md={4} lg={3}>
           <Paper
             sx={{
               p: 2,
@@ -123,15 +155,20 @@ const BarberProfile = () => {
             />
           </Paper>
         </Grid>
-        <Grid item xs={12} md={8} lg={9}>
+        <Grid xs={12} md={8} lg={9}>
           <Paper
             sx={{
               p: 2,
               display: "flex",
               flexDirection: "column",
-              height: 405,
+              minHeight: 405,
             }}
           >
+            {saveSuccess && (
+              <Alert severity="success">
+                Barber details saved successfully!
+              </Alert>
+            )}
             <Typography variant="h6" fontWeight="bold" align="left">
               Edit Details
             </Typography>
@@ -176,7 +213,7 @@ const BarberProfile = () => {
             </Button>
           </Paper>
         </Grid>
-        <Grid item xs={12} md={12} lg={12}>
+        <Grid xs={12} md={12} lg={12}>
           <Paper
             sx={{
               p: 2,
