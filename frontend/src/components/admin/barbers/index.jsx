@@ -1,8 +1,15 @@
-import { Box, useTheme } from "@mui/material";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { Box, CircularProgress, Typography, Button } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { mockDataBarbers } from "../../../data/mockData.js";
+
+import { getAllBarbers } from "../../../services/bookingService.js";
 
 const Barbers = () => {
+  const [rows, setRows] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const columns = [
     { field: "barber_id", headerName: "ID" },
     {
@@ -15,21 +22,55 @@ const Barbers = () => {
       field: "bio",
       headerName: "Bio",
       type: "number",
-      headerAlign: "left",
-      align: "left",
+    },
+    {
+      field: "action",
+      headerName: "",
+      flex: 1,
+      headerAlign: "right",
+      align: "right",
+      sortable: false,
+      renderCell: (params) => (
+        <Button component={Link} to={`/admin/barbers/${params.row.barberId}`}>
+          View Profile
+        </Button>
+      ),
     },
   ];
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getAllBarbers();
+        setRows(data);
+      } catch (error) {
+        console.error(error);
+        setError("Error fetching barbers data");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <Box m="20px">
-      <Box m="40px 0 0 0" height="auto">
-        <DataGrid
-          checkboxSelection
-          rows={mockDataBarbers}
-          columns={columns}
-          getRowId={(row) => row.barber_id}
-        />
-      </Box>
+      {isLoading ? (
+        <CircularProgress />
+      ) : error ? (
+        <Typography variant="h6" color="error">
+          {error}
+        </Typography>
+      ) : (
+        <Box m="20px 0 0 0" height="auto">
+          <DataGrid
+            checkboxSelection
+            rows={rows}
+            columns={columns}
+            getRowId={(row) => row.barberId}
+          />
+        </Box>
+      )}
     </Box>
   );
 };
