@@ -26,7 +26,13 @@ public class BarbersRepository(DbDataContext context) : IBarbersRepository
 
         barber.BarberWorkHours.Add(workHours);
 
-        await SaveChangesAsync();
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task AddBarberAsync(Barber barber)
+    {
+        await _context.Barbers.AddAsync(barber);
+        await _context.SaveChangesAsync();
     }
 
     public async Task<IEnumerable<Barber>> GetAllBarbersAsync()
@@ -83,7 +89,7 @@ public class BarbersRepository(DbDataContext context) : IBarbersRepository
 
         try
         {
-            await _context.SaveChangesAsync(); 
+            await _context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException ex)
         {
