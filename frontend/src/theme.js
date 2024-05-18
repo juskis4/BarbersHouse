@@ -43,6 +43,9 @@ export const tokens = (mode) => ({
         greenAccent: {
           main: "#148000",
         },
+        redAccent: {
+          main: "#a60202",
+        },
       }),
 });
 
