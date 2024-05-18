@@ -68,3 +68,21 @@ export async function addBarber(newBarber) {
     throw error;
   }
 }
+
+export async function deleteBarber(barberId) {
+  try {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      const response = await axios.delete(`${apiUrl}/Barbers/${barberId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    }
+  } catch (error) {
+    console.error("Error deleting a barber:", error);
+    throw error;
+  }
+}
