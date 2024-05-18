@@ -51,3 +51,20 @@ export async function updateBarber(barberId, updatedBarber) {
     throw error;
   }
 }
+
+export async function addBarber(newBarber) {
+  try {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const response = await axios.post(`${apiUrl}/Barbers`, newBarber, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    }
+  } catch (error) {
+    console.error("Error adding barber:", error);
+    throw error;
+  }
+}
