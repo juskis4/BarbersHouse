@@ -13,6 +13,7 @@ const Barbers = lazy(() => import("./components/admin/barbers"));
 const BarberProfile = lazy(
   () => import("./components/admin/barbers/barberProfile"),
 );
+const AddBarber = lazy(() => import("./components/admin/addBarber"));
 
 const App = () => {
   const [theme, colorMode] = useMode();
@@ -38,6 +39,14 @@ const App = () => {
           element: (
             <Suspense fallback={<div>Loading...</div>}>
               <Barbers />
+            </Suspense>
+          ),
+        },
+        {
+          path: "barbers/add",
+          element: (
+            <Suspense fallback={<div>Loading...</div>}>
+              <AddBarber />
             </Suspense>
           ),
         },
