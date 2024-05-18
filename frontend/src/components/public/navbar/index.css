@@ -1,46 +1,37 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  transition: background-color 0.3s;
+  background-color: transparent; /* Initial transparent background */
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1000; /* Ensures navbar is on top */
+}
+
+.navbar-scrolled {
+  background-color: rgba(255, 255, 255, 0.9); /* Solid color on scroll */
+}
+
 .instagram-icon {
   filter: grayscale(100%) !important;
   font-size: 24px !important; 
 }
 
-.collapse-button{
-  border: none !important;
+.nav-link {
+  color: black;
+  font-size: 16px;
+  padding: 10px 15px;
 }
 
-.ellipsis-icon {
-  filter: grayscale(100%);
-  font-size: 24px;
+.navbar-brand {
+  color: black;
+  font-weight: bold;
+  font-size: 20px;
 }
 
-.nav-link{
-  display: block; 
-  padding-top: 0 !important; 
-  padding-bottom: 0!important;
-}
-
-.icons-container { 
-  align-items: center; 
-  margin-right: 15px; 
-}
-.navbar {
-  background-color: rgba(255, 255, 255, 0.5); 
-  backdrop-filter: blur(2px); 
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); 
-  position: absolute !important;
-  width: 100% !important;
-  z-index: 2 !important; 
-}
-
-@media (max-width: 768px) { 
+@media (max-width: 768px) {
   .navbar-brand {
-    font-size: 18px; 
+    font-size: 18px; /* Adjusted for mobile */
   }
-
-  .icons-container {
-    margin-right: 5px; 
-  }
-} 
-
-.navbar-toggler {
-  border: none;  
 }
