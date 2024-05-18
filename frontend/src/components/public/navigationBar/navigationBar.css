@@ -1,0 +1,50 @@
+.container {
+    padding: 0 1rem;
+  }
+  
+  .border-t {
+    border-top: 1px solid #ddd;
+    position: sticky; /* Use sticky instead of fixed */
+    top: 0; /* Stick to the top of its container */
+    width: 100%; /* Full width */
+    background-color: #fff; /* Background color to match header */
+    z-index: 1000; /* On top of other elements */
+  }
+  
+  ul {
+    text-align: center;
+    white-space: nowrap;
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none; /* For Firefox */
+    -ms-overflow-style: none; /* For Internet Explorer and Edge */
+  }
+  
+  ul::-webkit-scrollbar {
+    display: none; /* For Chrome, Safari, and Opera */
+  }
+  
+  li {
+    display: inline-block;
+    font-size: 1rem;
+  }
+  
+  button {
+    opacity: 0.5;
+    font-weight: 500;
+    border-top: 2px solid transparent;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  button.active,
+  button:hover {
+    opacity: 1;
+    border-top-color: #ff6600; /* Primary color for active and hover states */
+  }
+  
+  .btn__content {
+    padding: 1rem;
+  }
+  

@@ -1,34 +1,63 @@
 .header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: center; /* Center items horizontally */
+  align-items: center; /* Center items vertically */
   padding: 20px 50px;
   background: #ffffff;
+  height: 200px; /* Adjust height as needed */
+  position: relative;
+}
+
+.logo-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .logo-section img {
-  height: 80px;
+  height: 150px;
   width: auto;
-  border-radius: 50%;  /* Makes the image round */
-  border: 2.5px solid orange;  /* Adds an orange border */
-  padding: 2.5px;  /* Optional: Adds space between the border and the image */
+  border-radius: 50%;
+  border: 2.5px solid orange;
+  padding: 2.5px;
+}
+
+.info-section {
+  flex: 2; /* Adjust to allocate more space for the info section */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-left: 30px;
 }
 
 .info-section h1 {
   margin: 0;
-  font-size: 24px; /* Consider responsiveness and scaling */
+  font-size: 24px;
+}
+
+.info-section p {
+  margin: 5px 0;
 }
 
 .info-section p a {
-  font-size: 14px; /* Smaller than main paragraph text */
-  color: orange; /* Orange color for visibility */
-  text-decoration: none; /* Removes underline */
+  font-size: 14px;
+  color: orange;
+  text-decoration: none;
 }
+
 .ratings span {
   color: orange;
-  font-size: 16px; 
+  font-size: 16px;
 }
-/* Enhancing the visibility of social links and adjusting overlap properties */
+
+.social-links {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
 .social-links a {
   display: inline-flex;
   align-items: center;
@@ -36,52 +65,60 @@
   width: 40px;
   height: 40px;
   margin-right: 10px;
-  background-color: #f4f4f4; /* Light grey background */
-  border-radius: 8px; /* Rounded corners for aesthetics */
-  color: #000; /* Black color for icons */
-  text-decoration: none; /* Removes underline from links */
-}
-.phone-number span {
-  font-size: 16px; /* Clear readability */
-}
-
-.book-now button {
-  background-color: #ffc107; /* Gold color */
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
-}
-
-.book-now button:hover {
-  background-color: #e0a800; /* Darker gold on hover */
-}
-
-.social-links a {
-  display: inline-flex;  /* Makes the link a flex container, centers the icon */
-  justify-content: center;  /* Centers the icon horizontally */
-  align-items: center;  /* Centers the icon vertically */
-  width: 40px;  /* Sets the width of the icon background */
-  height: 40px;  /* Sets the height of the icon background */
-  margin-right: 10px;  /* Space between icons */
-  background-color: #f4f4f4;  /* Light grey background, adjust as needed */
-  border-radius: 8px;  /* Rounded corners */
-  color: #000;  /* Icon color, adjust as needed */
-  text-decoration: none;  /* Removes underline from the links */
+  background-color: #f4f4f4;
+  border-radius: 8px;
+  color: #000;
+  text-decoration: none;
 }
 
 .social-links a:hover {
-  background-color: #e0e0e0; /* Darker shade on hover */
+  background-color: #e0e0e0;
 }
 
 .phone-number {
   display: flex;
   align-items: center;
   font-size: 16px;
+  margin-top: 10px;
 }
 
 .phone-number svg {
-  color: orange; /* Orange color for phone icon */
-  margin-right: 5px; /* Space between icon and text */
+  color: orange;
+  margin-right: 5px;
+}
+
+.book-now {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 30px;
+}
+
+.book-now button {
+  background-color: #ffc107;
+  border: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #000;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: auto;
+}
+
+.book-now button:hover {
+  background-color: #e0a800;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.book-now p {
+  font-size: 14px;
+  color: #666;
+  margin-top: 10px;
 }

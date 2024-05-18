@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './index.css'; // Ensure this CSS file exists and is correctly pathed
 import logoImg from '../../../assets/barbershop_logo.png';
-import { FaInstagram, FaWhatsapp, FaTiktok, FaPhone } from 'react-icons/fa'; // Added FaPhone for the phone icon
+import { FaInstagram, FaWhatsapp, FaTiktok, FaPhone, FaCalendarAlt  } from 'react-icons/fa'; // Added FaPhone for the phone icon
 
 function Header() {
   // Placeholder function for handling button click
@@ -34,7 +34,10 @@ function Header() {
         </div>
       </div>
       <div className="book-now">
-        <button onClick={handleBookingClick}>Book Now</button>
+        <button onClick={handleBookingClick}>
+          <FaCalendarAlt style={{ marginRight: '8px' }} /> Book Now
+        </button>
+        <p>You can make an appointment at Barber's House.</p>
       </div>
     </div>
   );

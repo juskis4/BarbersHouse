@@ -1,34 +1,82 @@
-.carousel-item img { 
-    width: 100%; 
-    height: 670px;
-    max-width: 100%; 
-    object-fit: cover; 
+/* index.css */
+#carousel {
+  padding-top: 0px;
 }
 
-.carousel {
-    z-index: 1;
-  }
+.carousel-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+}
 
-.overlay {
-   position: fixed;
-   top: 0;
-   left: 0;
-   width: 100%;
-   height: 100%;
-   background: rgba(0, 0, 0, 0.5); 
-   z-index: 10; 
+.slick-slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
- 
-.booking-box {
-   position: fixed;
-   top: 50%;
-   left: 50%;
-   transform: translate(-50%, -50%);  
-   width: 500px;
-   background: white;
-   z-index: 11; 
-   padding: 20px; 
-   border-radius: 5px;
-   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); 
+
+.slick-slide img {
+  width: 150px; /* Adjust width to fit 4 images in the container */
+  height: auto;
+  object-fit: cover;
+  border-radius: 10px; /* Optional: for rounded corners */
+  margin: 5px; /* Optional: to add some spacing between images */
 }
-  
+
+.slick-prev, .slick-next {
+  width: 50px;
+  height: 50px;
+  z-index: 10;
+}
+
+.slick-prev::before, .slick-next::before {
+  font-size: 50px;
+  color: #000; /* Adjust color as needed */
+}
+
+.slick-dots {
+  bottom: -30px; /* Adjust position as needed */
+}
+
+.button-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+section {
+  padding: 60px 20px;
+  margin-top: 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+section h2 {
+  margin-top: 0;
+}
+
+button.book-here-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  font-size: 16px;
+}
+
+.about-us {
+  padding: 60px 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.about-us h2 {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+.about-us p {
+  font-size: 1.2em;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
