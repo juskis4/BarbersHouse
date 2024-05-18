@@ -33,7 +33,7 @@ public class BarbersController(IBarbersService barbersService) : ControllerBase
     }
 
     [HttpPost]
-    //[Authorize(Policy = "IsAdmin")] // Restrict to admin users
+    [Authorize(Policy = "IsAdmin")]
     public async Task<IActionResult> AddBarber([FromBody] AddBarberViewModel model)
     {
         if (!ModelState.IsValid)

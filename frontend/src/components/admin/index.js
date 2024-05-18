@@ -16,6 +16,7 @@ import {
   Toolbar,
   List,
   ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
   Typography,
@@ -24,7 +25,10 @@ import Grid from "@mui/material/Unstable_Grid2";
 import MuiAppBar from "@mui/material/AppBar";
 import MuiDrawer from "@mui/material/Drawer";
 import MenuIcon from "@mui/icons-material/Menu";
+import Face6Icon from "@mui/icons-material/Face6";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ContentCutIcon from "@mui/icons-material/ContentCut";
 
 const drawerWidth = 240;
 
@@ -98,8 +102,8 @@ function AdminPage() {
     isAuthenticated && (
       <ColorModeContext.Provider value={colorMode}>
         <ThemeProvider theme={theme}>
+          <CssBaseline />
           <Box sx={{ display: "flex" }}>
-            <CssBaseline />
             <AppBar position="absolute" open={open}>
               <Toolbar
                 sx={{
@@ -149,22 +153,39 @@ function AdminPage() {
               </Toolbar>
               <Divider />
               <List component="nav">
-                <List component="nav">
-                  <ListItem button component={Link} to="/admin/barbers">
-                    <ListItemIcon>B</ListItemIcon>
+                <ListItem disablePadding>
+                  <ListItemButton component={Link} to="/admin/barbers">
+                    <ListItemIcon>
+                      <Face6Icon />
+                    </ListItemIcon>
                     <ListItemText primary="Barbers" />
-                  </ListItem>
-                  <Divider sx={{ my: 1 }} />
-                  <ListItem button>
-                    <ListItemIcon>B</ListItemIcon>
-                    <ListItemText primary="Second" />
-                  </ListItem>
-                  <Divider sx={{ my: 1 }} />
-                  <ListItem button>
-                    <ListItemIcon>C</ListItemIcon>
-                    <ListItemText primary="Third" />
-                  </ListItem>
-                </List>
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton component={Link} to="/admin/barbers/add">
+                    <ListItemIcon>
+                      <AddCircleOutlineIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Add Barber" />
+                  </ListItemButton>
+                </ListItem>
+                <Divider sx={{ my: 1 }} />
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <ContentCutIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Services" />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <AddCircleOutlineIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Add Services" />
+                  </ListItemButton>
+                </ListItem>
               </List>
             </Drawer>
             <Box
