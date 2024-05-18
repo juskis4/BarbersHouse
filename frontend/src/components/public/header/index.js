@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './index.css'; // Ensure this CSS file exists and is correctly pathed
+import './index.css'; 
 import logoImg from '../../../assets/barbershop_logo.png';
-import { FaInstagram, FaWhatsapp, FaTiktok, FaPhone, FaCalendarAlt  } from 'react-icons/fa'; // Added FaPhone for the phone icon
+import { FaInstagram, FaWhatsapp, FaTiktok, FaPhone, FaCalendarAlt  } from 'react-icons/fa'; 
+import Booking from '../booking';
 
 function Header() {
   // Placeholder function for handling button click

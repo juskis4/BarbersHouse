@@ -1,15 +1,13 @@
 import * as React from 'react';
 import "./index.css";
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import CircularProgress from '@mui/material/CircularProgress';
 import axios from 'axios';
-import { useState, useEffect } from 'react'; 
+import { useState, useEffect } from 'react';
 
 function Barbers() {
   const [selectedBarberId, setSelectedBarberId] = useState(null);
-  const [barbers, setBarbers] = useState([]); 
-  const [isLoading, setIsLoading] = useState(false); 
+  const [barbers, setBarbers] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const getBarbersWithServices = async () => {
     try {
@@ -17,7 +15,7 @@ function Barbers() {
       const res = await axios.get("https://api-zdmjnhdz7q-ew.a.run.app/Barbers/Services");
       console.log('Barbers data fetched:', res.data);
       setBarbers(res.data);
-      setSelectedBarberId(res.data[0]?.barberId || null); // Select the first barber by default
+      setSelectedBarberId(res.data[0]?.barberId || null); 
     } catch (err) {
       console.log('Error fetching barbers data:', err);
     } finally {
@@ -26,8 +24,8 @@ function Barbers() {
   };
 
   useEffect(() => {
-    getBarbersWithServices(); 
-  }, []); 
+    getBarbersWithServices();
+  }, []);
 
   const handleBarberSelect = (barberId) => {
     setSelectedBarberId(barberId);
@@ -54,31 +52,33 @@ function Barbers() {
 
   return (
     <section id="services" className="services-container">
-      <h2 className="services-header">Services</h2>
-      <div className="services-tabs">
-        {barbers.map((barber) => (
-          <button
-            key={barber.barberId}
-            className={`services-tab ${selectedBarberId === barber.barberId ? 'active' : ''}`}
-            onClick={() => handleBarberSelect(barber.barberId)}
-          >
-            {barber.name}
-          </button>
-        ))}
-      </div>
-      {isLoading ? (
-        <div style={{ width: '100%', textAlign: 'center', marginTop: 20 }}>
-          <CircularProgress />
+      <div className="services-content">
+        <h2 className="services-header">Services</h2>
+        <div className="services-tabs">
+          {barbers.map((barber) => (
+            <button
+              key={barber.barberId}
+              className={`services-tab ${selectedBarberId === barber.barberId ? 'active' : ''}`}
+              onClick={() => handleBarberSelect(barber.barberId)}
+            >
+              {barber.name}
+            </button>
+          ))}
         </div>
-      ) : (
-        barbers
-          .filter((barber) => barber.barberId === selectedBarberId)
-          .map((barber) => (
-            <div key={barber.barberId}>
-              <SelectedBarberServices barber={barber} />
-            </div>
-          ))
-      )}
+        {isLoading ? (
+          <div style={{ width: '100%', textAlign: 'center', marginTop: 20 }}>
+            <CircularProgress />
+          </div>
+        ) : (
+          barbers
+            .filter((barber) => barber.barberId === selectedBarberId)
+            .map((barber) => (
+              <div key={barber.barberId}>
+                <SelectedBarberServices barber={barber} />
+              </div>
+            ))
+        )}
+      </div>
     </section>
   );
 }

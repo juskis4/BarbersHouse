@@ -3,7 +3,10 @@ import CarouselBarber from './carousel';
 import Box from '@mui/material/Box';
 import Header from './header';
 import NavigationBar from './navigationBar/navigationBar';
-import Barbers from './barbers'; // Import the Barbers component
+import Barbers from './barbers'; 
+import Team from './team'; 
+import FAQ from './FAQ'; 
+import Footer from './footer'; 
 
 function PublicPage() {
   return (
@@ -11,7 +14,10 @@ function PublicPage() {
       <Header />
       <NavigationBar />
       <CarouselBarber />
-      <Barbers /> {/* Add the Barbers component here to display the Services section */}
+      <Barbers /> {}
+      <Team /> {}
+      <FAQ /> {}
+      <Footer /> {}
     </Box> 
   );
 }

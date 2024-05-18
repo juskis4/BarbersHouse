@@ -1,4 +1,3 @@
-/* index.css */
 #carousel {
   padding-top: 0px;
 }
@@ -17,11 +16,11 @@
 }
 
 .slick-slide img {
-  width: 150px; /* Adjust width to fit 4 images in the container */
+  width: 150px; 
   height: auto;
   object-fit: cover;
-  border-radius: 10px; /* Optional: for rounded corners */
-  margin: 5px; /* Optional: to add some spacing between images */
+  border-radius: 10px; 
+  margin: 5px; 
 }
 
 .slick-prev, .slick-next {
@@ -32,11 +31,11 @@
 
 .slick-prev::before, .slick-next::before {
   font-size: 50px;
-  color: #000; /* Adjust color as needed */
+  color: #000; 
 }
 
 .slick-dots {
-  bottom: -30px; /* Adjust position as needed */
+  bottom: -30px; 
 }
 
 .button-container {

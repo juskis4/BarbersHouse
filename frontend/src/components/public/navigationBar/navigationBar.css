@@ -4,11 +4,11 @@
   
   .border-t {
     border-top: 1px solid #ddd;
-    position: sticky; /* Use sticky instead of fixed */
-    top: 0; /* Stick to the top of its container */
-    width: 100%; /* Full width */
-    background-color: #fff; /* Background color to match header */
-    z-index: 1000; /* On top of other elements */
+    position: sticky; 
+    top: 0; 
+    width: 100%; 
+    background-color: #fff; 
+    z-index: 1000; 
   }
   
   ul {
@@ -16,12 +16,12 @@
     white-space: nowrap;
     max-width: 100%;
     overflow-x: auto;
-    scrollbar-width: none; /* For Firefox */
-    -ms-overflow-style: none; /* For Internet Explorer and Edge */
+    scrollbar-width: none; 
+    -ms-overflow-style: none; 
   }
   
   ul::-webkit-scrollbar {
-    display: none; /* For Chrome, Safari, and Opera */
+    display: none; 
   }
   
   li {
@@ -41,7 +41,7 @@
   button.active,
   button:hover {
     opacity: 1;
-    border-top-color: #ff6600; /* Primary color for active and hover states */
+    border-top-color: #ff6600; 
   }
   
   .btn__content {
