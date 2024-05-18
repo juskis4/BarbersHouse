@@ -16,6 +16,12 @@ public class BookingService(IBookingsRepository bookingsRepository, IMapper mapp
         return bookings;
     }
 
+    public async Task<List<GetBookingsViewModel>> GetBookingsAsync(int? barberId = null, DateTimeOffset? startDate = null, DateTimeOffset? endDate = null)
+    {
+        var bookings = await _bookingsRepository.GetBookingsAsync(barberId, startDate, endDate);
+        return _mapper.Map<List<GetBookingsViewModel>>(bookings);
+    }
+    
     public async Task AddBookingAsync(AddBookingViewModel bookingViewModel)
     {
         var booking = _mapper.Map<Booking>(bookingViewModel);
