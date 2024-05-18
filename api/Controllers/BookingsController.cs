@@ -10,6 +10,19 @@ public class BookingsController(IBookingService bookingService) : ControllerBase
 {
     private readonly IBookingService _bookingService = bookingService;
     
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<GetBookingsViewModel>>> GetBookings(int? barberId = null, DateTimeOffset? startDate = null, DateTimeOffset? endDate = null)
+    {
+        try
+        {
+            var bookings = await _bookingService.GetBookingsAsync(barberId, startDate, endDate);
+            return Ok(bookings);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
 
     [HttpPost("{barberId}/bookings")]
     public async Task<IActionResult> AddBookingAsync([FromBody] AddBookingViewModel booking)

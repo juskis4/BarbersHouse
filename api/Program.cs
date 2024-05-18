@@ -47,7 +47,7 @@ builder.Services.AddSignalR().AddJsonProtocol();
 builder.Services.AddResponseCompression(opts =>
 {
     opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
-          new[] { "application/octet-stream" });
+          ["application/octet-stream"]);
 });
 
 // Getting the client url
