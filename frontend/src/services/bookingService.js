@@ -4,7 +4,7 @@ import utc from "dayjs/plugin/utc";
 
 dayjs.extend(utc);
 
-const apiUrl = "https://api-zdmjnhdz7q-ew.a.run.app";
+const apiUrl = process.env.REACT_APP_API_KEY;
 
 export async function createBooking(bookingData) {
   try {
@@ -60,7 +60,7 @@ export async function getBookings(
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        params: params, // Include query parameters in the request
+        params: params,
       });
       const formattedBookings = response.data.map((booking) => ({
         bookingId: booking.bookingId,
