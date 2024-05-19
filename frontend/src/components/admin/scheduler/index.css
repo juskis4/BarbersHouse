@@ -1,0 +1,68 @@
+.quick-info-template .cell-footer.e-btn {
+  background-color: #ffffff;
+  border-color: #878787;
+  color: #878787;
+}
+
+.quick-info-header-content {
+  justify-content: flex-end;
+  display: flex;
+  flex-direction: column;
+  padding: 5px 10px 5px;
+}
+
+.quick-info-title {
+  font-weight: 500;
+  font-size: 16px;
+  letter-spacing: 0.48px;
+  height: 22px;
+}
+
+.duration-text {
+  font-size: 11px;
+  letter-spacing: 0.33px;
+  height: 14px;
+}
+
+.event-content {
+  height: 110px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10px 10px 0 0;
+}
+
+.eventcontent-type-wrap {
+  font-size: 12px;
+  color: #666;
+  letter-spacing: 0.33px;
+  height: 24px;
+  padding: 5px;
+}
+
+.event-content div span {
+  font-size: 12px;
+  color: #151515;
+  letter-spacing: 0.33px;
+  line-height: 14px;
+  padding-left: 8px;
+}
+
+.quick-info-template .cell-footer.e-btn {
+  background-color: #ffffff;
+  border-color: #878787;
+  color: #878787;
+}
+
+.quick-info-template .e-quick-popup-wrapper .e-cell-popup .e-popup-content {
+  padding: 0 14px 0 0;
+  margin: 0 20px 0 0;
+}
+
+.quick-info-template .e-quick-popup-wrapper .e-event-popup .e-popup-footer {
+  display: block;
+}
+
+.quick-info-template .e-quick-popup-wrapper .e-popup-footer button:first-child {
+  margin-right: 5px;
+}
