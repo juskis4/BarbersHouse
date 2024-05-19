@@ -1,13 +1,21 @@
 import * as React from 'react';
 import "./index.css";
 import CircularProgress from '@mui/material/CircularProgress';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Button from '@mui/material/Button';
 import axios from 'axios';
+import Booking from '../booking';
 import { useState, useEffect } from 'react';
 
 function Barbers() {
   const [selectedBarberId, setSelectedBarberId] = useState(null);
+  const [selectedService, setSelectedService] = useState(null);
   const [barbers, setBarbers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const getBarbersWithServices = async () => {
     try {
@@ -15,7 +23,7 @@ function Barbers() {
       const res = await axios.get("https://api-zdmjnhdz7q-ew.a.run.app/Barbers/Services");
       console.log('Barbers data fetched:', res.data);
       setBarbers(res.data);
-      setSelectedBarberId(res.data[0]?.barberId || null); 
+      setSelectedBarberId(res.data[0]?.barberId || null);
     } catch (err) {
       console.log('Error fetching barbers data:', err);
     } finally {
@@ -31,6 +39,20 @@ function Barbers() {
     setSelectedBarberId(barberId);
   };
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleServiceSelect = (barber, service) => {
+    setSelectedBarberId(barber.barberId);
+    setSelectedService(service);
+    setOpen(true);
+  };
+
   const SelectedBarberServices = ({ barber }) => {
     return (
       <div className="services-list">
@@ -42,7 +64,12 @@ function Barbers() {
                 <div className="service-description">{service.description}</div>
               </div>
               <div className="service-price">{service.price} kr</div>
-              <button className="service-select-btn">Select</button>
+              <button
+                className="service-select-btn"
+                onClick={() => handleServiceSelect(barber, service)}
+              >
+                Select
+              </button>
             </li>
           ))}
         </ul>
@@ -79,6 +106,19 @@ function Barbers() {
             ))
         )}
       </div>
+
+      <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
+        <DialogTitle>Booking</DialogTitle>
+        <DialogContent>
+          <Booking 
+            selectedBarber={barbers.find(barber => barber.barberId === selectedBarberId)}
+            selectedService={selectedService}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Close</Button>
+        </DialogActions>
+      </Dialog>
     </section>
   );
 }

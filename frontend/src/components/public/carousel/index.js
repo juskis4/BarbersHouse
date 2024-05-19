@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Slider from 'react-slick';
-import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -58,25 +57,6 @@ function CarouselBarber() {
           <img src={carouselImage5} alt="Fifth slide" />
         </div>
       </Slider>
-      <div className="button-container">
-        <Button
-          variant="contained"
-          className="book-here-btn"
-          onClick={handleClickOpen}
-        >
-          Book Here
-        </Button>
-      </div>
-
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Booking</DialogTitle>
-        <DialogContent>
-          <Booking />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Close</Button>
-        </DialogActions>
-      </Dialog>
 
       <section id="about-us" className="about-us">
         <h2>About Us</h2>

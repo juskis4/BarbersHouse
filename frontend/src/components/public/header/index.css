@@ -122,3 +122,44 @@
   color: #666;
   margin-top: 10px;
 }
+
+.floating-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #ffc107;
+  color: white;
+  border: none;
+  border-radius: 50%; 
+  width: 100px; 
+  height: 100px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  animation: pulse 1.5s infinite;
+}
+
+.floating-button:hover {
+  background-color: #e0a800;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.floating-button-icon {
+  font-size:30px; 
+}
+
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

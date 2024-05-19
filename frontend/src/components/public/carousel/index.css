@@ -31,11 +31,11 @@
 
 .slick-prev::before, .slick-next::before {
   font-size: 50px;
-  color: #000; 
+  color: #000; /* Adjust color as needed */
 }
 
 .slick-dots {
-  bottom: -30px; 
+  bottom: -30px; /* Adjust position as needed */
 }
 
 .button-container {
