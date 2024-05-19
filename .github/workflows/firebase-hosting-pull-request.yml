@@ -13,6 +13,7 @@ permissions:
 
 env:
   REACT_APP_API_KEY: ${{secrets.REACT_APP_API_KEY}}
+  SYNCFUSION_LICENSE_KEY: ${{secrets.SYNCFUSION_LICENSE_KEY}}
 
 jobs:
   build_and_preview:
