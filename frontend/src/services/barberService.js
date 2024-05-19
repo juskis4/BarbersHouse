@@ -1,7 +1,7 @@
 import axios from "axios";
 
-//const apiUrl = process.env.REACT_APP_API_KEY;
-const apiUrl = "https://api-zdmjnhdz7q-ew.a.run.app";
+const apiUrl = process.env.REACT_APP_API_KEY;
+
 export async function getBarbersWithServices() {
   try {
     const response = await axios.get(`${apiUrl}/Barbers/Services`);
