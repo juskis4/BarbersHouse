@@ -1,5 +1,6 @@
 import { AuthContext } from "../../context/AuthContext.js";
 import { ColorModeContext, useMode } from "../../theme.js";
+import Scheduler from "./scheduler/index.jsx";
 
 import * as React from "react";
 import { useNavigate, Outlet, Link } from "react-router-dom";
@@ -206,37 +207,7 @@ function AdminPage() {
                 {/* Render the content of the nested route (Barbers) */}
               </Container>
               <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-                <Grid container spacing={3}>
-                  <Grid xs={12} md={8} lg={9}>
-                    <Paper
-                      sx={{
-                        p: 2,
-                        display: "flex",
-                        flexDirection: "column",
-                        height: 240,
-                      }}
-                    >
-                      {/* 3/4 */}
-                    </Paper>
-                  </Grid>
-                  <Grid xs={12} md={4} lg={3}>
-                    <Paper
-                      sx={{
-                        p: 2,
-                        display: "flex",
-                        flexDirection: "column",
-                        height: 240,
-                      }}
-                    >
-                      {/* 1/4 */}
-                    </Paper>
-                  </Grid>
-                  <Grid xs={12}>
-                    <Paper
-                      sx={{ p: 2, display: "flex", flexDirection: "column" }}
-                    ></Paper>
-                  </Grid>
-                </Grid>
+                <Scheduler />
               </Container>
             </Box>
           </Box>
