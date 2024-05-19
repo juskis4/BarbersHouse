@@ -1,59 +1,124 @@
-import React, { useState, useEffect } from "react";
+import * as React from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   ScheduleComponent,
+  ViewsDirective,
+  ViewDirective,
+  TimelineViews,
+  TimelineMonth,
   Day,
   Week,
-  Month,
+  Agenda,
   Inject,
+  Resize,
+  DragAndDrop,
+  ResourcesDirective,
+  ResourceDirective,
 } from "@syncfusion/ej2-react-schedule";
 import { getBookings } from "../../../services/bookingService.js";
-import { Paper } from "@mui/material";
+import { getAllBarbers } from "../../../services/barberService.js";
 import dayjs from "dayjs";
-import duration from "dayjs/plugin/duration";
-
-dayjs.extend(duration);
 
 const Scheduler = () => {
   const [bookings, setBookings] = useState([]);
+  const [barbers, setBarbers] = useState([]);
+  const today = new Date();
 
   useEffect(() => {
-    const fetchBookings = async () => {
+    const fetchData = async () => {
       try {
-        const data = await getBookings();
-        setBookings(data);
+        const bookingsData = await getBookings();
+        const barbersData = await getAllBarbers();
+        console.log(barbersData);
+        setBookings(
+          bookingsData.map((booking) => ({
+            ...booking,
+            bookingDateTime: new Date(booking.bookingDateTime),
+            endTime: new Date(
+              dayjs(booking.bookingDateTime).add(booking.duration, "minute"),
+            ),
+          })),
+        );
+        setBarbers(barbersData);
       } catch (error) {
-        console.error("Error fetching bookings:", error);
+        console.error("Error fetching data:", error);
       }
     };
-    fetchBookings();
+    fetchData();
   }, []);
 
+  // Transform barbers to categoryData
+  const categoryData = barbers.map((barber) => ({
+    text: barber.name,
+    id: barber.barberId,
+    color: getRandomColor(),
+  }));
+
+  function getRandomColor() {
+    const letters = "0123456789ABCDEF";
+    let color = "#";
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+
   const eventSettings = {
-    dataSource: bookings.map((booking) => ({
-      // Map to add calculated endTime
-      ...booking,
-      endTime: dayjs(booking.bookingDateTime)
-        .add(booking.duration, "minute")
-        .toDate(), // Add duration (in minutes) to startTime
-    })),
+    dataSource: bookings,
     fields: {
       id: "bookingId",
       subject: { name: "serviceTitle" },
       startTime: { name: "bookingDateTime" },
-      endTime: { name: "endTime" }, // endTime field is now calculated
+      endTime: { name: "endTime" },
+      resourceId: "barberId",
     },
   };
 
   return (
-    <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-      <ScheduleComponent
-        height={500}
-        eventSettings={eventSettings}
-        showWeekNumber={true}
-      >
-        <Inject services={[Day, Week, Month]} />
-      </ScheduleComponent>
-    </Paper>
+    <ScheduleComponent
+      height={500}
+      selectedDate={today}
+      timezone={"UTC"}
+      eventSettings={eventSettings}
+      currentView="TimelineDay"
+      group={{ resources: ["Barbers"] }}
+    >
+      <ResourcesDirective>
+        <ResourceDirective
+          field="barberId"
+          title="Barber"
+          name="Barbers"
+          allowMultiple={true}
+          dataSource={categoryData}
+          textField="text"
+          idField="id"
+          colorField="color"
+        />
+      </ResourcesDirective>
+      <ViewsDirective>
+        <ViewDirective
+          displayName="Day"
+          option="TimelineDay"
+          startHour="06:00"
+          endHour="24:00"
+          timeScale={{ interval: 60, slotCount: 3 }}
+        />
+        <ViewDirective option="Week" startHour="06:00" endHour="24:00" />
+        <ViewDirective option="TimelineMonth" displayName="Month" />
+        <ViewDirective option="Agenda" />
+      </ViewsDirective>
+      <Inject
+        services={[
+          Day,
+          Week,
+          TimelineViews,
+          TimelineMonth,
+          Agenda,
+          Resize,
+          DragAndDrop,
+        ]}
+      />
+    </ScheduleComponent>
   );
 };
 
