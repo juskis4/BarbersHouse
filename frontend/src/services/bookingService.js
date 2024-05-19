@@ -35,3 +35,51 @@ export async function createBooking(bookingData) {
     }
   }
 }
+
+export async function getBookings(
+  barberId = null,
+  startDate = null,
+  endDate = null,
+) {
+  try {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      const params = {};
+      if (barberId) {
+        params.barberId = barberId;
+      }
+      if (startDate) {
+        params.startDate = startDate.toISOString();
+      }
+      if (endDate) {
+        params.endDate = endDate.toISOString();
+      }
+
+      const response = await axios.get(`${apiUrl}/Bookings`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: params,
+      });
+      const formattedBookings = response.data.map((booking) => ({
+        bookingId: booking.bookingId,
+        barberId: booking.barberId,
+        barberName: booking.barberName,
+        customerId: booking.customerId,
+        customerName: booking.customerName,
+        serviceId: booking.serviceId,
+        serviceTitle: booking.serviceTitle,
+        bookingDateTime: booking.bookingDateTime,
+        status: booking.status,
+        duration: booking.duration,
+      }));
+
+      console.log(formattedBookings);
+      return formattedBookings;
+    }
+  } catch (error) {
+    console.error("Error fetching bookings:", error);
+    throw error;
+  }
+}

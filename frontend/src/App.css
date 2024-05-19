@@ -1,6 +1,6 @@
 .App {
   text-align: center;
-  background-color: #f0dcc4 !important; 
+  background-color: #f0dcc4 !important;
 }
 
 .appBody {
@@ -18,9 +18,7 @@
   }
 }
 
-
-
-.App-header { 
+.App-header {
   background-color: #282c34;
   min-height: 100vh;
   display: flex;
@@ -29,7 +27,6 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
-  
 }
 
 .App-link {
@@ -45,4 +42,14 @@
   }
 }
 
-
+/* Synfusion css */
+@import "../node_modules/@syncfusion/ej2-base/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-buttons/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-calendars/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-dropdowns/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-inputs/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-lists/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-navigations/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-popups/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-splitbuttons/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-react-schedule/styles/material.css";

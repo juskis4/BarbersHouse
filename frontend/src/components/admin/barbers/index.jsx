@@ -133,7 +133,7 @@ const Barbers = () => {
         onClose={handleCloseDialog}
         onConfirm={handleConfirmDelete}
         title="Confirm Delete"
-        contentText="Are you sure you want to delete this barber? This action cannot be undone."
+        contentText="Are you sure you want to delete this barber? This will delete all related data (workHours, bookings, services). This action cannot be undone."
       />
     </Box>
   );
