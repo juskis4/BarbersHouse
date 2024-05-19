@@ -42,4 +42,17 @@ public class BookingService(IBookingsRepository bookingsRepository, IMapper mapp
         booking.Status = "Confirmed";
         await _bookingsRepository.SaveChangesAsync();
     }
+
+    public async Task CancelBooking(int barberId, int bookingId)
+    {
+        var booking = await _bookingsRepository.GetBookingByIdAsync(bookingId);
+
+        if (booking == null || booking.BarberId != barberId)
+        {
+            throw new ArgumentException("Booking not found for the specified barber.");
+        }
+
+        booking.Status = "Canceled";
+        await _bookingsRepository.SaveChangesAsync();
+    }
 }

@@ -9,4 +9,5 @@ public interface IBookingService
     Task<List<GetBookingsViewModel>> GetBookingsAsync(int? barberId = null, DateTimeOffset? startDate = null, DateTimeOffset? endDate = null);
     Task AddBookingAsync(AddBookingViewModel booking);
     Task ConfirmBooking(int barberId, int bookingId);
+    Task CancelBooking(int barberId, int bookingId);
 }

@@ -44,12 +44,31 @@ public class BookingsController(IBookingService bookingService) : ControllerBase
         }
     }
 
-    [HttpPut("{barberId:int}/bookings/{bookingId:int}")]
+    [HttpPut("{barberId:int}/bookings/{bookingId:int}/confirm")]
     public async Task<IActionResult> BookingConfirmation(int barberId, int bookingId)
     {
         try
         {
             await _bookingService.ConfirmBooking(barberId, bookingId);
+
+            return Ok(); 
+        }
+        catch (ArgumentException ex) 
+        {
+            return BadRequest(ex.Message);
+        }  
+        catch (Exception ex) 
+        {
+            return StatusCode(500, $"Internal server error. {ex.Message}"); 
+        }
+    }
+
+    [HttpPut("{barberId:int}/bookings/{bookingId:int}/cancel")]
+    public async Task<IActionResult> BookingCancel(int barberId, int bookingId)
+    {
+        try
+        {
+            await _bookingService.CancelBooking(barberId, bookingId);
 
             return Ok(); 
         }
