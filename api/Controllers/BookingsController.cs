@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using barbershouse.api.Services;
 using barbershouse.api.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace barbershouse.api.Controllers;
 
@@ -17,6 +18,26 @@ public class BookingsController(IBookingService bookingService) : ControllerBase
         {
             var bookings = await _bookingService.GetBookingsAsync(barberId, startDate, endDate);
             return Ok(bookings);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
+    
+    [HttpGet("{bookingId}")] 
+    [Authorize(Policy = "IsAdmin")]
+    public async Task<ActionResult<GetBookingDetailsViewModel>> GetBookingById(int bookingId)
+    {
+        try
+        {
+            var booking = await _bookingService.GetBookingByIdAsync(bookingId);
+            if (booking == null)
+            {
+                return NotFound(); 
+            }
+
+            return Ok(booking); 
         }
         catch (Exception ex)
         {
@@ -45,6 +66,7 @@ public class BookingsController(IBookingService bookingService) : ControllerBase
     }
 
     [HttpPut("{barberId:int}/bookings/{bookingId:int}/confirm")]
+    [Authorize(Policy = "IsAdmin")]
     public async Task<IActionResult> BookingConfirmation(int barberId, int bookingId)
     {
         try
@@ -64,6 +86,7 @@ public class BookingsController(IBookingService bookingService) : ControllerBase
     }
 
     [HttpPut("{barberId:int}/bookings/{bookingId:int}/cancel")]
+    [Authorize(Policy = "IsAdmin")]
     public async Task<IActionResult> BookingCancel(int barberId, int bookingId)
     {
         try

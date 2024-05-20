@@ -4,7 +4,7 @@ import Scheduler from "./scheduler/index.jsx";
 import { SnackbarProvider } from "notistack";
 
 import * as React from "react";
-import { useNavigate, Outlet, Link } from "react-router-dom";
+import { useNavigate, Outlet, Link, useLocation } from "react-router-dom";
 import { useEffect, useContext } from "react";
 import { styled, ThemeProvider } from "@mui/material/styles";
 import {
@@ -29,6 +29,8 @@ import Face6Icon from "@mui/icons-material/Face6";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ContentCutIcon from "@mui/icons-material/ContentCut";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 
 const drawerWidth = 240;
 
@@ -78,7 +80,7 @@ const Drawer = styled(MuiDrawer, {
 
 function AdminPage() {
   const [theme, colorMode] = useMode();
-
+  const location = useLocation();
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
@@ -154,6 +156,15 @@ function AdminPage() {
               <Divider />
               <List component="nav">
                 <ListItem disablePadding>
+                  <ListItemButton component={Link} to="/admin">
+                    <ListItemIcon>
+                      <DashboardIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Dashboard" />
+                  </ListItemButton>
+                </ListItem>
+                <Divider sx={{ my: 1 }} />
+                <ListItem disablePadding>
                   <ListItemButton component={Link} to="/admin/barbers">
                     <ListItemIcon>
                       <Face6Icon />
@@ -186,6 +197,23 @@ function AdminPage() {
                     <ListItemText primary="Add Services" />
                   </ListItemButton>
                 </ListItem>
+                <Divider sx={{ my: 1 }} />
+                <ListItem disablePadding>
+                  <ListItemButton component={Link} to="/admin/bookings">
+                    <ListItemIcon>
+                      <AutoStoriesIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Bookings" />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <AddCircleOutlineIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Add Booking" />
+                  </ListItemButton>
+                </ListItem>
               </List>
             </Drawer>
             <Box
@@ -206,9 +234,12 @@ function AdminPage() {
                 {/* Render the content of the nested route (Barbers) */}
               </Container>
               <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-                <SnackbarProvider maxSnack={3}>
-                  <Scheduler />
-                </SnackbarProvider>
+                {/* Conditionally render the Scheduler only on the main dashboard route */}
+                {location.pathname === "/admin" && (
+                  <SnackbarProvider maxSnack={3}>
+                    <Scheduler />
+                  </SnackbarProvider>
+                )}
               </Container>
             </Box>
           </Box>
