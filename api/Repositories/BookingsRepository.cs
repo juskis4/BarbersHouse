@@ -31,6 +31,16 @@ public class BookingsRepository : IBookingsRepository
                          .ToListAsync();
     }
 
+    public async Task<Booking?> GetBookingByIdWithDetailsAsync(int bookingId)
+    {
+        return await _context.Bookings
+                            .Include(b => b.Customer)
+                            .Include(b => b.Service)
+                            .Include(b => b.Barber)
+                            .Include(b => b.Customer)
+                            .FirstOrDefaultAsync(b => b.BookingID == bookingId);
+    }
+
     public async Task<IEnumerable<Booking?>> GetBookingsAsync(int? barberId = null, DateTimeOffset? startDate = null, DateTimeOffset? endDate = null)
     {
         var query = _context.Bookings
