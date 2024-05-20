@@ -2,7 +2,10 @@ import * as React from "react";
 import { useState, useEffect, useRef } from "react";
 import "./index.css";
 
-import { getBookings } from "../../../services/bookingService.js";
+import {
+  getBookings,
+  cancelBooking,
+} from "../../../services/bookingService.js";
 import { getAllBarbers } from "../../../services/barberService.js";
 
 import {
@@ -19,8 +22,11 @@ import {
   ResourceDirective,
 } from "@syncfusion/ej2-react-schedule";
 import { Internationalization, registerLicense } from "@syncfusion/ej2-base";
-import { Button, CircularProgress, Typography } from "@mui/material";
+import { CircularProgress, Typography, IconButton } from "@mui/material";
 import dayjs from "dayjs";
+import CancelIcon from "@mui/icons-material/Cancel";
+import EditNoteIcon from "@mui/icons-material/EditNote";
+import { useSnackbar } from "notistack";
 
 const licenseKey = process.env.SYNCFUSION_LICENSE_KEY;
 registerLicense(licenseKey);
@@ -30,6 +36,9 @@ const Scheduler = () => {
   const [barbers, setBarbers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { enqueueSnackbar } = useSnackbar();
+  const [refreshKey, setRefreshKey] = useState(0);
+
   const today = new Date();
   const intl = new Internationalization();
   let scheduleObj = useRef(null);
@@ -61,6 +70,7 @@ const Scheduler = () => {
     fetchData();
   }, []);
 
+  console.log(barbers);
   // Transform barbers to categoryData
   const categoryData = barbers.map((barber) => ({
     text: barber.name,
@@ -81,8 +91,11 @@ const Scheduler = () => {
     if (data.elementType === "cell") {
       return { alignItems: "center", color: "#919191" };
     } else {
-      const resourceData = bookings;
-      return { background: resourceData.Color, color: "#FFFFFF" };
+      const resource = scheduleObj.current.getResourceCollections()[0];
+      const resourceData = resource.dataSource.filter(
+        (resource) => resource.id === data.barberId,
+      )[0];
+      return { background: resourceData?.color, color: "#FFFFFF" };
     }
   };
 
@@ -145,86 +158,52 @@ const Scheduler = () => {
   };
 
   const footerTemplate = (props) => {
+    return <EventFooter data={props} />;
+  };
+
+  const EventFooter = ({ data }) => {
+    // Separate component for footer buttons
+    const scheduleObj = useRef();
+
+    const handleDelete = async () => {
+      try {
+        setError(null);
+        const eventDetails = data;
+        let currentAction = "Delete";
+        await cancelBooking(eventDetails.barberId, eventDetails.bookingId);
+        scheduleObj.current?.deleteEvent(eventDetails, currentAction);
+        enqueueSnackbar("Booking canceled successfully.", {
+          variant: "success",
+          autoHideDuration: 3000,
+          anchorOrigin: { vertical: "top", horizontal: "right" },
+        });
+        setBookings(
+          bookings.filter((booking) => booking.bookingId !== data.bookingId),
+        );
+        setRefreshKey(refreshKey + 1);
+      } catch (error) {
+        setError("Error while cancelling a booking.");
+        console.log(error);
+      }
+    };
+
     return (
       <div className="quick-info-footer">
-        {props.elementType === "cell" ? (
-          <div className="cell-footer">
-            <Button
-              type="submit"
-              aria-label="edit"
-              // onClick={buttonClickActions.bind(this)}
-              size="small"
-              color="primary"
-              sx={{
-                minWidth: "70px",
-                minHeight: "25px",
-                margin: "10px 10px 5px 0",
-                fontSize: "0.8rem",
-                textTransform: "none",
-              }}
-              variant="contained"
-              disabled={true}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              aria-label="edit"
-              size="small"
-              color="primary"
-              sx={{
-                minWidth: "70px",
-                minHeight: "25px",
-                margin: "10px 10px 5px 0",
-                fontSize: "0.8rem",
-                textTransform: "none",
-              }}
-              variant="contained"
-              disabled={true}
-            >
-              Edit
-            </Button>
-          </div>
-        ) : (
-          <div className="event-footer">
-            <Button
-              type="submit"
-              aria-label="edit"
-              // onClick={buttonClickActions.bind(this)}
-              size="small"
-              color="primary"
-              sx={{
-                minWidth: "70px",
-                minHeight: "25px",
-                margin: "10px 10px 5px 0",
-                fontSize: "0.8rem",
-                textTransform: "none",
-              }}
-              variant="contained"
-              disabled={isLoading}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              aria-label="edit"
-              // onClick={buttonClickActions.bind(this)}
-              size="small"
-              color="primary"
-              sx={{
-                minWidth: "70px",
-                minHeight: "25px",
-                margin: "10px 10px 5px 0",
-                fontSize: "0.8rem",
-                textTransform: "none",
-              }}
-              variant="contained"
-              disabled={isLoading}
-            >
-              Edit
-            </Button>
-          </div>
-        )}
+        <div className="event-footer">
+          <IconButton aria-label="edit" onClick={handleDelete} size="small">
+            Edit
+            <EditNoteIcon />
+          </IconButton>
+          <IconButton
+            aria-label="delete"
+            onClick={handleDelete}
+            size="small"
+            color="error"
+          >
+            Cancel
+            <CancelIcon />
+          </IconButton>
+        </div>
       </div>
     );
   };
@@ -245,6 +224,7 @@ const Scheduler = () => {
       {error && <Typography color="error">{error}</Typography>}
       <ScheduleComponent
         height={500}
+        key={refreshKey}
         selectedDate={today}
         timezone={"UTC"}
         eventSettings={eventSettings}
@@ -255,6 +235,19 @@ const Scheduler = () => {
           header: headerTemplate.bind(this),
           content: contentTemplate.bind(this),
           footer: footerTemplate.bind(this),
+        }}
+        actionComplete={async () => {
+          // Refetch bookings after action is completed
+          const bookingsData = await getBookings();
+          setBookings(
+            bookingsData.map((booking) => ({
+              ...booking,
+              bookingDateTime: new Date(booking.bookingDateTime),
+              endTime: new Date(
+                dayjs(booking.bookingDateTime).add(booking.duration, "minute"),
+              ),
+            })),
+          );
         }}
       >
         <ResourcesDirective>
