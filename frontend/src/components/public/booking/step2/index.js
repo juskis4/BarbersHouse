@@ -6,34 +6,23 @@ import { Row } from './row';
 const Step2 = ({ services, selectedBarberId, onSelectedServiceChange, setSelectedServices, selectedRows, setSelectedRows }) => {
 
   useEffect(() => {
-    // When barberId changes, clear selectedServices and selectedRows
+    
     setSelectedRows([]);
     setSelectedServices([]);
   }, [selectedBarberId, setSelectedRows, setSelectedServices]); 
 
   const handleRowClick = (rowId) => {
-    setSelectedRows(prev => {
-        if (prev.includes(rowId)) { // If it's already selected, deselect
-            return prev.filter(id => id !== rowId);
-        } else {  // If it's not selected, select
-            return [...prev, rowId];
-        }
-    });
+    setSelectedRows([rowId]); 
 
-    setSelectedServices(prev => {
-        const selectedService = services.find(service => service.serviceId === rowId);
-        if (prev.includes(selectedService)) {  // If service is already selected, remove it
-            return prev.filter(s => s.serviceId !== rowId);
-        } else {  // If service is not selected, add it
-            return [...prev, selectedService];
-        }
-    });
+    const selectedService = services.find(service => service.serviceId === rowId);
+    setSelectedServices([selectedService]); 
 
-    // Call onSelectedServiceChange prop
+
     if (onSelectedServiceChange) {
         onSelectedServiceChange(rowId);
     }
 };
+
   const filteredServices = services.filter((service) => service.barberId === selectedBarberId || selectedBarberId === null);
 
   return (
@@ -76,6 +65,10 @@ Step2.propTypes = {
     barberId: PropTypes.number.isRequired,
   })).isRequired,
   selectedBarberId: PropTypes.string.isRequired,
+  onSelectedServiceChange: PropTypes.func,
+  setSelectedServices: PropTypes.func.isRequired,
+  selectedRows: PropTypes.arrayOf(PropTypes.number).isRequired,
+  setSelectedRows: PropTypes.func.isRequired,
 };
 
 export default Step2;

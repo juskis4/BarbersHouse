@@ -9,6 +9,7 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { useState, useEffect } from "react";
 import { getBarbersWithServices } from "../../../../services/barberService.js";
+import { useTranslation } from 'react-i18next';
 
 import Step1 from "../step1";
 import Step2 from "../step2";
@@ -16,10 +17,11 @@ import Step3 from "../step3";
 import Step4 from "../step4";
 
 export default function VerticalLinearStepper() {
-  const [activeStep, setActiveStep] = React.useState(0);
+  const { t } = useTranslation();
+  const [activeStep, setActiveStep] = useState(0);
   const numSteps = 4;
 
-  const [selectedBarberId, setSelectedBarberId] = React.useState("");
+  const [selectedBarberId, setSelectedBarberId] = useState("");
   const [selectedServices, setSelectedServices] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
@@ -81,9 +83,9 @@ export default function VerticalLinearStepper() {
           },
         }}
       >
-        {/* Step 1 */}
-        <Step key={"Select a Barber"}>
-          <StepLabel>Select a Barber</StepLabel>
+    
+        <Step key={t('step1.title')}>
+          <StepLabel>{t('step1.title')}</StepLabel>
           <StepContent>
             <Step1
               barbers={barbers}
@@ -99,23 +101,22 @@ export default function VerticalLinearStepper() {
                   sx={{ mt: 1, mr: 1 }}
                   disabled={selectedBarberId === ""}
                 >
-                  Continue
+                  {t('common.continue')}
                 </Button>
                 <Button
                   disabled={activeStep === 0}
                   onClick={() => handleBack()}
                   sx={{ mt: 1, mr: 1 }}
                 >
-                  Back
+                  {t('common.back')}
                 </Button>
               </div>
             </Box>
           </StepContent>
         </Step>
 
-        {/* Step 2 */}
-        <Step key={"Select a Service"}>
-          <StepLabel>Select a Service</StepLabel>
+        <Step key={t('step2.title')}>
+          <StepLabel>{t('step2.title')}</StepLabel>
           <StepContent>
             <Step2
               services={services}
@@ -133,23 +134,23 @@ export default function VerticalLinearStepper() {
                   sx={{ mt: 1, mr: 1 }}
                   disabled={selectedServices.length === 0}
                 >
-                  Continue
+                  {t('common.continue')}
                 </Button>
                 <Button
                   disabled={activeStep === 0}
                   onClick={() => handleBack()}
                   sx={{ mt: 1, mr: 1 }}
                 >
-                  Back
+                  {t('common.back')}
                 </Button>
               </div>
             </Box>
           </StepContent>
         </Step>
 
-        {/* Step 3 */}
-        <Step key={"Pick a date and time"}>
-          <StepLabel>Pick a date and time</StepLabel>
+       
+        <Step key={t('step3.title')}>
+          <StepLabel>{t('step3.title')}</StepLabel>
           <StepContent>
             <Step3
               selectedBarberId={selectedBarberId}
@@ -165,23 +166,23 @@ export default function VerticalLinearStepper() {
                   sx={{ mt: 1, mr: 1 }}
                   disabled={selectedTimeSlot === null}
                 >
-                  Continue
+                  {t('common.continue')}
                 </Button>
                 <Button
                   disabled={activeStep === 0}
                   onClick={handleBack}
                   sx={{ mt: 1, mr: 1 }}
                 >
-                  Back
+                  {t('common.back')}
                 </Button>
               </div>
             </Box>
           </StepContent>
         </Step>
 
-        {/* Step 4 */}
-        <Step key={"Enter Details"}>
-          <StepLabel>Enter Details</StepLabel>
+        
+        <Step key={t('step4.title')}>
+          <StepLabel>{t('step4.title')}</StepLabel>
           <StepContent>
             <Step4
               selectedBarberId={selectedBarberId}
@@ -196,7 +197,7 @@ export default function VerticalLinearStepper() {
                   onClick={handleBack}
                   sx={{ mt: 1, mr: 1 }}
                 >
-                  Back
+                  {t('common.back')}
                 </Button>
               </div>
             </Box>
@@ -205,8 +206,8 @@ export default function VerticalLinearStepper() {
       </Stepper>
       {activeStep === numSteps && (
         <Paper square elevation={0} sx={{ p: 3 }}>
-          <Typography>You Booking was successful</Typography>
-          <Typography>See you soon!</Typography>
+          <Typography>{t('stepper.success')}</Typography>
+          <Typography>{t('stepper.seeYouSoon')}</Typography>
         </Paper>
       )}
     </Box>

@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import CircularProgress from '@mui/material/CircularProgress';
 import "./index.css";
+import { useTranslation } from 'react-i18next';
 
 function Team() {
+  const { t } = useTranslation(); 
   const [barbers, setBarbers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -26,7 +28,7 @@ function Team() {
   return (
     <section id="team" className="team-container">
       <div className="team-content">
-        <h2 className="team-header">Get to know the team</h2>
+        <h2 className="team-header">{t('team.header')}</h2>
         {isLoading ? (
           <div style={{ width: '100%', textAlign: 'center', marginTop: 20 }}>
             <CircularProgress />

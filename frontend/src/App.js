@@ -8,6 +8,7 @@ import { AuthProvider } from "./context/AuthContext.js";
 import { ThemeProvider } from "@mui/material/styles";
 import { useMode, ColorModeContext } from "./theme.js";
 
+
 const AdminPage = lazy(() => import("./components/admin"));
 const Barbers = lazy(() => import("./components/admin/barbers"));
 const Bookings = lazy(() => import("./components/admin/bookings"));

@@ -31,7 +31,7 @@
 
 .slick-prev::before, .slick-next::before {
   font-size: 50px;
-  color: #000; 
+  color: #000;
 }
 
 .slick-dots {
