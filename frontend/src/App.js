@@ -10,6 +10,7 @@ import { useMode, ColorModeContext } from "./theme.js";
 
 const AdminPage = lazy(() => import("./components/admin"));
 const Barbers = lazy(() => import("./components/admin/barbers"));
+const Bookings = lazy(() => import("./components/admin/bookings"));
 const BarberProfile = lazy(
   () => import("./components/admin/barbers/barberProfile"),
 );
@@ -63,6 +64,14 @@ const App = () => {
           element: (
             <Suspense fallback={<div>Loading...</div>}>
               <BarberProfile />
+            </Suspense>
+          ),
+        },
+        {
+          path: "bookings",
+          element: (
+            <Suspense fallback={<div>Loading...</div>}>
+              <Bookings />
             </Suspense>
           ),
         },

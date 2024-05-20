@@ -70,7 +70,6 @@ const Scheduler = () => {
     fetchData();
   }, []);
 
-  console.log(barbers);
   // Transform barbers to categoryData
   const categoryData = barbers.map((barber) => ({
     text: barber.name,
