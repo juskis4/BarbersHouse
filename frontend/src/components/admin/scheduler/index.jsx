@@ -81,8 +81,11 @@ const Scheduler = () => {
     if (data.elementType === "cell") {
       return { alignItems: "center", color: "#919191" };
     } else {
-      const resourceData = bookings;
-      return { background: resourceData.Color, color: "#FFFFFF" };
+      const resource = scheduleObj.current.getResourceCollections()[0];
+      const resourceData = resource.dataSource.filter(
+        (resource) => resource.id === data.barberId,
+      )[0];
+      return { background: resourceData?.color, color: "#FFFFFF" };
     }
   };
 
