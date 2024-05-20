@@ -82,3 +82,38 @@ export async function getBookings(
     throw error;
   }
 }
+
+export async function cancelBooking(barberId, bookingId) {
+  try {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      const response = await axios.put(
+        `${apiUrl}/Bookings/${barberId}/bookings/${bookingId}/cancel`,
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (response.status === 200) {
+        return response.data;
+      } else {
+        throw new Error(response.data.message || "Error cancelling booking");
+      }
+    }
+  } catch (error) {
+    console.error("Error cancelling booking:", error);
+    if (error.response) {
+      throw new Error(
+        `Server responded with ${error.response.status}: ${
+          error.response.data.message || error.response.data
+        }`,
+      );
+    } else {
+      throw new Error("Error setting up the request");
+    }
+  }
+}
