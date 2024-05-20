@@ -6,10 +6,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 
 import ConfirmationDialog from "../confirmDialog";
-import {
-  getBookings,
-  cancelBooking,
-} from "../../../services/bookingService.js";
+import { getBookings } from "../../../services/bookingService.js";
 
 dayjs.extend(utc);
 const Bookings = () => {
