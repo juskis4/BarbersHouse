@@ -16,6 +16,20 @@ public class BookingService(IBookingsRepository bookingsRepository, IMapper mapp
         return bookings;
     }
 
+    public async Task<GetBookingDetailsViewModel?> GetBookingByIdAsync(int bookingId)
+    {
+        var booking = await _bookingsRepository.GetBookingByIdWithDetailsAsync(bookingId);
+        var bookingDetails = _mapper.Map<GetBookingDetailsViewModel>(booking);
+        bookingDetails.Barber.Services = null; 
+        return bookingDetails;
+    }
+
+    public async Task<List<GetBookingsViewModel>> GetBookingsAsync(int? barberId = null, DateTimeOffset? startDate = null, DateTimeOffset? endDate = null)
+    {
+        var bookings = await _bookingsRepository.GetBookingsAsync(barberId, startDate, endDate);
+        return _mapper.Map<List<GetBookingsViewModel>>(bookings);
+    }
+    
     public async Task AddBookingAsync(AddBookingViewModel bookingViewModel)
     {
         var booking = _mapper.Map<Booking>(bookingViewModel);
@@ -34,6 +48,19 @@ public class BookingService(IBookingsRepository bookingsRepository, IMapper mapp
         }
 
         booking.Status = "Confirmed";
+        await _bookingsRepository.SaveChangesAsync();
+    }
+
+    public async Task CancelBooking(int barberId, int bookingId)
+    {
+        var booking = await _bookingsRepository.GetBookingByIdAsync(bookingId);
+
+        if (booking == null || booking.BarberId != barberId)
+        {
+            throw new ArgumentException("Booking not found for the specified barber.");
+        }
+
+        booking.Status = "Canceled";
         await _bookingsRepository.SaveChangesAsync();
     }
 }

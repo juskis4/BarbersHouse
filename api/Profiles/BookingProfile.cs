@@ -15,6 +15,17 @@ public class BookingProfile : Profile
             .ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.BookingDateTime));
 
         CreateMap<AddBookingViewModel, Booking>()
-            .ForMember(dest => dest.BookingDateTime, opt => opt.MapFrom(src => src.StartTime)); 
+            .ForMember(dest => dest.BookingDateTime, opt => opt.MapFrom(src => src.StartTime));
+
+        CreateMap<Booking, GetBookingsViewModel>()
+            .ForMember(dest => dest.BarberName, opt => opt.MapFrom(src => src.Barber.Name))
+            .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.CustomerName))
+            .ForMember(dest => dest.ServiceTitle, opt => opt.MapFrom(src => src.Service.Title))
+            .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => src.Service.Duration));
+
+        CreateMap<Booking, GetBookingDetailsViewModel>()
+            .ForMember(dest => dest.Barber, opt => opt.MapFrom(src => src.Barber))
+            .ForMember(dest => dest.Service, opt => opt.MapFrom(src => src.Service))
+            .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.CustomerName));
     }
 }

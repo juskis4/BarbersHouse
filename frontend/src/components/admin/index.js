@@ -1,14 +1,15 @@
 import { AuthContext } from "../../context/AuthContext.js";
 import { ColorModeContext, useMode } from "../../theme.js";
+import Scheduler from "./scheduler/index.jsx";
+import { SnackbarProvider } from "notistack";
 
 import * as React from "react";
-import { useNavigate, Outlet, Link } from "react-router-dom";
+import { useNavigate, Outlet, Link, useLocation } from "react-router-dom";
 import { useEffect, useContext } from "react";
 import { styled, ThemeProvider } from "@mui/material/styles";
 import {
   CssBaseline,
   Container,
-  Paper,
   Box,
   Divider,
   IconButton,
@@ -21,7 +22,6 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
-import Grid from "@mui/material/Unstable_Grid2";
 import MuiAppBar from "@mui/material/AppBar";
 import MuiDrawer from "@mui/material/Drawer";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -29,6 +29,8 @@ import Face6Icon from "@mui/icons-material/Face6";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ContentCutIcon from "@mui/icons-material/ContentCut";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 
 const drawerWidth = 240;
 
@@ -78,7 +80,7 @@ const Drawer = styled(MuiDrawer, {
 
 function AdminPage() {
   const [theme, colorMode] = useMode();
-
+  const location = useLocation();
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
@@ -154,6 +156,15 @@ function AdminPage() {
               <Divider />
               <List component="nav">
                 <ListItem disablePadding>
+                  <ListItemButton component={Link} to="/admin">
+                    <ListItemIcon>
+                      <DashboardIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Dashboard" />
+                  </ListItemButton>
+                </ListItem>
+                <Divider sx={{ my: 1 }} />
+                <ListItem disablePadding>
                   <ListItemButton component={Link} to="/admin/barbers">
                     <ListItemIcon>
                       <Face6Icon />
@@ -186,6 +197,23 @@ function AdminPage() {
                     <ListItemText primary="Add Services" />
                   </ListItemButton>
                 </ListItem>
+                <Divider sx={{ my: 1 }} />
+                <ListItem disablePadding>
+                  <ListItemButton component={Link} to="/admin/bookings">
+                    <ListItemIcon>
+                      <AutoStoriesIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Bookings" />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <AddCircleOutlineIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Add Booking" />
+                  </ListItemButton>
+                </ListItem>
               </List>
             </Drawer>
             <Box
@@ -206,37 +234,12 @@ function AdminPage() {
                 {/* Render the content of the nested route (Barbers) */}
               </Container>
               <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-                <Grid container spacing={3}>
-                  <Grid xs={12} md={8} lg={9}>
-                    <Paper
-                      sx={{
-                        p: 2,
-                        display: "flex",
-                        flexDirection: "column",
-                        height: 240,
-                      }}
-                    >
-                      {/* 3/4 */}
-                    </Paper>
-                  </Grid>
-                  <Grid xs={12} md={4} lg={3}>
-                    <Paper
-                      sx={{
-                        p: 2,
-                        display: "flex",
-                        flexDirection: "column",
-                        height: 240,
-                      }}
-                    >
-                      {/* 1/4 */}
-                    </Paper>
-                  </Grid>
-                  <Grid xs={12}>
-                    <Paper
-                      sx={{ p: 2, display: "flex", flexDirection: "column" }}
-                    ></Paper>
-                  </Grid>
-                </Grid>
+                {/* Conditionally render the Scheduler only on the main dashboard route */}
+                {location.pathname === "/admin" && (
+                  <SnackbarProvider maxSnack={3}>
+                    <Scheduler />
+                  </SnackbarProvider>
+                )}
               </Container>
             </Box>
           </Box>

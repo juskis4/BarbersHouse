@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using barbershouse.api.Services;
 using barbershouse.api.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace barbershouse.api.Controllers;
 
@@ -10,6 +11,39 @@ public class BookingsController(IBookingService bookingService) : ControllerBase
 {
     private readonly IBookingService _bookingService = bookingService;
     
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<GetBookingsViewModel>>> GetBookings(int? barberId = null, DateTimeOffset? startDate = null, DateTimeOffset? endDate = null)
+    {
+        try
+        {
+            var bookings = await _bookingService.GetBookingsAsync(barberId, startDate, endDate);
+            return Ok(bookings);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
+    
+    [HttpGet("{bookingId}")] 
+    [Authorize(Policy = "IsAdmin")]
+    public async Task<ActionResult<GetBookingDetailsViewModel>> GetBookingById(int bookingId)
+    {
+        try
+        {
+            var booking = await _bookingService.GetBookingByIdAsync(bookingId);
+            if (booking == null)
+            {
+                return NotFound(); 
+            }
+
+            return Ok(booking); 
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
 
     [HttpPost("{barberId}/bookings")]
     public async Task<IActionResult> AddBookingAsync([FromBody] AddBookingViewModel booking)
@@ -31,12 +65,33 @@ public class BookingsController(IBookingService bookingService) : ControllerBase
         }
     }
 
-    [HttpPut("{barberId:int}/bookings/{bookingId:int}")]
+    [HttpPut("{barberId:int}/bookings/{bookingId:int}/confirm")]
+    [Authorize(Policy = "IsAdmin")]
     public async Task<IActionResult> BookingConfirmation(int barberId, int bookingId)
     {
         try
         {
             await _bookingService.ConfirmBooking(barberId, bookingId);
+
+            return Ok(); 
+        }
+        catch (ArgumentException ex) 
+        {
+            return BadRequest(ex.Message);
+        }  
+        catch (Exception ex) 
+        {
+            return StatusCode(500, $"Internal server error. {ex.Message}"); 
+        }
+    }
+
+    [HttpPut("{barberId:int}/bookings/{bookingId:int}/cancel")]
+    [Authorize(Policy = "IsAdmin")]
+    public async Task<IActionResult> BookingCancel(int barberId, int bookingId)
+    {
+        try
+        {
+            await _bookingService.CancelBooking(barberId, bookingId);
 
             return Ok(); 
         }
