@@ -10,19 +10,6 @@ public class BookingHub(IBarbersService barbersService, IBookingService bookingS
     private readonly IBookingService _bookingService = bookingService;
     private readonly IServicesService _servicesService = servicesService;
 
-    public async Task GetTimeSlots(int barberId, int[] selectedServices)
-    {
-        var request = new AvailableTimeSlotRequestViewModel
-        {
-            SelectedDate = DateTime.Today.AddDays(3),
-            SelectedBarberId = barberId,
-            SelectedServiceIds = selectedServices
-        };
-        var timeSlots = await CalculateTimeSlots(request);
-
-        await Clients.Caller.SendAsync("ReceiveAvailableTimeSlots", timeSlots);
-    }
-
     public async Task GetTimeSlotsForDate(int barberId, int[] selectedServices, DateTime date)
     {
         var request = new AvailableTimeSlotRequestViewModel
