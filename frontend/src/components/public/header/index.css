@@ -8,6 +8,16 @@
   position: relative;
 }
 
+.rating-link {
+  text-decoration: none;
+  color: inherit; /* Use this to inherit the color from the parent */
+}
+
+.rating-link:hover {
+  text-decoration: none;
+  color: inherit; /* Optional: Add any hover color you prefer */
+}
+
 .logo-section {
   flex: 1;
   display: flex;
@@ -162,4 +172,7 @@
   100% {
     transform: scale(1);
   }
+
+
+  
 }

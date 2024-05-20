@@ -1,7 +1,10 @@
 import React from 'react';
 import './navigationBar.css';
+import { useTranslation } from 'react-i18next';
 
 function NavigationBar() {
+  const { t } = useTranslation(); 
+
   const scrollToSection = (sectionId) => {
     document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
   };
@@ -12,22 +15,22 @@ function NavigationBar() {
         <ul className="text-center whitespace-no-wrap max-w-full scrollbar-hidden overflow-x-auto" style={{ transform: 'translateY(-1px)' }}>
           <li className="inline text-mid">
             <button className="opacity-50 font-medium btn border-t border-primary opacity-100" onClick={() => scrollToSection('about-us')}>
-              <span className="btn__content p-4">About Us</span>
+              <span className="btn__content p-4">{t('navigation.aboutUs')}</span>
             </button>
           </li>
           <li className="inline text-mid">
             <button className="opacity-50 font-medium btn" onClick={() => scrollToSection('services')}>
-              <span className="btn__content p-4">Services</span>
+              <span className="btn__content p-4">{t('navigation.services')}</span>
             </button>
           </li>
           <li className="inline text-mid">
             <button className="opacity-50 font-medium btn" onClick={() => scrollToSection('team')}>
-              <span className="btn__content p-4">Team</span>
+              <span className="btn__content p-4">{t('navigation.team')}</span>
             </button>
           </li>
           <li className="inline text-mid">
             <button className="opacity-50 font-medium btn" onClick={() => scrollToSection('faq')}>
-              <span className="btn__content p-4">FAQ</span>
+              <span className="btn__content p-4">{t('navigation.faq')}</span>
             </button>
           </li>
         </ul>

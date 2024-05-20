@@ -2,8 +2,11 @@ import React from "react";
 import "./index.css";
 import logo from "../../../assets/barbershop_logo.png";
 import { FaInstagram, FaPhone, FaMapPin } from "react-icons/fa";
+import { useTranslation } from 'react-i18next';
 
 function Footer() {
+  const { t } = useTranslation();
+
   const scrollToSection = (sectionId) => {
     document.getElementById(sectionId).scrollIntoView({ behavior: "smooth" });
   };
@@ -16,12 +19,12 @@ function Footer() {
           <div className="footer-logo-circle"></div>
         </div>
         <ul className="footer-links">
-          <li onClick={() => scrollToSection("about-us")}>About Us</li>
-          <li onClick={() => scrollToSection("services")}>Services</li>
-          <li onClick={() => scrollToSection("team")}>Team</li>
-          <li onClick={() => scrollToSection("faq")}>FAQ</li>
+          <li onClick={() => scrollToSection("about-us")}>{t('footer.aboutUs')}</li>
+          <li onClick={() => scrollToSection("services")}>{t('footer.services')}</li>
+          <li onClick={() => scrollToSection("team")}>{t('footer.team')}</li>
+          <li onClick={() => scrollToSection("faq")}>{t('footer.faq')}</li>
         </ul>
-        <h3 className="footer-contacts-title">Contacts</h3>
+        <h3 className="footer-contacts-title">{t('footer.contact')}</h3>
         <ul className="footer-contacts">
           <li>
             <a
@@ -29,8 +32,7 @@ function Footer() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <FaMapPin style={{ color: "orange", marginRight: "5px" }} /> Show
-              on map
+              <FaMapPin style={{ color: "orange", marginRight: "5px" }} /> {t('footer.showOnMap')}
             </a>
           </li>
           <li>
@@ -39,8 +41,7 @@ function Footer() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <FaPhone style={{ color: "orange", marginRight: "5px" }} /> +45 52
-              64 42 96
+              <FaPhone style={{ color: "orange", marginRight: "5px" }} /> +45 52 64 42 96
             </a>
           </li>
           <li>
@@ -49,8 +50,7 @@ function Footer() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <FaInstagram style={{ color: "orange", marginRight: "5px" }} />{" "}
-              barbershouse.dk
+              <FaInstagram style={{ color: "orange", marginRight: "5px" }} /> barbershouse.dk
             </a>
           </li>
         </ul>

@@ -9,8 +9,10 @@ import Button from '@mui/material/Button';
 import axios from 'axios';
 import Booking from '../booking';
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 function Barbers() {
+  const { t } = useTranslation();
   const [selectedBarberId, setSelectedBarberId] = useState(null);
   const [selectedService, setSelectedService] = useState(null);
   const [barbers, setBarbers] = useState([]);
@@ -68,7 +70,7 @@ function Barbers() {
                 className="service-select-btn"
                 onClick={() => handleServiceSelect(barber, service)}
               >
-                Select
+                {t('barbers.select')}
               </button>
             </li>
           ))}
@@ -80,7 +82,7 @@ function Barbers() {
   return (
     <section id="services" className="services-container">
       <div className="services-content">
-        <h2 className="services-header">Services</h2>
+        <h2 className="services-header">{t('barbers.services')}</h2>
         <div className="services-tabs">
           {barbers.map((barber) => (
             <button
@@ -108,7 +110,7 @@ function Barbers() {
       </div>
 
       <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
-        <DialogTitle>Booking</DialogTitle>
+        <DialogTitle>{t('barbers.booking')}</DialogTitle>
         <DialogContent>
           <Booking 
             selectedBarber={barbers.find(barber => barber.barberId === selectedBarberId)}
@@ -116,7 +118,7 @@ function Barbers() {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Close</Button>
+          <Button onClick={handleClose}>{t('common.close')}</Button>
         </DialogActions>
       </Dialog>
     </section>

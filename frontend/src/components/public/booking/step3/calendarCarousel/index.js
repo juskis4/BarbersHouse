@@ -22,8 +22,7 @@ function CalendarCarousel({ onDateSelected }) {
       sx={{ 
         "& .MuiPaper-root": { padding: "16px", textAlign: "center" } }}
     >
-      {/* TODO change to render the whole month */}
-      {[...Array(7)].map((_, index) => {
+        {[...Array(7)].map((_, index) => {
         const date = dayjs().add(index, "day");
 
         return (
