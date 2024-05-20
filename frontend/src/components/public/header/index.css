@@ -10,12 +10,12 @@
 
 .rating-link {
   text-decoration: none;
-  color: inherit; /* Use this to inherit the color from the parent */
+  color: inherit; 
 }
 
 .rating-link:hover {
   text-decoration: none;
-  color: inherit; /* Optional: Add any hover color you prefer */
+  color: inherit; 
 }
 
 .logo-section {
