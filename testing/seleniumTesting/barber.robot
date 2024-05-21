@@ -236,15 +236,3 @@ Go back to previous step in booking a reservation
     Click Element    xpath=/html/body/div[2]/div[3]/div/div[2]/button
     Sleep    1s
     Close Browser
-
-
-
-
-
-
-
-
-
-
-
-    
