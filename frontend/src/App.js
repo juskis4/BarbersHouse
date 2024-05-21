@@ -15,6 +15,9 @@ const Bookings = lazy(() => import("./components/admin/bookings"));
 const BarberProfile = lazy(
   () => import("./components/admin/barbers/barberProfile"),
 );
+const BookingDetails = lazy(
+  () => import("./components/admin/bookings/bookingDetails"),
+);
 const AddBarber = lazy(() => import("./components/admin/addBarber"));
 
 const App = () => {
@@ -73,6 +76,14 @@ const App = () => {
           element: (
             <Suspense fallback={<div>Loading...</div>}>
               <Bookings />
+            </Suspense>
+          ),
+        },
+        {
+          path: "bookings/:bookingId",
+          element: (
+            <Suspense fallback={<div>Loading...</div>}>
+              <BookingDetails />
             </Suspense>
           ),
         },
