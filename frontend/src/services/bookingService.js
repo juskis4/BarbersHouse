@@ -68,6 +68,7 @@ export async function getBookings(
         barberName: booking.barberName,
         customerId: booking.customerId,
         customerName: booking.customerName,
+        customerEmail: booking.customerEmail,
         serviceId: booking.serviceId,
         serviceTitle: booking.serviceTitle,
         bookingDateTime: booking.bookingDateTime,
