@@ -12,6 +12,7 @@ public class ServicesRepository(DbDataContext context) : IServicesRepository
     {
         return await _context.Services
                  .Where(s => serviceIds.Contains(s.ServiceID))
+                 .Where(b => b.Title != "Blocked")
                  .Select(s => s.Duration)
                  .ToListAsync();
     }
