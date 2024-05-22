@@ -19,6 +19,7 @@ const BookingDetails = lazy(
   () => import("./components/admin/bookings/bookingDetails"),
 );
 const AddBarber = lazy(() => import("./components/admin/addBarber"));
+const AddBooking = lazy(() => import("./components/admin/addBooking"));
 
 const App = () => {
   const [theme, colorMode] = useMode();
@@ -76,6 +77,14 @@ const App = () => {
           element: (
             <Suspense fallback={<div>Loading...</div>}>
               <Bookings />
+            </Suspense>
+          ),
+        },
+        {
+          path: "bookings/add",
+          element: (
+            <Suspense fallback={<div>Loading...</div>}>
+              <AddBooking />
             </Suspense>
           ),
         },

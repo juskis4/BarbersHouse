@@ -157,7 +157,7 @@ const BookingDetails = () => {
               <ListItem>
                 <ListItemText
                   primary="Customer Email"
-                  secondary={booking.status}
+                  secondary={booking.customerEmail}
                 />
               </ListItem>
             </List>
