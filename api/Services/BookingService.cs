@@ -32,6 +32,12 @@ public class BookingService(IBookingsRepository bookingsRepository, IMapper mapp
     
     public async Task AddBookingAsync(AddBookingViewModel bookingViewModel)
     {
+        // Manual "Blocking" time booking
+        if(bookingViewModel.ServiceId == null)
+        {
+            
+        }
+        
         var booking = _mapper.Map<Booking>(bookingViewModel);
         booking.Status = "Pending";
 

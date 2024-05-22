@@ -11,7 +11,8 @@ public class BookingProfile : Profile
         CreateMap<Booking, AddBookingViewModel>()
             .ForMember(dest => dest.BarberId, opt => opt.MapFrom(src => src.BarberId))
             .ForMember(dest => dest.ServiceId, opt => opt.MapFrom(src => src.ServiceId))
-            .ForMember(dest => dest.CustomerId, opt => opt.MapFrom(src => src.CustomerId))
+            .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.CustomerName))
+            .ForMember(dest => dest.CustomerEmail, opt => opt.MapFrom(src => src.Customer.CustomerEmail))
             .ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.BookingDateTime));
 
         CreateMap<AddBookingViewModel, Booking>()
