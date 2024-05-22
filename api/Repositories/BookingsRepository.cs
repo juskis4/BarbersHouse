@@ -4,14 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace barbershouse.api.Repositories;
 
-public class BookingsRepository : IBookingsRepository
+public class BookingsRepository(DbDataContext context) : IBookingsRepository
 {
-    private readonly DbDataContext _context;
-
-    public BookingsRepository(DbDataContext context)
-    {
-        _context = context;
-    }
+    private readonly DbDataContext _context = context;
 
     public async Task AddBookingAsync(Booking booking)
     {
