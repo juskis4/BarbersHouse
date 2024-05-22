@@ -5,10 +5,11 @@ using barbershouse.api.ViewModels;
 
 namespace barbershouse.api.Services;
 
-public class BookingService(IBookingsRepository bookingsRepository, ICustomersService customersService, IMapper mapper) : IBookingService
+public class BookingService(IBookingsRepository bookingsRepository, ICustomersService customersService, IServicesService servicesService, IMapper mapper) : IBookingService
 {
     private readonly IBookingsRepository _bookingsRepository = bookingsRepository;
     private readonly ICustomersService _customersService = customersService; 
+    private readonly IServicesService _serviceService = servicesService;
     private readonly IMapper _mapper = mapper;
 
     public async Task<IEnumerable<Booking?>> GetBookingsForBarberByDateAsync(int barberId, DateTime date)
@@ -34,17 +35,30 @@ public class BookingService(IBookingsRepository bookingsRepository, ICustomersSe
     public async Task AddBookingAsync(AddBookingViewModel bookingViewModel)
     {
         // Manual "Blocking" time booking
-        if(bookingViewModel.ServiceId == null)
+        if((bookingViewModel.ServiceId == 0 || bookingViewModel.ServiceId == null) && bookingViewModel.Duration != null)
         {
-            
+            var blockService = new Service {
+                Title = "Blocked",
+                Duration = (int)bookingViewModel.Duration,
+            };
+
+            await _serviceService.AddServiceForBarberAsync(bookingViewModel.BarberId, blockService);
+            bookingViewModel.ServiceId = blockService.ServiceID;
+            var blockedBooking = _mapper.Map<Booking>(bookingViewModel);
+            blockedBooking.Status = "Blocked";
+            // Ghost customer in DB
+            blockedBooking.CustomerId = 12;
+
+            await _bookingsRepository.AddBookingAsync(blockedBooking);
         }
+        else {
+            var customer = await _customersService.GetOrCreateCustomerAsync(bookingViewModel.CustomerName, bookingViewModel.CustomerEmail);
+            var booking = _mapper.Map<Booking>(bookingViewModel);
+            booking.Status = "Pending";
+            booking.CustomerId = customer.CustomerID; 
 
-        var customer = await _customersService.GetOrCreateCustomerAsync(bookingViewModel.CustomerName, bookingViewModel.CustomerEmail);
-        var booking = _mapper.Map<Booking>(bookingViewModel);
-        booking.Status = "Pending";
-        booking.CustomerId = customer.CustomerID; 
-
-        await _bookingsRepository.AddBookingAsync(booking);
+            await _bookingsRepository.AddBookingAsync(booking);
+        }
     }
 
     public async Task ConfirmBooking(int barberId, int bookingId)
