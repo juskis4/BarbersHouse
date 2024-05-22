@@ -4,7 +4,7 @@ import utc from "dayjs/plugin/utc";
 
 dayjs.extend(utc);
 
-const apiUrl = "https://api-zdmjnhdz7q-ew.a.run.app";
+const apiUrl = process.env.REACT_APP_API_KEY;
 
 export async function createBooking(bookingData) {
   try {
@@ -12,7 +12,6 @@ export async function createBooking(bookingData) {
       ...bookingData,
       StartTime: dayjs(bookingData.StartTime).utc().toISOString(),
     };
-
     const response = await axios.post(
       `${apiUrl}/Bookings/${bookingData.BarberId}/bookings`,
       bookingDataWithUtcTime,
@@ -26,6 +25,31 @@ export async function createBooking(bookingData) {
     }
   } catch (err) {
     console.error("Error while creating a booking:", err);
+    if (err.response) {
+      throw new Error(
+        `Server responded with ${err.response.status}: ${err.response.data.message || err.response.data}`,
+      );
+    } else {
+      throw new Error("Network Error: Unable to reach the API server.");
+    }
+  }
+}
+
+export async function createManualBooking(bookingData) {
+  try {
+    const response = await axios.post(
+      `${apiUrl}/Bookings/${bookingData.BarberId}/bookings`,
+      bookingData,
+    );
+
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      const errorData = response.data;
+      throw new Error(errorData.message || "Error creating a manual booking");
+    }
+  } catch (err) {
+    console.error("Error while creating a manual booking:", err);
     if (err.response) {
       throw new Error(
         `Server responded with ${err.response.status}: ${err.response.data.message || err.response.data}`,

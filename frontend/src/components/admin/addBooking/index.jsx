@@ -19,7 +19,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import { createBooking } from "../../../services/bookingService";
+import { createManualBooking } from "../../../services/bookingService";
 
 import { getBarbersWithServices } from "../../../services/barberService.js";
 
@@ -72,7 +72,6 @@ const AddBooking = () => {
 
     let bookingData = {
       barberId: selectedBarber,
-      type: bookingType,
       startTime: startTime.toISOString(),
     };
 
@@ -90,7 +89,7 @@ const AddBooking = () => {
     }
 
     try {
-      await createBooking(bookingData);
+      await createManualBooking(bookingData);
       setSaveSuccess(true);
     } catch (error) {
       setError("An error occurred while adding the booking. Please try again.");
@@ -118,7 +117,7 @@ const AddBooking = () => {
           Add a Barber
         </Typography>
         {saveSuccess && (
-          <Alert severity="success">Barber added successfully!</Alert>
+          <Alert severity="success">Booking added successfully!</Alert>
         )}
 
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
@@ -170,11 +169,14 @@ const AddBooking = () => {
 
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DateTimePicker
-                  sx={{ mt: 2 }}
                   label="Start Time"
                   value={startTime}
-                  onChange={setStartTime}
-                  renderInput={(params) => <TextField {...params} />}
+                  timezone="UTC"
+                  sx={{ mt: 2 }}
+                  onChange={(newValue) => setStartTime(dayjs(newValue))}
+                  slotProps={{
+                    textField: { size: "small" },
+                  }}
                 />
               </LocalizationProvider>
             </>
@@ -218,11 +220,14 @@ const AddBooking = () => {
               </FormControl>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DateTimePicker
-                  sx={{ mt: 2 }}
                   label="Start Time"
                   value={startTime}
+                  timezone="UTC"
+                  sx={{ mt: 2 }}
                   onChange={(newValue) => setStartTime(dayjs(newValue))}
-                  renderInput={(params) => <TextField {...params} />}
+                  slotProps={{
+                    textField: { size: "small" },
+                  }}
                 />
               </LocalizationProvider>
             </>
