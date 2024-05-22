@@ -16,13 +16,13 @@ public class Service
     public string Title { get; set; }
 
     [Column("description")]
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     [Column("duration")]
     public int Duration { get; set; } 
 
     [Column("price")]
-    public decimal Price { get; set; }
+    public decimal? Price { get; set; }
 
     [Required] 
     [ForeignKey("BarberId")] 
