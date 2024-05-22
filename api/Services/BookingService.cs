@@ -5,9 +5,10 @@ using barbershouse.api.ViewModels;
 
 namespace barbershouse.api.Services;
 
-public class BookingService(IBookingsRepository bookingsRepository, IMapper mapper) : IBookingService
+public class BookingService(IBookingsRepository bookingsRepository, ICustomersService customersService, IMapper mapper) : IBookingService
 {
     private readonly IBookingsRepository _bookingsRepository = bookingsRepository;
+    private readonly ICustomersService _customersService = customersService; 
     private readonly IMapper _mapper = mapper;
 
     public async Task<IEnumerable<Booking?>> GetBookingsForBarberByDateAsync(int barberId, DateTime date)
@@ -37,9 +38,11 @@ public class BookingService(IBookingsRepository bookingsRepository, IMapper mapp
         {
             
         }
-        
+
+        var customer = await _customersService.GetOrCreateCustomerAsync(bookingViewModel.CustomerName, bookingViewModel.CustomerEmail);
         var booking = _mapper.Map<Booking>(bookingViewModel);
         booking.Status = "Pending";
+        booking.CustomerId = customer.CustomerID; 
 
         await _bookingsRepository.AddBookingAsync(booking);
     }
