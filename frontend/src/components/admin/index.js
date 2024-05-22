@@ -207,7 +207,7 @@ function AdminPage() {
                   </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
-                  <ListItemButton>
+                  <ListItemButton component={Link} to="/admin/bookings/add">
                     <ListItemIcon>
                       <AddCircleOutlineIcon />
                     </ListItemIcon>
