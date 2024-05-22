@@ -147,7 +147,7 @@ const Scheduler = () => {
           <span>{props.customerName}</span>
         </div>
         <div className="eventcontent-type-wrap">
-          <label>Phone Number:</label> <span></span>
+          <label>Customer Email:</label> <span> {props.customerEmail} </span>
         </div>
         <div className="eventcontent-type-wrap">
           <label>Status:</label> <span>{props.status}</span>

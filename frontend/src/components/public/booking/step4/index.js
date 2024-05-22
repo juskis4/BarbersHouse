@@ -1,26 +1,33 @@
-import React, { useState } from 'react';
-import { TextField, Box, Button } from '@mui/material';
-import { createBooking } from '../../../../services/bookingService'
+import React, { useState } from "react";
+import { TextField, Box, Button } from "@mui/material";
+import { createBooking } from "../../../../services/bookingService";
 
-function Step4({ selectedBarberId, selectedServices, selectedTimeSlot, handleNext }) {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+function Step4({
+  selectedBarberId,
+  selectedServices,
+  selectedTimeSlot,
+  handleNext,
+}) {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
 
   const handleConfirmBooking = async () => {
     try {
-      const [firstService] = selectedServices;  
+      const [firstService] = selectedServices;
       const serviceId = firstService?.serviceId;
       const bookingData = {
         BarberId: selectedBarberId,
-        CustomerId: 1, 
-        ServiceId: serviceId, 
+        CustomerName: name,
+        CustomerEmail: email,
+        ServiceId: serviceId,
+        duration: null,
         StartTime: selectedTimeSlot.startTime,
       };
 
       await createBooking(bookingData);
-      handleNext(); 
+      handleNext();
     } catch (error) {
-      console.error("Error creating booking:", error.message); 
+      console.error("Error creating booking:", error.message);
     }
   };
 
@@ -42,11 +49,7 @@ function Step4({ selectedBarberId, selectedServices, selectedTimeSlot, handleNex
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-      <Button 
-        variant="contained" 
-        onClick={handleConfirmBooking}
-        sx={{ mt: 2 }}
-      >
+      <Button variant="contained" onClick={handleConfirmBooking} sx={{ mt: 2 }}>
         Confirm Booking
       </Button>
     </Box>
