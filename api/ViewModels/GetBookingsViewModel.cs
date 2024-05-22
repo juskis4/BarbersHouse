@@ -7,6 +7,7 @@ public class GetBookingsViewModel
     public string BarberName { get; set; }
     public int CustomerId { get; set; }
     public string CustomerName { get; set; }
+    public string CustomerEmail { get; set; }
     public int ServiceId { get; set; }
     public string ServiceTitle { get; set; }
     public DateTimeOffset BookingDateTime { get; set; }
