@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using barbershouse.api.Services;
 using barbershouse.api.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
+using barbershouse.api.Models;
 
 namespace barbershouse.api.Controllers;
 
@@ -102,6 +104,26 @@ public class BookingsController(IBookingService bookingService) : ControllerBase
         catch (Exception ex) 
         {
             return StatusCode(500, $"Internal server error. {ex.Message}"); 
+        }
+    }
+
+    [HttpPatch("{bookingId}")]
+    [Authorize(Policy = "IsAdmin")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> UpdateBooking(int bookingId, [FromBody] JsonPatchDocument<Booking> patchDoc)
+    {
+        try
+        {
+            await _bookingService.UpdateBookingAsync(bookingId, patchDoc);
+            return NoContent();
+        }
+        catch (ArgumentException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
         }
     }
 }

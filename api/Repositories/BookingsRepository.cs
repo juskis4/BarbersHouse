@@ -68,6 +68,30 @@ public class BookingsRepository(DbDataContext context) : IBookingsRepository
         return await _context.Bookings.FindAsync(bookingId);
     }
 
+    public async Task UpdateBookingAsync(Booking booking)
+    {
+        _context.Entry(booking).State = EntityState.Modified;
+
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+            // handling concurrency conflicts 
+            var entry = ex.Entries.Single();
+            var databaseValues = entry.GetDatabaseValues();
+
+            if (databaseValues == null)
+            {
+                // The entity has been deleted since it was fetched
+                throw new ArgumentException("Booking not found.");
+            }
+
+            throw new DbUpdateConcurrencyException("The booking was updated by another user. Please try again.");
+        }
+    }
+
     public async Task SaveChangesAsync()
     {
         await _context.SaveChangesAsync();

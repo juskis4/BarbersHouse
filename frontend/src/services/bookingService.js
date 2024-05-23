@@ -158,3 +158,33 @@ export async function getBookingById(bookingId) {
     throw error;
   }
 }
+
+export async function updateBooking(bookingId, updatedBooking) {
+  try {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      const patchOperations = Object.keys(updatedBooking).map((key) => ({
+        op: "replace",
+        path: `/${key}`,
+        value: updatedBooking[key],
+      }));
+
+      const response = await axios.patch(
+        `${apiUrl}/Bookings/${bookingId}`,
+        patchOperations,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json-patch+json",
+          },
+        },
+      );
+
+      return response.data;
+    }
+  } catch (error) {
+    console.error("Error updating booking:", error);
+    throw error;
+  }
+}

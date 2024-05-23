@@ -1,5 +1,6 @@
 using barbershouse.api.Models;
 using barbershouse.api.ViewModels;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace barbershouse.api.Services;
 
@@ -11,4 +12,5 @@ public interface IBookingService
     Task AddBookingAsync(AddBookingViewModel booking);
     Task ConfirmBooking(int barberId, int bookingId);
     Task CancelBooking(int barberId, int bookingId);
+    Task UpdateBookingAsync(int bookingId, JsonPatchDocument<Booking> patchDoc);
 }
