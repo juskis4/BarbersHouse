@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { getBookingById } from "../../../../services/bookingService.js";
+import {
+  getBookingById,
+  updateBooking,
+} from "../../../../services/bookingService.js";
 
 import { useParams, Link } from "react-router-dom";
 import {
@@ -17,6 +20,7 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  Alert,
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import dayjs from "dayjs";
@@ -29,6 +33,7 @@ const BookingDetails = () => {
   const [booking, setBooking] = useState(null);
   const allowedStatuses = ["Pending", "Cancelled", "Completed"];
   const [isLoading, setIsLoading] = useState(true);
+  const [saveSuccess, setSaveSuccess] = useState(false);
   const [error, setError] = useState(null);
 
   const [isEditing, setIsEditing] = useState(false);
@@ -77,12 +82,17 @@ const BookingDetails = () => {
     setIsLoading(true);
     try {
       const updatedBooking = {
-        ...booking,
         bookingDateTime: new Date(editedBookingDateTime).toISOString(),
         status: editedStatus,
       };
-      //await updateBooking(bookingId, updatedBooking);
-      setBooking(updatedBooking);
+
+      await updateBooking(bookingId, updatedBooking);
+
+      setBooking({
+        ...booking,
+        ...updatedBooking,
+      });
+      setSaveSuccess(true);
       setIsEditing(false);
     } catch (error) {
       console.error("Error updating booking:", error);
@@ -95,7 +105,7 @@ const BookingDetails = () => {
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Typography variant="h4" gutterBottom>
-        Booking Details
+        Booking ID {booking.bookingId}
       </Typography>
       <Grid container spacing={4}>
         {/* Barber Details */}
@@ -167,8 +177,18 @@ const BookingDetails = () => {
         {/* Booking Details */}
         <Grid xs={12} md={4} lg={7}>
           <Paper
-            sx={{ p: 2, display: "flex", flexDirection: "column", height: 260 }}
+            sx={{
+              p: 2,
+              display: "flex",
+              flexDirection: "column",
+              minHeight: 260,
+            }}
           >
+            {saveSuccess && (
+              <Alert severity="success">
+                Booking details saved successfully!
+              </Alert>
+            )}
             <Typography variant="h6" fontWeight="bold" gutterBottom>
               Booking Details
             </Typography>
@@ -239,7 +259,6 @@ const BookingDetails = () => {
               variant="h6"
               fontWeight="bold"
               gutterBottom
-              alignCenter
               sx={{ width: "100%", align: "center" }}
             >
               Booked Service

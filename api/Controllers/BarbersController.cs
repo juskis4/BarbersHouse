@@ -93,6 +93,7 @@ public class BarbersController(IBarbersService barbersService) : ControllerBase
 
     [HttpPatch("{barberId}")]
     [Authorize(Policy = "IsAdmin")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> UpdateBarber(int barberId, [FromBody] JsonPatchDocument<Barber> patchDoc)
     {
         try
