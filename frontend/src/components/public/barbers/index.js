@@ -6,8 +6,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
-import axios from "axios";
 import Booking from "../booking";
+import { getBarbersWithServices } from "../../../services/barberService.js";
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -19,24 +19,21 @@ function Barbers() {
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const getBarbersWithServices = async () => {
-    try {
-      setIsLoading(true);
-      const res = await axios.get(
-        "https://api-zdmjnhdz7q-ew.a.run.app/Barbers/Services",
-      );
-      console.log("Barbers data fetched:", res.data);
-      setBarbers(res.data);
-      setSelectedBarberId(res.data[0]?.barberId || null);
-    } catch (err) {
-      console.log("Error fetching barbers data:", err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
-    getBarbersWithServices();
+    const fetchBarbers = async () => {
+      setIsLoading(true);
+      try {
+        const allBarbers = await getBarbersWithServices();
+        setBarbers(allBarbers);
+        setSelectedBarberId(allBarbers[0]?.barberId || null);
+      } catch (err) {
+        console.log("Error fetching barbers data:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchBarbers();
   }, []);
 
   const handleBarberSelect = (barberId) => {
