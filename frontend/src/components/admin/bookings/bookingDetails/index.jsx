@@ -31,7 +31,11 @@ dayjs.extend(utc);
 const BookingDetails = () => {
   const { bookingId } = useParams();
   const [booking, setBooking] = useState(null);
-  const allowedStatuses = ["Pending", "Cancelled", "Completed"];
+  const [allowedStatuses, setAllowedStatuses] = useState([
+    "Pending",
+    "Canceled",
+    "Completed",
+  ]);
   const [isLoading, setIsLoading] = useState(true);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [error, setError] = useState(null);
@@ -50,6 +54,11 @@ const BookingDetails = () => {
             new Date(data.bookingDateTime).toLocaleString(),
           );
           setEditedStatus(data.status);
+          setAllowedStatuses(
+            data.service.title === "Blocked"
+              ? ["Blocked", "Canceled"]
+              : ["Pending", "Canceled", "Completed"],
+          );
         }
       } catch (error) {
         console.error("Error fetching booking details:", error);
