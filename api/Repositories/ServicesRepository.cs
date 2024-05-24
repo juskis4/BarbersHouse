@@ -1,12 +1,25 @@
+using AutoMapper;
 using barbershouse.api.Data;
 using barbershouse.api.Models;
+using barbershouse.api.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace barbershouse.api.Repositories;
 
-public class ServicesRepository(DbDataContext context) : IServicesRepository
+public class ServicesRepository(DbDataContext context, IMapper mapper) : IServicesRepository
 {
     private readonly DbDataContext _context = context;
+    private readonly IMapper _mapper = mapper;
+
+    public async Task<IEnumerable<GetServiceViewModel>> GetAllServicesAsync()
+    {
+        var services = await _context.Services
+            .Where(b => b.Title != "Blocked")
+            .Include(s => s.Barber) 
+            .ToListAsync(); 
+
+        return _mapper.Map<IEnumerable<GetServiceViewModel>>(services);
+    }
 
     public async Task<IEnumerable<int>> GetDurationsForServicesAsync(IEnumerable<int> serviceIds)
     {

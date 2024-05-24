@@ -182,7 +182,7 @@ function AdminPage() {
                 </ListItem>
                 <Divider sx={{ my: 1 }} />
                 <ListItem disablePadding>
-                  <ListItemButton>
+                  <ListItemButton component={Link} to="/admin/services">
                     <ListItemIcon>
                       <ContentCutIcon />
                     </ListItemIcon>

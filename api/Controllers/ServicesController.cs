@@ -11,6 +11,13 @@ public class ServicesController(IServicesService servicesService) : ControllerBa
 {
     private readonly IServicesService _servicesService = servicesService;
 
+    [HttpGet] 
+    public async Task<ActionResult<IEnumerable<ServiceViewModel>>> GetAllServices()
+    {
+        var services = await _servicesService.GetAllServicesAsync();
+        return Ok(services);
+    }
+
     [HttpGet("{id}")]
     public async Task<ActionResult<ServiceViewModel>> GetService(int id)
     {

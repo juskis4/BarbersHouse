@@ -11,6 +11,11 @@ public class ServicesService(IServicesRepository servicesRepository, IBarbersRep
     private readonly IBarbersRepository _barbersRepository = barbersRepository;
     private readonly IMapper _mapper = mapper;
 
+    public async Task<IEnumerable<GetServiceViewModel>> GetAllServicesAsync()
+    {
+        return await _servicesRepository.GetAllServicesAsync(); 
+    }
+
     public async Task<ServiceViewModel> GetServiceByIdAsync(int serviceId)
     {
         var service = await _servicesRepository.GetServicesByIdAsync(serviceId);
