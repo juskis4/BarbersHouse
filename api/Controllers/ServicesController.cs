@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using barbershouse.api.Services;
 using barbershouse.api.Models;
 using barbershouse.api.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace barbershouse.api.Controllers;
 
@@ -11,7 +13,15 @@ public class ServicesController(IServicesService servicesService) : ControllerBa
 {
     private readonly IServicesService _servicesService = servicesService;
 
+    [HttpGet] 
+    public async Task<ActionResult<IEnumerable<ServiceViewModel>>> GetAllServices()
+    {
+        var services = await _servicesService.GetAllServicesAsync();
+        return Ok(services);
+    }
+
     [HttpGet("{id}")]
+    [Authorize(Policy = "IsAdmin")]
     public async Task<ActionResult<ServiceViewModel>> GetService(int id)
     {
         var service = await _servicesService.GetServiceByIdAsync(id);
@@ -25,6 +35,7 @@ public class ServicesController(IServicesService servicesService) : ControllerBa
     }
 
     [HttpPost("{barberId}/services")]
+    [Authorize(Policy = "IsAdmin")]
     public async Task<IActionResult> AddServiceForBarber(int barberId, [FromBody] AddServiceViewModel model)
     {
         if (!ModelState.IsValid)
@@ -32,23 +43,56 @@ public class ServicesController(IServicesService servicesService) : ControllerBa
             return BadRequest(ModelState);
         }
 
-        var service = new Service
-        {
-            Title = model.Title,
-            Description = model.Description,
-            Duration = model.Duration,
-            Price = model.Price,
-            BarberId = barberId
-        };
-
         try
         {
-            await _servicesService.AddServiceForBarberAsync(barberId, service);
+            var service = await _servicesService.AddServiceForBarberAsync(barberId, model);
             return Ok();
         }
-        catch (KeyNotFoundException)
+        catch (ArgumentException ex)
         {
-            return NotFound();
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error. {ex.Message}");
+        }
+    }
+
+    [HttpPatch("{serviceId}")]
+    [Authorize(Policy = "IsAdmin")]
+    public async Task<IActionResult> UpdateService(int serviceId, [FromBody] JsonPatchDocument<Service> patchDoc)
+    {
+        try
+        {
+            await _servicesService.UpdateServiceAsync(serviceId, patchDoc);
+            return NoContent(); 
+        }
+        catch (ArgumentException ex)
+        {
+            return NotFound(ex.Message); 
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
+
+    [HttpDelete("{serviceId}")]
+    [Authorize(Policy = "IsAdmin")]
+    public async Task<IActionResult> DeleteService(int serviceId)
+    {
+        try
+        {
+            await _servicesService.DeleteServiceAsync(serviceId);
+            return NoContent(); 
+        }
+        catch (ArgumentException ex)
+        {
+            return NotFound(ex.Message); 
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
         }
     }
 }

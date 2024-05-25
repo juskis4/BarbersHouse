@@ -44,8 +44,9 @@ public class BarbersRepository(DbDataContext context) : IBarbersRepository
     public async Task<IEnumerable<Barber>> GetAllBarbersWithServicesAsync()
     {
         return await _context.Barbers
-                             .Include(b => b.Services)
-                             .ToListAsync();
+            .Include(b => b.Services.Where(s => s.Title != "Blocked")) 
+            .Where(b => b.Services.Any()) 
+            .ToListAsync();
     }
 
     public async Task<Barber?> GetBarberByIdAsync(int barberId)

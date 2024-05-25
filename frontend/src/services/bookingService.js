@@ -145,7 +145,6 @@ export async function cancelBooking(barberId, bookingId) {
 
 export async function getBookingById(bookingId) {
   try {
-    console.log(bookingId);
     const token = localStorage.getItem("token");
     if (token) {
       const response = await axios.get(`${apiUrl}/Bookings/${bookingId}`, {

@@ -40,17 +40,18 @@ public class BookingService(IBookingsRepository bookingsRepository, ICustomersSe
         // Manual "Blocking" time booking
         if((bookingViewModel.ServiceId == 0 || bookingViewModel.ServiceId == null) && bookingViewModel.Duration != null)
         {
-            var blockService = new Service {
+            var blockServiceViewModel = new AddServiceViewModel 
+            {
                 Title = "Blocked",
                 Duration = (int)bookingViewModel.Duration,
             };
 
-            await _serviceService.AddServiceForBarberAsync(bookingViewModel.BarberId, blockService);
-            bookingViewModel.ServiceId = blockService.ServiceID;
+            var blockService = await _serviceService.AddServiceForBarberAsync(bookingViewModel.BarberId, blockServiceViewModel); 
+            bookingViewModel.ServiceId = blockService.ServiceId;
             var blockedBooking = _mapper.Map<Booking>(bookingViewModel);
+
             blockedBooking.Status = "Blocked";
-            // Ghost customer in DB
-            blockedBooking.CustomerId = 12;
+            blockedBooking.CustomerId = 12; // Ghost customer in DB
 
             await _bookingsRepository.AddBookingAsync(blockedBooking);
         }

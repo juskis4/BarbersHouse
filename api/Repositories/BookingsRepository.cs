@@ -92,6 +92,11 @@ public class BookingsRepository(DbDataContext context) : IBookingsRepository
         }
     }
 
+    public async Task<bool> AnyBookingsWithServiceAsync(int serviceId)
+    {
+        return await _context.Bookings.AnyAsync(b => b.ServiceId == serviceId && b.Status != "Canceled");
+    }
+
     public async Task SaveChangesAsync()
     {
         await _context.SaveChangesAsync();
