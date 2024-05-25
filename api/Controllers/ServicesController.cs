@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using barbershouse.api.Services;
 using barbershouse.api.Models;
 using barbershouse.api.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace barbershouse.api.Controllers;
 
@@ -19,6 +21,7 @@ public class ServicesController(IServicesService servicesService) : ControllerBa
     }
 
     [HttpGet("{id}")]
+    [Authorize(Policy = "IsAdmin")]
     public async Task<ActionResult<ServiceViewModel>> GetService(int id)
     {
         var service = await _servicesService.GetServiceByIdAsync(id);
@@ -56,6 +59,44 @@ public class ServicesController(IServicesService servicesService) : ControllerBa
         catch (KeyNotFoundException)
         {
             return NotFound();
+        }
+    }
+
+    [HttpPatch("{serviceId}")]
+    [Authorize(Policy = "IsAdmin")]
+    public async Task<IActionResult> UpdateService(int serviceId, [FromBody] JsonPatchDocument<Service> patchDoc)
+    {
+        try
+        {
+            await _servicesService.UpdateServiceAsync(serviceId, patchDoc);
+            return NoContent(); 
+        }
+        catch (ArgumentException ex)
+        {
+            return NotFound(ex.Message); 
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
+
+    [HttpDelete("{serviceId}")]
+    [Authorize(Policy = "IsAdmin")]
+    public async Task<IActionResult> DeleteService(int serviceId)
+    {
+        try
+        {
+            await _servicesService.DeleteServiceAsync(serviceId);
+            return NoContent(); 
+        }
+        catch (ArgumentException ex)
+        {
+            return NotFound(ex.Message); 
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
         }
     }
 }

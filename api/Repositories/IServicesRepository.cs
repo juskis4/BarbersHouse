@@ -6,9 +6,10 @@ namespace barbershouse.api.Repositories;
 public interface IServicesRepository
 {
     Task<IEnumerable<GetServiceViewModel>> GetAllServicesAsync();
-    Task<Service?> GetServicesByIdAsync(int serviceId);
+    Task<Service?> GetServiceByIdAsync(int serviceId);
     Task<IEnumerable<int>> GetDurationsForServicesAsync(IEnumerable<int> serviceIds); 
-    Task DeleteServicesAsync(IEnumerable<Service> services);
+    Task DeleteServiceAsync(Service service);
+    Task UpdateServiceAsync(Service service);
 
     Task SaveChangesAsync();
 }

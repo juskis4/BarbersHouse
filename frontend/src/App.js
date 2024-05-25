@@ -18,6 +18,9 @@ const BarberProfile = lazy(
 const BookingDetails = lazy(
   () => import("./components/admin/bookings/bookingDetails"),
 );
+const ServiceDetails = lazy(
+  () => import("./components/admin/services/serviceDetails"),
+);
 const AddBarber = lazy(() => import("./components/admin/addBarber"));
 const AddBooking = lazy(() => import("./components/admin/addBooking"));
 
@@ -65,14 +68,6 @@ const App = () => {
           ),
         },
         {
-          path: "services/:serviceId",
-          element: (
-            <Suspense fallback={<div>Loading...</div>}>
-              <BarberProfile />
-            </Suspense>
-          ),
-        },
-        {
           path: "bookings",
           element: (
             <Suspense fallback={<div>Loading...</div>}>
@@ -101,6 +96,14 @@ const App = () => {
           element: (
             <Suspense fallback={<div>Loading...</div>}>
               <Services />
+            </Suspense>
+          ),
+        },
+        {
+          path: "services/:serviceId",
+          element: (
+            <Suspense fallback={<div>Loading...</div>}>
+              <ServiceDetails />
             </Suspense>
           ),
         },

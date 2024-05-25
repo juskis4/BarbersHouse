@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Box, CircularProgress, Typography, Button } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import ConfirmationDialog from "../confirmDialog";
-import { getServices } from "../../../services/servicesService";
+import { getServices, deleteService } from "../../../services/servicesService";
 
 const Services = () => {
   const [rows, setRows] = useState([]);
@@ -74,16 +74,18 @@ const Services = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      // await deleteService(serviceToDelete);
+      await deleteService(serviceToDelete);
 
-      const updatedRows = rows.filter(
-        (row) => row.serviceId !== serviceToDelete,
-      );
-      setRows(updatedRows);
+      setRows(rows.filter((row) => row.serviceId !== serviceToDelete));
+
       handleCloseDialog();
     } catch (error) {
       console.error(error);
-      setError("Error deleting service. Try again");
+      setError(
+        error.response?.data
+          ? error.response.data
+          : "Error deleting service. Try again.",
+      );
     }
   };
 

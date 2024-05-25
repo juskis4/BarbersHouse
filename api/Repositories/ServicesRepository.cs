@@ -30,16 +30,22 @@ public class ServicesRepository(DbDataContext context, IMapper mapper) : IServic
                  .ToListAsync();
     }
 
-    public async Task<Service?> GetServicesByIdAsync(int serviceId)
+    public async Task<Service?> GetServiceByIdAsync(int serviceId)
     {
         return await _context.Services
             .FirstOrDefaultAsync(s => s.ServiceID == serviceId);
     }
 
-    public async Task DeleteServicesAsync(IEnumerable<Service> services)
+    public async Task DeleteServiceAsync(Service service)
     {
-        _context.Services.RemoveRange(services);
-        await SaveChangesAsync();
+        _context.Services.Remove(service); 
+        await _context.SaveChangesAsync();
+    }
+    
+    public async Task UpdateServiceAsync(Service service)
+    {
+        _context.Entry(service).State = EntityState.Modified; 
+        await _context.SaveChangesAsync(); 
     }
 
     public async Task SaveChangesAsync()

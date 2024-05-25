@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const apiUrl = "http://localhost:5037";
+const apiUrl = process.env.REACT_APP_API_KEY;
 
 export async function getServices() {
   try {
@@ -73,6 +73,21 @@ export async function deleteService(serviceId) {
     }
   } catch (error) {
     console.error("Error deleting a service:", error);
+    throw error;
+  }
+}
+
+export async function getServiceById(serviceId) {
+  try {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const response = await axios.get(`${apiUrl}/Services/${serviceId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return response.data;
+    }
+  } catch (error) {
+    console.error("Error fetching service by ID:", error);
     throw error;
   }
 }
