@@ -14,5 +14,7 @@ public class ServiceProfile : Profile
 
         CreateMap<Service, GetServiceViewModel>()
             .ForMember(dest => dest.BarbersName, opt => opt.MapFrom(src => src.Barber.Name));
+
+        CreateMap<AddServiceViewModel, Service>();
     }
 }

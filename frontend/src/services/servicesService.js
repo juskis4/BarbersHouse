@@ -12,6 +12,32 @@ export async function getServices() {
   }
 }
 
+export async function createService(barberId, serviceData) {
+  try {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      const response = await axios.post(
+        `${apiUrl}/Services/${barberId}/services`,
+        serviceData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      return response.data;
+    } else {
+      throw new Error("Missing authorization token");
+    }
+  } catch (error) {
+    console.error("Error adding a service:", error);
+    throw error;
+  }
+}
+
 export async function updateService(serviceId, updatedService) {
   try {
     const token = localStorage.getItem("token");

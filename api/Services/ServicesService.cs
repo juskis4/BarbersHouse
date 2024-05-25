@@ -31,7 +31,7 @@ public class ServicesService(IServicesRepository servicesRepository, IBarbersRep
         return _mapper.Map<ServiceViewModel>(service); ;
     }
 
-    public async Task AddServiceForBarberAsync(int barberId, Service service)
+    public async Task<ServiceViewModel> AddServiceForBarberAsync(int barberId, AddServiceViewModel model)
     {
         var barber = await _barbersRepository.GetBarberByIdAsync(barberId);
         if (barber == null)
@@ -39,8 +39,13 @@ public class ServicesService(IServicesRepository servicesRepository, IBarbersRep
             throw new KeyNotFoundException("Barber not found.");
         }
 
-        barber.Services.Add(service);
-        await _barbersRepository.SaveChangesAsync();
+        var service = _mapper.Map<Service>(model);
+        service.BarberId = barberId;
+        
+        await _servicesRepository.AddServiceAsync(service);
+        await _servicesRepository.SaveChangesAsync();
+
+        return _mapper.Map<ServiceViewModel>(service);
     }
 
     public async Task<int> GetTotalDurationForServicesAsync(IEnumerable<int> serviceIds)

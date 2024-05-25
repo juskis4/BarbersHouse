@@ -10,6 +10,7 @@ public interface IServicesRepository
     Task<IEnumerable<int>> GetDurationsForServicesAsync(IEnumerable<int> serviceIds); 
     Task DeleteServiceAsync(Service service);
     Task UpdateServiceAsync(Service service);
+    Task AddServiceAsync(Service service);
 
     Task SaveChangesAsync();
 }

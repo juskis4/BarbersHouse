@@ -41,11 +41,17 @@ public class ServicesRepository(DbDataContext context, IMapper mapper) : IServic
         _context.Services.Remove(service); 
         await _context.SaveChangesAsync();
     }
-    
+
     public async Task UpdateServiceAsync(Service service)
     {
         _context.Entry(service).State = EntityState.Modified; 
         await _context.SaveChangesAsync(); 
+    }
+
+    public async Task AddServiceAsync(Service service)
+    {
+        _context.Services.Add(service);
+        await _context.SaveChangesAsync();
     }
 
     public async Task SaveChangesAsync()

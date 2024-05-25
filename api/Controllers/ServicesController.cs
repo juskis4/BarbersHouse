@@ -35,6 +35,7 @@ public class ServicesController(IServicesService servicesService) : ControllerBa
     }
 
     [HttpPost("{barberId}/services")]
+    [Authorize(Policy = "IsAdmin")]
     public async Task<IActionResult> AddServiceForBarber(int barberId, [FromBody] AddServiceViewModel model)
     {
         if (!ModelState.IsValid)
@@ -42,23 +43,18 @@ public class ServicesController(IServicesService servicesService) : ControllerBa
             return BadRequest(ModelState);
         }
 
-        var service = new Service
-        {
-            Title = model.Title,
-            Description = model.Description,
-            Duration = model.Duration,
-            Price = model.Price,
-            BarberId = barberId
-        };
-
         try
         {
-            await _servicesService.AddServiceForBarberAsync(barberId, service);
+            var service = await _servicesService.AddServiceForBarberAsync(barberId, model);
             return Ok();
         }
-        catch (KeyNotFoundException)
+        catch (ArgumentException ex)
         {
-            return NotFound();
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error. {ex.Message}");
         }
     }
 

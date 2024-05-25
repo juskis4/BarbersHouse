@@ -23,6 +23,7 @@ const ServiceDetails = lazy(
 );
 const AddBarber = lazy(() => import("./components/admin/addBarber"));
 const AddBooking = lazy(() => import("./components/admin/addBooking"));
+const AddService = lazy(() => import("./components/admin/addService"));
 
 const App = () => {
   const [theme, colorMode] = useMode();
@@ -104,6 +105,14 @@ const App = () => {
           element: (
             <Suspense fallback={<div>Loading...</div>}>
               <ServiceDetails />
+            </Suspense>
+          ),
+        },
+        {
+          path: "services/add",
+          element: (
+            <Suspense fallback={<div>Loading...</div>}>
+              <AddService />
             </Suspense>
           ),
         },
