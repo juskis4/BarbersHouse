@@ -20,8 +20,8 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { createManualBooking } from "../../../services/bookingService";
-
 import { getBarbersWithServices } from "../../../services/barberService.js";
+import emailService from "../../../services/emailService";
 
 const AddBooking = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -30,7 +30,7 @@ const AddBooking = () => {
   const [bookingType, setBookingType] = useState("");
   const [barbers, setBarbers] = useState([]);
   const [selectedBarber, setSelectedBarber] = useState("");
-  const [services, setServices] = useState([]); // All services
+  const [services, setServices] = useState([]);
   const [selectedService, setSelectedService] = useState("");
   const [startTime, setStartTime] = useState(dayjs(new Date()));
   const [barberServices, setBarberServices] = useState([]);
@@ -75,11 +75,15 @@ const AddBooking = () => {
       startTime: startTime.toISOString(),
     };
 
+    // if creating blocked slot
     if (bookingType === "blocked") {
       bookingData.duration = parseInt(event.currentTarget.duration.value, 10);
-    } else if (bookingType === "customer") {
+    }
+    // if creating customer booking
+    else if (bookingType === "customer") {
       const customerName = event.currentTarget.customerName.value;
       const customerEmail = event.currentTarget.customerEmail.value;
+
       bookingData = {
         ...bookingData,
         customerName,
@@ -89,7 +93,28 @@ const AddBooking = () => {
     }
 
     try {
+      // create booking
       await createManualBooking(bookingData);
+
+      // prepare email data and call email service
+      const bookedBarber = barbers.find(
+        (barber) => barber.barberId === bookingData.barberId,
+      );
+      const bookedService = bookedBarber.services.find(
+        (service) => service.serviceId === bookingData.serviceId,
+      );
+      const emailData = {
+        BarberName: bookedBarber.name,
+        BarberEmail: bookedBarber.email,
+        CustomerName: bookingData.customerName,
+        CustomerEmail: bookingData.customerEmail,
+        ServiceTitle: bookedService.title,
+        Duration: bookedService.duration,
+        Price: bookedService.price,
+        StartTime: bookingData.startTime,
+      };
+      await emailService.sendBookingConfirmationEmails(emailData);
+
       setSaveSuccess(true);
     } catch (error) {
       setError("An error occurred while adding the booking. Please try again.");
@@ -114,7 +139,7 @@ const AddBooking = () => {
           <AddCircleIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Add a Barber
+          Add a Booking
         </Typography>
         {saveSuccess && (
           <Alert severity="success">Booking added successfully!</Alert>

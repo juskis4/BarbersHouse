@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { TextField, Box, Button } from "@mui/material";
 import { createBooking } from "../../../../services/bookingService";
+import emailService from "../../../../services/emailService";
 
 function Step4({
-  selectedBarberId,
+  selectedBarber,
   selectedServices,
   selectedTimeSlot,
   handleNext,
@@ -16,7 +17,7 @@ function Step4({
       const [firstService] = selectedServices;
       const serviceId = firstService?.serviceId;
       const bookingData = {
-        BarberId: selectedBarberId,
+        BarberId: selectedBarber.barberId,
         CustomerName: name,
         CustomerEmail: email,
         ServiceId: serviceId,
@@ -25,6 +26,19 @@ function Step4({
       };
 
       await createBooking(bookingData);
+
+      const emailData = {
+        BarberName: selectedBarber.name,
+        BarberEmail: selectedBarber.email,
+        CustomerName: name,
+        CustomerEmail: email,
+        ServiceTitle: firstService.title,
+        Duration: firstService.duration,
+        Price: firstService.price,
+        StartTime: selectedTimeSlot.startTime,
+      };
+      await emailService.sendBookingConfirmationEmails(emailData);
+
       handleNext();
     } catch (error) {
       console.error("Error creating booking:", error.message);
