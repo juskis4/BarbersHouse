@@ -30,7 +30,7 @@ const AddBooking = () => {
   const [bookingType, setBookingType] = useState("");
   const [barbers, setBarbers] = useState([]);
   const [selectedBarber, setSelectedBarber] = useState("");
-  const [services, setServices] = useState([]); // All services
+  const [services, setServices] = useState([]);
   const [selectedService, setSelectedService] = useState("");
   const [startTime, setStartTime] = useState(dayjs(new Date()));
   const [barberServices, setBarberServices] = useState([]);
@@ -75,9 +75,12 @@ const AddBooking = () => {
       startTime: startTime.toISOString(),
     };
 
+    // if creating blocked slot
     if (bookingType === "blocked") {
       bookingData.duration = parseInt(event.currentTarget.duration.value, 10);
-    } else if (bookingType === "customer") {
+    }
+    // if creating customer booking
+    else if (bookingType === "customer") {
       const customerName = event.currentTarget.customerName.value;
       const customerEmail = event.currentTarget.customerEmail.value;
 
@@ -90,8 +93,10 @@ const AddBooking = () => {
     }
 
     try {
+      // create booking
       await createManualBooking(bookingData);
 
+      // prepare email data and call email service
       const bookedBarber = barbers.find(
         (barber) => barber.barberId === bookingData.barberId,
       );
