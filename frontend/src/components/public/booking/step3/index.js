@@ -22,7 +22,7 @@ const Step3 = ({
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-
+  const handleGetTimeSlotsRef = useRef(null);
   // SignalR connection
   const establishConnection = useCallback(async () => {
     const connection = new signalR.HubConnectionBuilder()
@@ -41,7 +41,8 @@ const Step3 = ({
 
       connectionRef.current.on("BookingChanged", async () => {
         //SignalR will trigger this callback whenever there is an update to the bookings
-        await handleGetTimeSlots();
+        const currentHandleGetTimeSlots = handleGetTimeSlotsRef.current;
+        await currentHandleGetTimeSlots();
       });
     } catch (err) {
       console.error(err);
@@ -77,6 +78,10 @@ const Step3 = ({
       setIsLoading(false);
     }
   }, [selectedBarberId, selectedServices, selectedDate]);
+
+  useEffect(() => {
+    handleGetTimeSlotsRef.current = handleGetTimeSlots;
+  }, [handleGetTimeSlots]);
 
   useEffect(() => {
     if (connectionEstablished && selectedServices.length > 0) {
