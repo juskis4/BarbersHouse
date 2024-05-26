@@ -302,11 +302,10 @@ const BookingDetails = () => {
                     />
                   </ListItem>
                   <ListItem>
-                    {/* TODO: change the link */}
                     <Button
                       sx={{ mt: 1 }}
                       component={Link}
-                      to={`/admin/bookings/${booking.bookingId}`}
+                      to={`/admin/services/${booking.service.serviceId}`}
                     >
                       View
                     </Button>
