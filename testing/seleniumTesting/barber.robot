@@ -168,18 +168,20 @@ Book a reservation using the floating button
     Click Element    xpath=//*[@id="root"]/div/div[1]/button/span    
     Sleep    1s
     Wait Until Element Is Visible    xpath=//*[@id=":r0:"]    
-    Click Element    xpath=/html/body/div[2]/div[3]/div/div[1]/div/div/div/div[1]/div/div/div/div/div[1]/div/div[2]/img    
+    Click Element    xpath=/html/body/div[2]/div[3]/div/div[1]/div/div/div/div[1]/div/div/div/div/div[1]/div/div[2]/img   
+    Sleep  1s 
     Click Element    xpath=/html/body/div[2]/div[3]/div/div[1]/div/div/div/div[1]/div/div/div/div/div[2]/div/button[1]    
     Sleep    1s
     Wait Until Element Is Visible    xpath=/html/body/div[2]/div[3]/div/div[1]/div/div/div/div[3]/div/div/div/div/div[1]/table/tbody/tr[1]/th    
     Click Element    xpath=/html/body/div[2]/div[3]/div/div[1]/div/div/div/div[3]/div/div/div/div/div[1]/table/tbody/tr[2]/th    
     Sleep    1s
     Click Element    xpath=/html/body/div[2]/div[3]/div/div[1]/div/div/div/div[3]/div/div/div/div/div[2]/div/button[1]    
-    Sleep   3s
-    Click Element    xpath=/html/body/div[2]/div[3]/div/div[1]/div/div/div/div[5]/div/div/div/div/div[1]/div[2]/button[1]
+    Sleep   4s
+    Click Element    xpath=/html/body/div[2]/div[3]/div/div[1]/div/div/div/div[5]/div/div/div/div/div[1]/div[1]/div[2]/button  #test?
+    Sleep    2s
+    Click Element    xpath=/html/body/div[2]/div[3]/div/div[1]/div/div/div/div[5]/div/div/div/div/div[1]/div[2]/button[1]    
     Sleep    1s
-    Click Element    xpath=/html/body/div[2]/div[3]/div/div[1]/div/div/div/div[5]/div/div/div/div/div[2]/div/button[1]    
-    Sleep    1s
+    Click Element    xpath=/html/body/div[2]/div[3]/div/div[1]/div/div/div/div[5]/div/div/div/div/div[2]/div/button[1]
     Wait Until Element Is Visible    xpath=/html/body/div[2]/div[3]/div/div[1]/div/div/div/div[7]/div/div/div/div/div[1]
     Sleep    1s
     Input Text    xpath=//*[@id=":r2:"]    test_name
@@ -199,23 +201,24 @@ Go back to previous step in booking a reservation
 
     Open Chrome
     Go To    https://barbershouseproject-419414.web.app/    
-    Sleep    2s    
+    Sleep    2s   
     Click Element    xpath=//*[@id="root"]/div/div[1]/button/span    
     Sleep    1s
     Wait Until Element Is Visible    xpath=//*[@id=":r0:"]    
-    Click Element    xpath=/html/body/div[2]/div[3]/div/div[1]/div/div/div/div[1]/div/div/div/div/div[1]/div/div[2]/img    
-    Sleep    1s
+    Click Element    xpath=/html/body/div[2]/div[3]/div/div[1]/div/div/div/div[1]/div/div/div/div/div[1]/div/div[2]/img   
+    Sleep  1s 
     Click Element    xpath=/html/body/div[2]/div[3]/div/div[1]/div/div/div/div[1]/div/div/div/div/div[2]/div/button[1]    
     Sleep    1s
     Wait Until Element Is Visible    xpath=/html/body/div[2]/div[3]/div/div[1]/div/div/div/div[3]/div/div/div/div/div[1]/table/tbody/tr[1]/th    
-    Click Element    xpath=/html/body/div[2]/div[3]/div/div[1]/div/div/div/div[3]/div/div/div/div/div[1]/table/tbody/tr[2]/th   
+    Click Element    xpath=/html/body/div[2]/div[3]/div/div[1]/div/div/div/div[3]/div/div/div/div/div[1]/table/tbody/tr[2]/th    
     Sleep    1s
-    Click Element    xpath=/html/body/div[2]/div[3]/div/div[1]/div/div/div/div[3]/div/div/div/div/div[2]/div/button[1]   
-    Sleep   3s
-    Click Element    xpath=/html/body/div[2]/div[3]/div/div[1]/div/div/div/div[5]/div/div/div/div/div[1]/div[2]/button[1]
+    Click Element    xpath=/html/body/div[2]/div[3]/div/div[1]/div/div/div/div[3]/div/div/div/div/div[2]/div/button[1]    
+    Sleep   4s
+    Click Element    xpath=/html/body/div[2]/div[3]/div/div[1]/div/div/div/div[5]/div/div/div/div/div[1]/div[1]/div[2]/button  #test?
+    Sleep    2s
+    Click Element    xpath=/html/body/div[2]/div[3]/div/div[1]/div/div/div/div[5]/div/div/div/div/div[1]/div[2]/button[1]    
     Sleep    1s
-    Click Element    xpath=/html/body/div[2]/div[3]/div/div[1]/div/div/div/div[5]/div/div/div/div/div[2]/div/button[1]    
-    Sleep    1s
+    Click Element    xpath=/html/body/div[2]/div[3]/div/div[1]/div/div/div/div[5]/div/div/div/div/div[2]/div/button[1]
     Wait Until Element Is Visible    xpath=/html/body/div[2]/div[3]/div/div[1]/div/div/div/div[7]/div/div/div/div/div[1]
     Sleep    1s
     Input Text    xpath=//*[@id=":r2:"]    test_name
@@ -519,7 +522,7 @@ Delete a Service
     Wait Until Element Is Visible    xpath=//*[@id="root"]/div/div/div/nav/li[1]/a
     Click Element    xpath=//*[@id="root"]/div/div/div/nav/li[4]/a/div[2]/span
     Sleep    1s
-    Click Element    xpath=//*[@id="root"]/div/main/div[2]/div/div/div/div[2]/div/div[2]/div/div[7]/div[9]/button
+    Click Element    xpath=//*[@id="root"]/div/main/div[2]/div/div/div/div[2]/div/div[2]/div/div[6]/div[9]/button
     Sleep    1s
     Click Element    xpath=/html/body/div[3]/div[3]/div/div[2]/button[2]
 
@@ -548,8 +551,5 @@ Delete a Barber
     Click Element    xpath=//*[@id="root"]/div/main/div[2]/div/div/div/div[2]/div/div[2]/div/div[3]/div[7]/button
     Sleep    1s
     Click Element    xpath=/html/body/div[3]/div[3]/div/div[2]/button[2]
-
-
-
-
+    
     Close Browser
