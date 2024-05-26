@@ -2,9 +2,9 @@ import * as React from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import "./index.css";
 
-function Step1({ barbers, isLoading, selectedBarberId, onBarberChange }) {
-  const handleChange = (barberId) => {
-    onBarberChange(barberId);
+function Step1({ barbers, isLoading, selectedBarber, onBarberChange }) {
+  const handleChange = (barber) => {
+    onBarberChange(barber);
   };
 
   return (
@@ -18,8 +18,8 @@ function Step1({ barbers, isLoading, selectedBarberId, onBarberChange }) {
           {barbers.map((barber) => (
             <div
               key={barber.barberId}
-              className={`barber-photo-wrapper ${selectedBarberId === barber.barberId ? "selected" : ""}`}
-              onClick={() => handleChange(barber.barberId)}
+              className={`barber-photo-wrapper ${selectedBarber.barberId === barber.barberId ? "selected" : ""}`}
+              onClick={() => handleChange(barber)}
             >
               <img
                 src={
