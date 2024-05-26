@@ -1,18 +1,21 @@
 using System.Linq.Expressions;
 using AutoMapper;
+using barbershouse.api.Hubs;
 using barbershouse.api.Models;
 using barbershouse.api.Repositories;
 using barbershouse.api.ViewModels;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Operations;
+using Microsoft.AspNetCore.SignalR;
 
 namespace barbershouse.api.Services;
 
-public class BookingService(IBookingsRepository bookingsRepository, ICustomersService customersService, IServicesService servicesService, IMapper mapper) : IBookingService
+public class BookingService(IBookingsRepository bookingsRepository, ICustomersService customersService, IServicesService servicesService, IHubContext<BookingHub> hubContext, IMapper mapper) : IBookingService
 {
     private readonly IBookingsRepository _bookingsRepository = bookingsRepository;
     private readonly ICustomersService _customersService = customersService; 
     private readonly IServicesService _serviceService = servicesService;
+    private readonly IHubContext<BookingHub> _hubContext = hubContext; 
     private readonly IMapper _mapper = mapper;
 
     public async Task<IEnumerable<Booking?>> GetBookingsForBarberByDateAsync(int barberId, DateTime date)
@@ -54,14 +57,16 @@ public class BookingService(IBookingsRepository bookingsRepository, ICustomersSe
             blockedBooking.CustomerId = 12; // Ghost customer in DB
 
             await _bookingsRepository.AddBookingAsync(blockedBooking);
+            await _hubContext.Clients.All.SendAsync("BookingChanged");
         }
         else {
             var customer = await _customersService.GetOrCreateCustomerAsync(bookingViewModel.CustomerName, bookingViewModel.CustomerEmail);
             var booking = _mapper.Map<Booking>(bookingViewModel);
             booking.Status = "Pending";
             booking.CustomerId = customer.CustomerID; 
-
+            
             await _bookingsRepository.AddBookingAsync(booking);
+            await _hubContext.Clients.All.SendAsync("BookingChanged");
         }
     }
 

@@ -45,9 +45,13 @@ builder.Services.AddScoped<IAdminAuthService, AdminAuthService>();
 builder.Services.AddScoped<IAdminRepository, AdminRepository>();
 builder.Services.AddScoped<IPasswordHasher<Admin>, PasswordHasher<Admin>>();
 
-
 // SignalR
-builder.Services.AddSignalR().AddJsonProtocol();
+builder.Services.AddSignalR(hubOptions =>
+{
+    hubOptions.KeepAliveInterval = TimeSpan.FromSeconds(60); // Ping every minute
+    hubOptions.ClientTimeoutInterval = TimeSpan.FromMinutes(1.5); // 1.5 minutes timeout
+}).AddJsonProtocol(); 
+
 builder.Services.AddResponseCompression(opts =>
 {
     opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
@@ -125,12 +129,6 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// builder.Services.AddSwaggerGen(c => {
-//     c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
-//     c.IgnoreObsoleteActions();
-//     c.IgnoreObsoleteProperties();
-//     c.CustomSchemaIds(type => type.FullName);
-// });
 
 var app = builder.Build();
 
