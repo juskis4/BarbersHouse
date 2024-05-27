@@ -28,7 +28,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import { useSnackbar } from "notistack";
 
-const licenseKey = process.env.SYNCFUSION_LICENSE_KEY;
+const licenseKey = process.env.REACT_APP_SYNCFUSION_LICENSE_KEY;
 registerLicense(licenseKey);
 
 const Scheduler = () => {
