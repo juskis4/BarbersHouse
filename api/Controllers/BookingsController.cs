@@ -126,4 +126,19 @@ public class BookingsController(IBookingService bookingService) : ControllerBase
             return StatusCode(500, $"Internal server error: {ex.Message}");
         }
     }
+
+    [HttpGet("statistics")]
+    [Authorize(Policy = "IsAdmin")]
+    public async Task<ActionResult<BookingStatisticsViewModel>> GetBookingStatistics()
+    {
+        try
+        {
+            var stats = await _bookingService.GetBookingStatisticsAsync(); 
+            return Ok(stats);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
 }

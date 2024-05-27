@@ -129,4 +129,28 @@ public class BookingService(IBookingsRepository bookingsRepository, ICustomersSe
 
         await _bookingsRepository.UpdateBookingAsync(booking);
     }
+
+    public async Task<BookingStatisticsViewModel> GetBookingStatisticsAsync()
+    {
+        var now = DateTime.UtcNow;
+        var lastMonthStart = new DateTime(now.Year, now.Month - 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        var lastMonthEnd = lastMonthStart.AddMonths(1).AddDays(-1);
+        var thisMonthStart = new DateTime(now.Year, now.Month, 1, 0, 0, 0, DateTimeKind.Utc);
+
+        var lastMonthBookings = await _bookingsRepository.GetBookingsAsync(startDate: lastMonthStart, endDate: lastMonthEnd);
+        var thisMonthBookings = await _bookingsRepository.GetBookingsAsync(startDate: thisMonthStart, endDate: now);
+
+        var totalBookingsCurrentMonth = thisMonthBookings.Count(); 
+        var thisMonthRevenue = thisMonthBookings.Sum(b => b.Service.Price);
+        var bookingPercentageChange = lastMonthBookings.Count() == 0
+                                        ? 0
+                                        : (thisMonthBookings.Count() - lastMonthBookings.Count()) / (decimal)lastMonthBookings.Count() * 100;
+
+        return new BookingStatisticsViewModel
+        {
+            TotalBookingsCurrentMonth = totalBookingsCurrentMonth, 
+            BookingPercentageChange = bookingPercentageChange,
+            CurrentMonthRevenue = thisMonthRevenue
+        };
+    }
 }

@@ -13,4 +13,5 @@ public interface IBookingService
     Task ConfirmBooking(int barberId, int bookingId);
     Task CancelBooking(int barberId, int bookingId);
     Task UpdateBookingAsync(int bookingId, JsonPatchDocument<Booking> patchDoc);
+    Task<BookingStatisticsViewModel> GetBookingStatisticsAsync();
 }
