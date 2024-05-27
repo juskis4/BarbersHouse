@@ -6,10 +6,10 @@ dayjs.extend(utc);
 
 class EmailService {
   constructor() {
-    this.customerTemplateId = process.env.EMAILJS_CUSTOMER_TEMPLATE_ID;
-    this.barberTemplateId = process.env.EMAILJS_BARBER_TEMPLATE_ID;
-    this.serviceId = process.env.EMAILJS_SERVICE_ID;
-    this.publicKey = process.env.EMAILJS_PUBLIC_KEY;
+    this.customerTemplateId = process.env.REACT_APP_EMAILJS_CUSTOMER_TEMPLATE_ID;
+    this.barberTemplateId = process.env.REACT_APP_EMAILJS_BARBER_TEMPLATE_ID;
+    this.serviceId = process.env.REACT_APP_EMAILJS_SERVICE_ID;
+    this.publicKey = process.env.REACT_APP_EMAILJS_PUBLIC_KEY;
 
     emailjs.init(this.publicKey);
   }
