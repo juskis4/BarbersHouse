@@ -132,7 +132,7 @@ const BarberProfile = () => {
           >
             <StatBox
               title="Cuts"
-              bookings="300"
+              value="300"
               icon={
                 <ContentCutIcon sx={{ color: "secondary", fontSize: "28px" }} />
               }
@@ -150,7 +150,7 @@ const BarberProfile = () => {
           >
             <StatBox
               title="DKK"
-              bookings="53200"
+              value="53200"
               icon={<PaidIcon sx={{ color: "secondary", fontSize: "32px" }} />}
             />
           </Paper>

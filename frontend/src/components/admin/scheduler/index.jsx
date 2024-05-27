@@ -2,12 +2,15 @@ import * as React from "react";
 import { useState, useEffect, useRef } from "react";
 import "./index.css";
 
+import StatBox from "../barbers/statBox";
 import {
   getBookings,
   cancelBooking,
+  getStats,
 } from "../../../services/bookingService.js";
 import { getAllBarbers } from "../../../services/barberService.js";
 
+// SYncfusion
 import {
   ScheduleComponent,
   ViewsDirective,
@@ -22,10 +25,25 @@ import {
   ResourceDirective,
 } from "@syncfusion/ej2-react-schedule";
 import { Internationalization, registerLicense } from "@syncfusion/ej2-base";
-import { CircularProgress, Typography, IconButton } from "@mui/material";
-import dayjs from "dayjs";
+
+// Material UI
+import {
+  CircularProgress,
+  Typography,
+  IconButton,
+  Paper,
+  Box,
+} from "@mui/material";
+import Grid from "@mui/material/Unstable_Grid2";
+
+// Icons
 import CancelIcon from "@mui/icons-material/Cancel";
 import EditNoteIcon from "@mui/icons-material/EditNote";
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import PaidIcon from "@mui/icons-material/Paid";
+
+import dayjs from "dayjs";
 import { useSnackbar } from "notistack";
 
 const licenseKey = process.env.SYNCFUSION_LICENSE_KEY;
@@ -34,11 +52,16 @@ registerLicense(licenseKey);
 const Scheduler = () => {
   const [bookings, setBookings] = useState([]);
   const [barbers, setBarbers] = useState([]);
+
+  // Statistical data
+  const [totalBookingsCurrentMonth, setTotalBookingsCurrentMonth] = useState(0);
+  const [bookingPercentageChange, setBookingPercentageChange] = useState(0);
+  const [currentMonthRevenue, setCurrentMonthRevenue] = useState(0);
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const { enqueueSnackbar } = useSnackbar();
   const [refreshKey, setRefreshKey] = useState(0);
-
   const today = new Date();
   const intl = new Internationalization();
   let scheduleObj = useRef(null);
@@ -50,6 +73,8 @@ const Scheduler = () => {
         setIsLoading(true);
         const bookingsData = await getBookings();
         const barbersData = await getAllBarbers();
+        const statsData = await getStats();
+
         setBookings(
           bookingsData.map((booking) => ({
             ...booking,
@@ -59,7 +84,12 @@ const Scheduler = () => {
             ),
           })),
         );
+
         setBarbers(barbersData);
+
+        setTotalBookingsCurrentMonth(statsData.totalBookingsCurrentMonth);
+        setBookingPercentageChange(statsData.bookingPercentageChange);
+        setCurrentMonthRevenue(statsData.currentMonthRevenue);
       } catch (error) {
         setError("Error fetching data, try again.");
         console.error("Error fetching data:", error);
@@ -221,64 +251,130 @@ const Scheduler = () => {
   return (
     <div>
       {error && <Typography color="error">{error}</Typography>}
-      <ScheduleComponent
-        height={500}
-        key={refreshKey}
-        selectedDate={today}
-        timezone={"UTC"}
-        eventSettings={eventSettings}
-        currentView="TimelineDay"
-        ref={scheduleObj}
-        group={{ resources: ["Barbers"] }}
-        quickInfoTemplates={{
-          header: headerTemplate.bind(this),
-          content: contentTemplate.bind(this),
-          footer: footerTemplate.bind(this),
-        }}
-        actionComplete={async () => {
-          // Refetch bookings after action is completed
-          const bookingsData = await getBookings();
-          setBookings(
-            bookingsData.map((booking) => ({
-              ...booking,
-              bookingDateTime: new Date(booking.bookingDateTime),
-              endTime: new Date(
-                dayjs(booking.bookingDateTime).add(booking.duration, "minute"),
-              ),
-            })),
-          );
-        }}
-      >
-        <ResourcesDirective>
-          <ResourceDirective
-            field="barberId"
-            title="Barber"
-            name="Barbers"
-            allowMultiple={true}
-            dataSource={categoryData}
-            textField="text"
-            idField="id"
-            colorField="color"
-          />
-        </ResourcesDirective>
-        {isLoading ? (
-          <CircularProgress />
-        ) : (
-          <ViewsDirective>
-            <ViewDirective
-              displayName="Day"
-              option="TimelineDay"
-              startHour="06:00"
-              endHour="24:00"
-              timeScale={{ interval: 60, slotCount: 3 }}
+      <Grid container spacing={4} justifyContent="center" alignItems="center">
+        <Grid xs={12} sm={7} lg={3}>
+          <Paper
+            sx={{
+              p: 2,
+              mt: 2,
+              display: "flex",
+              flexDirection: "column",
+              height: 60,
+              alignItems: "center",
+            }}
+          >
+            <StatBox
+              title="Bookings"
+              value={totalBookingsCurrentMonth}
+              icon={<CalendarMonthIcon />}
+              secondaryText="Current Month"
             />
-            <ViewDirective option="Week" startHour="06:00" endHour="24:00" />
-            <ViewDirective option="TimelineMonth" displayName="Month" />
-            <ViewDirective option="Agenda" />
-          </ViewsDirective>
-        )}
-        <Inject services={[Day, Week, TimelineViews, TimelineMonth, Agenda]} />
-      </ScheduleComponent>
+          </Paper>
+        </Grid>
+        <Grid xs={12} sm={7} lg={3}>
+          <Paper
+            sx={{
+              p: 2,
+              mt: 2,
+              display: "flex",
+              flexDirection: "column",
+              height: 60,
+              alignItems: "center",
+            }}
+          >
+            <StatBox
+              title={bookingPercentageChange > 0 ? "Growth" : "Decline"}
+              value={`${bookingPercentageChange.toFixed(2)}%`}
+              icon={<TrendingUpIcon />}
+              secondaryText="Compared to Last Month"
+            />
+          </Paper>
+        </Grid>
+        <Grid xs={12} sm={7} lg={3}>
+          <Paper
+            sx={{
+              p: 2,
+              mt: 2,
+              display: "flex",
+              flexDirection: "column",
+              height: 60,
+              alignItems: "center",
+            }}
+          >
+            <StatBox
+              title="DKK "
+              value={`${currentMonthRevenue}`}
+              icon={<PaidIcon sx={{ color: "secondary", fontSize: "32px" }} />}
+              secondaryText="Current Month"
+            />
+          </Paper>
+        </Grid>
+      </Grid>
+      <Box sx={{ mt: 4 }}>
+        <ScheduleComponent
+          height={500}
+          key={refreshKey}
+          selectedDate={today}
+          timezone={"UTC"}
+          eventSettings={eventSettings}
+          currentView="TimelineDay"
+          ref={scheduleObj}
+          group={{ resources: ["Barbers"] }}
+          quickInfoTemplates={{
+            header: headerTemplate.bind(this),
+            content: contentTemplate.bind(this),
+            footer: footerTemplate.bind(this),
+          }}
+          actionComplete={async () => {
+            // Refetch bookings after action is completed
+            const bookingsData = await getBookings();
+            setBookings(
+              bookingsData.map((booking) => ({
+                ...booking,
+                bookingDateTime: new Date(booking.bookingDateTime),
+                endTime: new Date(
+                  dayjs(booking.bookingDateTime).add(
+                    booking.duration,
+                    "minute",
+                  ),
+                ),
+              })),
+            );
+          }}
+        >
+          <ResourcesDirective>
+            <ResourceDirective
+              field="barberId"
+              title="Barber"
+              name="Barbers"
+              allowMultiple={true}
+              dataSource={categoryData}
+              textField="text"
+              idField="id"
+              colorField="color"
+            />
+          </ResourcesDirective>
+          {isLoading ? (
+            <CircularProgress />
+          ) : (
+            <ViewsDirective>
+              <ViewDirective
+                displayName="Day"
+                option="TimelineDay"
+                startHour="06:00"
+                endHour="24:00"
+                timeScale={{ interval: 60, slotCount: 3 }}
+              />
+              <ViewDirective option="Week" startHour="06:00" endHour="24:00" />
+              <ViewDirective option="TimelineMonth" displayName="Month" />
+              <ViewDirective option="Agenda" />
+            </ViewsDirective>
+          )}
+          <Inject
+            services={[Day, Week, TimelineViews, TimelineMonth, Agenda]}
+          />
+        </ScheduleComponent>
+      </Box>
     </div>
   );
 };

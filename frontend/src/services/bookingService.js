@@ -187,3 +187,28 @@ export async function updateBooking(bookingId, updatedBooking) {
     throw error;
   }
 }
+
+export async function getStats() {
+  try {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      const response = await axios.get(`${apiUrl}/Bookings/statistics`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.status === 200) {
+        return response.data;
+      } else {
+        throw new Error(
+          response.data.message || "Error fetching booking statistics",
+        );
+      }
+    }
+  } catch (error) {
+    console.error("Error updating booking:", error);
+    throw error;
+  }
+}
