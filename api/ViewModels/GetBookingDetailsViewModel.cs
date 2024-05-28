@@ -3,7 +3,7 @@ namespace barbershouse.api.ViewModels;
 public class GetBookingDetailsViewModel
 {
     public int BookingId { get; set; }
-    public BarberViewModel Barber { get; set; } 
+    public BarberWithServicesViewModel Barber { get; set; } 
     public int CustomerId { get; set; }
     public string CustomerName { get; set; }
     public string CustomerEmail { get; set; }

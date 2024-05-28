@@ -2,17 +2,17 @@ name: API CI Pipeline
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ["master"]
     paths:
-      - 'api/**'
+      - "api/**"
   pull_request:
-    branches: [ "master" ]
+    branches: ["master"]
     paths:
-      - 'api/**'
+      - "api/**"
 
 env:
-  DOTNET_VERSION: '8.0.x'
-  API_PROJECT_PATH: 'api/api.csproj' 
+  DOTNET_VERSION: "8.0.x"
+  API_PROJECT_PATH: "api/api.csproj"
 
 jobs:
   build:
@@ -26,7 +26,7 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
-          
+
       - name: Cache NuGet packages
         uses: actions/cache@v3
         with:
@@ -43,3 +43,7 @@ jobs:
 
       - name: Build app
         run: dotnet build ${{ env.API_PROJECT_PATH }} -c Release --no-restore # Build the API project
+
+      - name: Test
+        working-directory: ./testing/frontend-tests/api-tests/
+        run: dotnet test --no-build

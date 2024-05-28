@@ -8,7 +8,7 @@ public interface IBarbersService {
 
     Task<IEnumerable<BarberResultViewModel>> GetAllBarbersAsync();
     Task<Barber?> GetBarberByIdAsync(int barberId);
-    Task<IEnumerable<BarberViewModel>> GetAllBarbersWithServicesAsync();
+    Task<IEnumerable<BarberWithServicesViewModel>> GetAllBarbersWithServicesAsync();
     Task AddBarberWorkHoursAsync(int barberId, AddBarberWorkHoursViewModel workHours);
     Task<Barber> AddBarberAsync(AddBarberViewModel model);
     Task<IEnumerable<BarberWorkHours>> GetWorkHoursByBarberIdAsync(int barberId);  

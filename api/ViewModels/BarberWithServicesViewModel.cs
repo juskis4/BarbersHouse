@@ -1,6 +1,6 @@
 namespace barbershouse.api.ViewModels;
 
-public class BarberViewModel
+public class BarberWithServicesViewModel
 {
     public int BarberId { get; set; }
     public string Name { get; set; }
