@@ -5,9 +5,6 @@ using barbershouse.api.ViewModels;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Xunit;
 using barbershouse.api.Tests.Common.Factories;
 using barbershouse.api.Tests.Common.Helpers;
@@ -17,30 +14,27 @@ namespace barbershouse.api.Tests.Controllers;
 
 public class BarbersControllerTests : IClassFixture<UserFixture>
 {
-    private readonly Mock<IBarbersService> _mockBarbersService;
-    private readonly BarbersController _controller;
     private readonly IMapper _mapper;
     private readonly UserFixture _fixture;
 
-
     public BarbersControllerTests(UserFixture fixture)
     {
-        _mockBarbersService = new Mock<IBarbersService>();
         _mapper = TestMapper.CreateMapper();
-        _controller = new BarbersController(_mockBarbersService.Object);
         _fixture = fixture;
     }
 
-    // Test: GetBarberById - Success
     [Fact]
     public async Task GetBarberById_ReturnsOkResult_WhenBarberExists()
     {
         // Arrange
         var barber = BarberFactory.CreateBarber();
-        _mockBarbersService.Setup(service => service.GetBarberByIdAsync(barber.BarberID)).ReturnsAsync(barber);
+        var mockService = new Mock<IBarbersService>();
+        var controller = _fixture.CreateControllerWithMockService<BarbersController, IBarbersService>(mockService);
+        mockService.Setup(service => service.GetBarberByIdAsync(barber.BarberID))
+                   .ReturnsAsync(barber);
 
         // Act
-        var result = await _controller.GetBarberById(barber.BarberID);
+        var result = await controller.GetBarberById(barber.BarberID);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
@@ -48,16 +42,17 @@ public class BarbersControllerTests : IClassFixture<UserFixture>
         Assert.Equal(barber.BarberID, returnedBarber.BarberID);
     }
 
-    // Test: GetBarberById - Not Found
     [Fact]
     public async Task GetBarberById_ReturnsNotFound_WhenBarberDoesNotExist()
     {
         // Arrange
         var barberId = 1;
-        _mockBarbersService.Setup(service => service.GetBarberByIdAsync(barberId)).ReturnsAsync((Barber?)null);
+        var mockService = new Mock<IBarbersService>();
+        var controller = _fixture.CreateControllerWithMockService<BarbersController, IBarbersService>(mockService);
+        mockService.Setup(service => service.GetBarberByIdAsync(barberId)).ReturnsAsync((Barber?)null);
 
         // Act
-        var result = await _controller.GetBarberById(barberId);
+        var result = await controller.GetBarberById(barberId);
 
         // Assert
         var notFoundObjectResult = Assert.IsType<NotFoundObjectResult>(result.Result);
@@ -67,14 +62,15 @@ public class BarbersControllerTests : IClassFixture<UserFixture>
     public async Task GetBarbersAsync_ReturnsOkResult_WithListOfBarbers()
     {
         // Arrange
-        var barbers = BarberFactory.CreateBarbersList(3); // Create a list of 3 barbers
-        var barberResultViewModels = _mapper.Map<IEnumerable<BarberResultViewModel>>(barbers); // Assuming you have a valid AutoMapper configuration
-        _mockBarbersService
-            .Setup(service => service.GetAllBarbersAsync())
+        var barbers = BarberFactory.CreateBarbersList(3);
+        var mockService = new Mock<IBarbersService>();
+        var controller = _fixture.CreateControllerWithMockService<BarbersController, IBarbersService>(mockService);
+        var barberResultViewModels = _mapper.Map<IEnumerable<BarberResultViewModel>>(barbers);
+        mockService.Setup(service => service.GetAllBarbersAsync())
             .ReturnsAsync(barberResultViewModels);
 
         // Act
-        var result = await _controller.GetBarbersAsync();
+        var result = await controller.GetBarbersAsync();
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
@@ -82,33 +78,35 @@ public class BarbersControllerTests : IClassFixture<UserFixture>
         Assert.Equal(barbers.Count, returnedBarbers.Count());
     }
 
-    // Test: GetBarbersAsync - Service Throws Exception
     [Fact]
     public async Task GetBarbersAsync_ReturnsInternalServerError_WhenServiceThrowsException()
     {
         // Arrange
-        _mockBarbersService.Setup(service => service.GetAllBarbersAsync())
+        var mockService = new Mock<IBarbersService>();
+        var controller = _fixture.CreateControllerWithMockService<BarbersController, IBarbersService>(mockService);
+        mockService.Setup(service => service.GetAllBarbersAsync())
             .ThrowsAsync(new Exception("Database connection error"));
 
         // Act
-        var result = await _controller.GetBarbersAsync();
+        var result = await controller.GetBarbersAsync();
 
         // Assert
         var statusCodeResult = Assert.IsType<ObjectResult>(result.Result);
         Assert.Equal(500, statusCodeResult.StatusCode);
     }
 
-    // Test: GetBarbersAsync - Returns Empty List
     [Fact]
     public async Task GetBarbersAsync_ReturnsOkResult_WithEmptyList_WhenNoBarbersExist()
     {
         // Arrange
         var emptyList = new List<BarberResultViewModel>();
-        _mockBarbersService.Setup(service => service.GetAllBarbersAsync())
+        var mockService = new Mock<IBarbersService>();
+        var controller = _fixture.CreateControllerWithMockService<BarbersController, IBarbersService>(mockService);
+        mockService.Setup(service => service.GetAllBarbersAsync())
             .ReturnsAsync(emptyList);
 
         // Act
-        var result = await _controller.GetBarbersAsync();
+        var result = await controller.GetBarbersAsync();
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
@@ -116,19 +114,19 @@ public class BarbersControllerTests : IClassFixture<UserFixture>
         Assert.Empty(returnedBarbers);
     }
 
-    // Test: GetBarbersWithServicesAsync - Success
     [Fact]
     public async Task GetBarbersWithServicesAsync_ReturnsOkResult_WithListOfBarbersWithServices()
     {
         // Arrange
-        var barbersWithServices = BarberFactory.CreateBarbersList(3, withServices: true); // Now includes services
+        var barbersWithServices = BarberFactory.CreateBarbersList(3, withServices: true);
         var barberWithServicesViewModels = _mapper.Map<IEnumerable<BarberWithServicesViewModel>>(barbersWithServices);
-        _mockBarbersService
-            .Setup(service => service.GetAllBarbersWithServicesAsync())
+        var mockService = new Mock<IBarbersService>();
+        var controller = _fixture.CreateControllerWithMockService<BarbersController, IBarbersService>(mockService);
+        mockService.Setup(service => service.GetAllBarbersWithServicesAsync())
             .ReturnsAsync(barberWithServicesViewModels);
 
         // Act
-        var result = await _controller.GetBarbersWithServicesAsync();
+        var result = await controller.GetBarbersWithServicesAsync();
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
@@ -136,33 +134,35 @@ public class BarbersControllerTests : IClassFixture<UserFixture>
         Assert.Equal(barbersWithServices.Count(), returnedBarbers.Count());
     }
 
-    // Test: GetBarbersWithServicesAsync - Service Throws Exception
     [Fact]
     public async Task GetBarbersWithServicesAsync_ReturnsInternalServerError_WhenServiceThrowsException()
     {
         // Arrange
-        _mockBarbersService.Setup(service => service.GetAllBarbersWithServicesAsync())
+        var mockService = new Mock<IBarbersService>();
+        var controller = _fixture.CreateControllerWithMockService<BarbersController, IBarbersService>(mockService);
+        mockService.Setup(service => service.GetAllBarbersWithServicesAsync())
             .ThrowsAsync(new Exception("Database connection error"));
 
         // Act
-        var result = await _controller.GetBarbersWithServicesAsync();
+        var result = await controller.GetBarbersWithServicesAsync();
 
         // Assert
         var statusCodeResult = Assert.IsType<ObjectResult>(result.Result);
         Assert.Equal(500, statusCodeResult.StatusCode);
     }
 
-    // Test: GetBarbersWithServicesAsync - Returns Empty List
     [Fact]
     public async Task GetBarbersWithServicesAsync_ReturnsOkResult_WithEmptyList_WhenNoBarbersWithServicesExist()
     {
         // Arrange
         var emptyList = new List<BarberWithServicesViewModel>();
-        _mockBarbersService.Setup(service => service.GetAllBarbersWithServicesAsync())
+        var mockService = new Mock<IBarbersService>();
+        var controller = _fixture.CreateControllerWithMockService<BarbersController, IBarbersService>(mockService);
+        mockService.Setup(service => service.GetAllBarbersWithServicesAsync())
             .ReturnsAsync(emptyList);
 
         // Act
-        var result = await _controller.GetBarbersWithServicesAsync();
+        var result = await controller.GetBarbersWithServicesAsync();
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
@@ -170,88 +170,121 @@ public class BarbersControllerTests : IClassFixture<UserFixture>
         Assert.Empty(returnedBarbers);
     }
 
-
-    // // Test: AddBarber - Success (Authorized Admin)
-    // [Fact]
-    // public async Task AddBarber_AuthorizedAdmin_ReturnsCreatedAtAction_WhenValidModel()
-    // {
-    //     // Arrange
-    //     var newBarberModel = new AddBarberViewModel
-    //     {
-    //         Name = "New Barber",
-    //         Email = "newbarber@example.com",
-    //         Bio = "Experienced barber",
-    //         PhotoUrl = "https://example.com/photo.jpg"
-    //     };
-
-    //     var createdBarber = BarberFactory.CreateBarber();
-
-    //     // Use the UserFixture's AdminUser and create the ControllerContext
-    //     _controller.ControllerContext = _fixture.CreateControllerContext(_fixture.AdminUser);
-
-    //     // Set up the mock service in the fixture
-    //     _fixture.MockBarbersService.Setup(service => service.AddBarberAsync(newBarberModel))
-    //                                .ReturnsAsync(createdBarber);
-
-    //     // Act
-    //     var result = await _controller.AddBarber(newBarberModel);
-
-    //     // Assert
-    //     var createdAtActionResult = Assert.IsType<CreatedAtActionResult>(result);
-    //     Assert.Equal(nameof(BarbersController.GetBarberById), createdAtActionResult.ActionName);
-    //     Assert.Equal(createdBarber, createdAtActionResult.Value);
-    // }
-
-    // Test: AddBarber - Failure (Non-Admin User)
     [Fact]
-    public async Task AddBarber_NonAdminUser_ReturnsUnauthorized()
+    public async Task DeleteBarber_ExistingBarber_ReturnsNoContent()
     {
         // Arrange
-        var newBarberModel = new AddBarberViewModel
-        {
-            Name = "Test Barber",
-            Email = "testbarber@example.com",
-            Bio = "This is a test bio.",
-            PhotoUrl = "https://example.com/testphoto.jpg"
-        };
-
-        // Create a strict mock to verify no unexpected interactions
-        var mockBarbersService = new Mock<IBarbersService>(MockBehavior.Strict);
-
-        // Set up the mock to throw UnauthorizedAccessException
-        mockBarbersService.Setup(service => service.AddBarberAsync(It.IsAny<AddBarberViewModel>()))
-                          .ThrowsAsync(new UnauthorizedAccessException());
-
-        // Pass the mock service to CreateControllerContext
-        _controller.ControllerContext = _fixture.CreateControllerContext(
-            _fixture.RegularUser,
-            mockBarbersService);
+        var barberId = 1;
+        var mockService = new Mock<IBarbersService>();
+        var controller = _fixture.CreateControllerWithMockService<BarbersController, IBarbersService>(mockService);
+        _fixture.SetUserInControllerContext(controller, _fixture.AdminUser);
+        mockService.Setup(service => service.DeleteBarberAsync(barberId)).Returns(Task.CompletedTask);
 
         // Act
-        var result = await _controller.AddBarber(newBarberModel);
-
-        // Verify that no methods were called on the mock service
-        mockBarbersService.VerifyNoOtherCalls();
+        var result = await controller.DeleteBarber(barberId);
 
         // Assert
-        Assert.IsType<UnauthorizedResult>(result);
-
-
+        Assert.IsType<NoContentResult>(result);
     }
 
-    // // Test: AddBarber - Failure (Invalid Model)
-    // [Fact]
-    // public async Task AddBarber_InvalidModel_ReturnsBadRequest()
-    // {
-    //     // Arrange
-    //     var invalidModel = new AddBarberViewModel(); // Missing required properties
-    //     _controller.ModelState.AddModelError("Name", "Name is required.");
+    [Fact]
+    public async Task DeleteBarber_NonExistentBarber_ReturnsNotFound()
+    {
+        // Arrange
+        var barberId = 999;
+        var mockService = new Mock<IBarbersService>();
+        var controller = _fixture.CreateControllerWithMockService<BarbersController, IBarbersService>(mockService);
+        _fixture.SetUserInControllerContext(controller, _fixture.AdminUser);
+        mockService.Setup(service => service.DeleteBarberAsync(barberId))
+                   .ThrowsAsync(new ArgumentException("Barber not found."));
 
-    //     // Act
-    //     var result = await _controller.AddBarber(invalidModel);
+        // Act
+        var result = await controller.DeleteBarber(barberId);
 
-    //     // Assert
-    //     var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-    //     Assert.IsType<SerializableError>(badRequestResult.Value);
-    // }
+        // Assert
+        var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+        Assert.Equal("Barber not found.", notFoundResult.Value);
+    }
+
+    [Fact]
+    public async Task DeleteBarber_ServiceError_ReturnsInternalServerError()
+    {
+        // Arrange
+        var barberId = 1;
+        var mockService = new Mock<IBarbersService>();
+        var controller = _fixture.CreateControllerWithMockService<BarbersController, IBarbersService>(mockService);
+        _fixture.SetUserInControllerContext(controller, _fixture.AdminUser);
+        mockService.Setup(service => service.DeleteBarberAsync(barberId))
+                   .ThrowsAsync(new Exception("Database error"));
+
+        // Act
+        var result = await controller.DeleteBarber(barberId);
+
+        // Assert
+        var errorResult = Assert.IsType<ObjectResult>(result);
+        Assert.Equal(500, errorResult.StatusCode);
+        Assert.Contains("Internal server error", errorResult.Value?.ToString());
+    }
+
+    [Fact]
+    public async Task UpdateBarber_ValidPatch_ReturnsNoContent()
+    {
+        // Arrange
+        var barberId = 1;
+        var patchDoc = new JsonPatchDocument<Barber>();
+        patchDoc.Replace(b => b.Name, "Updated Name");
+        var mockService = new Mock<IBarbersService>();
+        var controller = _fixture.CreateControllerWithMockService<BarbersController, IBarbersService>(mockService);
+        _fixture.SetUserInControllerContext(controller, _fixture.AdminUser);
+        mockService.Setup(s => s.UpdateBarberAsync(barberId, patchDoc)).Returns(Task.CompletedTask);
+
+        // Act
+        var result = await controller.UpdateBarber(barberId, patchDoc);
+
+        // Assert
+        Assert.IsType<NoContentResult>(result);
+        mockService.Verify(s => s.UpdateBarberAsync(barberId, patchDoc), Times.Once);
+    }
+
+    [Fact]
+    public async Task UpdateBarber_InvalidPatch_ReturnsBadRequest()
+    {
+        // Arrange
+        var barberId = 1;
+        var patchDoc = new JsonPatchDocument<Barber>();
+        patchDoc.Replace(b => b.BarberID, 2);
+        var mockService = new Mock<IBarbersService>();
+        var controller = _fixture.CreateControllerWithMockService<BarbersController, IBarbersService>(mockService);
+        _fixture.SetUserInControllerContext(controller, _fixture.AdminUser);
+        mockService.Setup(s => s.UpdateBarberAsync(barberId, patchDoc))
+                   .ThrowsAsync(new ArgumentException("Invalid patch operation."));
+
+        // Act
+        var result = await controller.UpdateBarber(barberId, patchDoc);
+
+        // Assert
+        var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+        Assert.Equal("Invalid patch operation.", badRequestResult.Value);
+    }
+
+    [Fact]
+    public async Task UpdateBarber_NonExistentBarber_ReturnsNotFound()
+    {
+        // Arrange
+        var barberId = 999;
+        var patchDoc = new JsonPatchDocument<Barber>();
+        patchDoc.Replace(b => b.Name, "Updated Name");
+        var mockService = new Mock<IBarbersService>();
+        var controller = _fixture.CreateControllerWithMockService<BarbersController, IBarbersService>(mockService);
+        _fixture.SetUserInControllerContext(controller, _fixture.AdminUser);
+        mockService.Setup(s => s.UpdateBarberAsync(barberId, patchDoc))
+                   .ThrowsAsync(new ArgumentException("Barber not found."));
+
+        // Act
+        var result = await controller.UpdateBarber(barberId, patchDoc);
+
+        // Assert
+        var notFoundResult = Assert.IsType<BadRequestObjectResult>(result);
+        Assert.Equal("Barber not found.", notFoundResult.Value);
+    }
 }

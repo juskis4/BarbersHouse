@@ -13,7 +13,7 @@ public class ServicesController(IServicesService servicesService) : ControllerBa
 {
     private readonly IServicesService _servicesService = servicesService;
 
-    [HttpGet] 
+    [HttpGet]
     public async Task<ActionResult<IEnumerable<ServiceViewModel>>> GetAllServices()
     {
         var services = await _servicesService.GetAllServicesAsync();
@@ -31,7 +31,7 @@ public class ServicesController(IServicesService servicesService) : ControllerBa
             return NotFound();
         }
 
-        return service;
+        return Ok(service); 
     }
 
     [HttpPost("{barberId}/services")]
@@ -65,11 +65,11 @@ public class ServicesController(IServicesService servicesService) : ControllerBa
         try
         {
             await _servicesService.UpdateServiceAsync(serviceId, patchDoc);
-            return NoContent(); 
+            return NoContent();
         }
         catch (ArgumentException ex)
         {
-            return NotFound(ex.Message); 
+            return NotFound(ex.Message);
         }
         catch (Exception ex)
         {
@@ -84,11 +84,11 @@ public class ServicesController(IServicesService servicesService) : ControllerBa
         try
         {
             await _servicesService.DeleteServiceAsync(serviceId);
-            return NoContent(); 
+            return NoContent();
         }
         catch (ArgumentException ex)
         {
-            return NotFound(ex.Message); 
+            return NotFound(ex.Message);
         }
         catch (Exception ex)
         {

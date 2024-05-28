@@ -1,7 +1,7 @@
 using AutoMapper;
 using barbershouse.api.Profiles;
 
-namespace barbershouse.api.Tests.Common.Helpers // Adjust namespace as needed
+namespace barbershouse.api.Tests.Common.Helpers 
 {
     public static class TestMapper
     {
