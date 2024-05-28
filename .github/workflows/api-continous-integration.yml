@@ -13,6 +13,7 @@ on:
 env:
   DOTNET_VERSION: "8.0.x"
   API_PROJECT_PATH: "api/api.csproj"
+  TEST_PROJECT_PATH: "testing/api-tests/api-tests.csproj"
 
 jobs:
   build:
@@ -36,7 +37,7 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Restore dependencies
-        run: dotnet restore ${{ env.API_PROJECT_PATH }} # Restore project dependencies for your API project
+        run: dotnet restore ${{ env.API_PROJECT_PATH }} # Restore project dependencies for API project
 
       - name: Clean
         run: dotnet clean ${{ env.API_PROJECT_PATH }} --configuration Release # Clean the API project
@@ -44,6 +45,14 @@ jobs:
       - name: Build app
         run: dotnet build ${{ env.API_PROJECT_PATH }} -c Release --no-restore # Build the API project
 
+      - name: Restore Test dependencies
+        run: dotnet restore ${{ env.TEST_PROJECT_PATH }} # Restore project dependencies for testing project
+
+      - name: Clean Test
+        run: dotnet clean ${{ env.TEST_PROJECT_PATH }} --configuration Release # Clean the testing project
+
+      - name: Build Test
+        run: dotnet build ${{ env.TEST_PROJECT_PATH }} -c Release --no-restore # Build the testing project
+
       - name: Test
-        working-directory: testing/api-tests/api-tests.csproj
-        run: dotnet test --no-build
+        run: dotnet test ${{ env.TEST_PROJECT_PATH }} --no-build --verbosity normal
