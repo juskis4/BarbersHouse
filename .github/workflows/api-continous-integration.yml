@@ -54,5 +54,10 @@ jobs:
       - name: Build Test
         run: dotnet build ${{ env.TEST_PROJECT_PATH }} -c Release --no-restore # Build the testing project
 
+      - name: Print Test Project Path
+        run: |
+          echo "Test project path:"
+          echo "${{ env.TEST_PROJECT_PATH }}"
+
       - name: Test
         run: dotnet test ${{ env.TEST_PROJECT_PATH }} --no-build --verbosity normal
