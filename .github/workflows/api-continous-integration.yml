@@ -51,10 +51,5 @@ jobs:
       - name: Clean Test
         run: dotnet clean ${{ env.TEST_PROJECT_PATH }} --configuration Release # Clean the testing project
 
-      - name: Print Test Project Path
-        run: |
-          echo "Test project path:"
-          echo "${{ env.TEST_PROJECT_PATH }}"
-
       - name: Test
-        run: dotnet test ${{ env.TEST_PROJECT_PATH }} --verbosity normal
+        run: dotnet test ${{ env.TEST_PROJECT_PATH }} --verbosity normal # Build and test
