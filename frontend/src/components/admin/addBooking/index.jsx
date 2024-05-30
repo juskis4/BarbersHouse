@@ -96,24 +96,27 @@ const AddBooking = () => {
       // create booking
       await createManualBooking(bookingData);
 
-      // prepare email data and call email service
-      const bookedBarber = barbers.find(
-        (barber) => barber.barberId === bookingData.barberId,
-      );
-      const bookedService = bookedBarber.services.find(
-        (service) => service.serviceId === bookingData.serviceId,
-      );
-      const emailData = {
-        BarberName: bookedBarber.name,
-        BarberEmail: bookedBarber.email,
-        CustomerName: bookingData.customerName,
-        CustomerEmail: bookingData.customerEmail,
-        ServiceTitle: bookedService.title,
-        Duration: bookedService.duration,
-        Price: bookedService.price,
-        StartTime: bookingData.startTime,
-      };
-      await emailService.sendBookingConfirmationEmails(emailData);
+      // if creating blocked slot
+      if (bookingType === "customer") {
+        // prepare email data and call email service
+        const bookedBarber = barbers.find(
+          (barber) => barber.barberId === bookingData.barberId,
+        );
+        const bookedService = bookedBarber.services.find(
+          (service) => service.serviceId === bookingData.serviceId,
+        );
+        const emailData = {
+          BarberName: bookedBarber.name,
+          BarberEmail: bookedBarber.email,
+          CustomerName: bookingData.customerName,
+          CustomerEmail: bookingData.customerEmail,
+          ServiceTitle: bookedService.title,
+          Duration: bookedService.duration,
+          Price: bookedService.price,
+          StartTime: bookingData.startTime,
+        };
+        await emailService.sendBookingConfirmationEmails(emailData);
+      }
 
       setSaveSuccess(true);
     } catch (error) {
