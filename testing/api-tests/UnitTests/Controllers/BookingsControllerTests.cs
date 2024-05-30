@@ -45,11 +45,11 @@ public class BookingsControllerTests
     {
         // Arrange
         var booking = BookingFactory.CreateBookingDetailsViewModel();
-        _mockBookingService.Setup(service => service.GetBookingByIdAsync(1)).ReturnsAsync(booking);
+        _mockBookingService.Setup(service => service.GetBookingByIdAsync(booking.BookingId)).ReturnsAsync(booking);
         _fixture.SetUserInControllerContext(_controller, _fixture.AdminUser);
 
         // Act
-        var result = await _controller.GetBookingById(1);
+        var result = await _controller.GetBookingById(booking.BookingId);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
