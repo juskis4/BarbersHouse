@@ -1,16 +1,20 @@
 using barbershouse.api.Controllers;
-using barbershouse.api.Models;
 using barbershouse.api.Services;
 using barbershouse.api.ViewModels;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
+using barbershouse.api.Tests.Common.Factories;
 using barbershouse.api.Tests.Common.Helpers;
+using barbershouse.api.Models;
+using System.Collections.Generic;
+using System;
+using System.Threading.Tasks;
 
 namespace barbershouse.api.Tests.Controllers;
 
-public class BookingsControllerTests
+public class BookingsControllerTests()
 {
     private readonly Mock<IBookingService> _mockBookingService;
     private readonly BookingsController _controller;
@@ -27,7 +31,7 @@ public class BookingsControllerTests
     public async Task GetBookings_ReturnsOkResult_WithBookings()
     {
         // Arrange
-        var bookings = new List<GetBookingsViewModel> { new GetBookingsViewModel() };
+        var bookings = BookingFactory.CreateBookingsList(1);
         _mockBookingService.Setup(service => service.GetBookingsAsync(null, null, null)).ReturnsAsync(bookings);
 
         // Act
@@ -43,7 +47,7 @@ public class BookingsControllerTests
     public async Task GetBookingById_AdminUser_ReturnsOkResult_WithBooking()
     {
         // Arrange
-        var booking = new GetBookingDetailsViewModel();
+        var booking = BookingFactory.CreateBookingDetailsViewModel();
         _mockBookingService.Setup(service => service.GetBookingByIdAsync(1)).ReturnsAsync(booking);
         _fixture.SetUserInControllerContext(_controller, _fixture.AdminUser);
 
@@ -73,7 +77,7 @@ public class BookingsControllerTests
     public async Task AddBookingAsync_ReturnsOkResult_WhenBookingIsAdded()
     {
         // Arrange
-        var booking = new AddBookingViewModel();
+        var booking = BookingFactory.CreateAddBookingViewModel();
 
         // Act
         var result = await _controller.AddBookingAsync(booking);
@@ -159,3 +163,4 @@ public class BookingsControllerTests
         var returnValue = Assert.IsType<BookingStatisticsViewModel>(okResult.Value);
     }
 }
+

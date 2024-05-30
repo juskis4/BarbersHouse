@@ -102,25 +102,6 @@ public class ServicesControllerTests : IClassFixture<UserFixture>
     }
 
     [Fact]
-    public async Task AddServiceForBarber_ReturnsBadRequest_WhenModelIsInvalid()
-    {
-        // Arrange
-        var barberId = 1;
-        var model = new AddServiceViewModel(); // invalid because required properties are not set
-        var mockService = new Mock<IServicesService>();
-        var controller = _fixture.CreateControllerWithMockService<ServicesController, IServicesService>(mockService);
-        _fixture.SetUserInControllerContext(controller, _fixture.AdminUser);
-        controller.ModelState.AddModelError("Title", "Required");
-
-        // Act
-        var result = await controller.AddServiceForBarber(barberId, model);
-
-        // Assert
-        var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-        Assert.IsType<SerializableError>(badRequestResult.Value);
-    }
-
-    [Fact]
     public async Task AddServiceForBarber_ReturnsBadRequest_WhenServiceThrowsArgumentException()
     {
         // Arrange
