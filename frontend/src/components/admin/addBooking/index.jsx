@@ -96,7 +96,7 @@ const AddBooking = () => {
       // create booking
       await createManualBooking(bookingData);
 
-      // if creating blocked slot
+      // if creating customer booking, send email to barber and customer
       if (bookingType === "customer") {
         // prepare email data and call email service
         const bookedBarber = barbers.find(
