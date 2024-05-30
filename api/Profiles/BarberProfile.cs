@@ -8,7 +8,7 @@ public class BarberProfile : Profile
 {
     public BarberProfile()
     {
-        CreateMap<Barber, BarberViewModel>()
+        CreateMap<Barber, BarberWithServicesViewModel>()
             .ForMember(dest => dest.BarberId, opt => opt.MapFrom(src => src.BarberID))
             .ForMember(dest => dest.Services, opt => opt.MapFrom(src => src.Services));
 

@@ -25,10 +25,10 @@ public class BarbersService(IBarbersRepository barbersRepository, IMapper mapper
         return await _barbersRepository.GetBarberByIdAsync(barberId);
     }
 
-    public async Task<IEnumerable<BarberViewModel>> GetAllBarbersWithServicesAsync()
+    public async Task<IEnumerable<BarberWithServicesViewModel>> GetAllBarbersWithServicesAsync()
     {
         var barbers = await _barbersRepository.GetAllBarbersWithServicesAsync();
-        return _mapper.Map<IEnumerable<BarberViewModel>>(barbers);
+        return _mapper.Map<IEnumerable<BarberWithServicesViewModel>>(barbers);
     }
 
     public async Task<Barber> AddBarberAsync(AddBarberViewModel model)

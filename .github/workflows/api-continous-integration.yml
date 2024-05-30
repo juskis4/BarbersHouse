@@ -2,17 +2,18 @@ name: API CI Pipeline
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ["master"]
     paths:
-      - 'api/**'
+      - "api/**"
   pull_request:
-    branches: [ "master" ]
+    branches: ["master"]
     paths:
-      - 'api/**'
+      - "api/**"
 
 env:
-  DOTNET_VERSION: '8.0.x'
-  API_PROJECT_PATH: 'api/api.csproj' 
+  DOTNET_VERSION: "8.0.x"
+  API_PROJECT_PATH: "api/api.csproj"
+  TEST_PROJECT_PATH: "testing/api-tests/api-tests.csproj"
 
 jobs:
   build:
@@ -26,7 +27,7 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
-          
+
       - name: Cache NuGet packages
         uses: actions/cache@v3
         with:
@@ -36,10 +37,19 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Restore dependencies
-        run: dotnet restore ${{ env.API_PROJECT_PATH }} # Restore project dependencies for your API project
+        run: dotnet restore ${{ env.API_PROJECT_PATH }} # Restore project dependencies for API project
 
       - name: Clean
         run: dotnet clean ${{ env.API_PROJECT_PATH }} --configuration Release # Clean the API project
 
       - name: Build app
         run: dotnet build ${{ env.API_PROJECT_PATH }} -c Release --no-restore # Build the API project
+
+      - name: Restore Test dependencies
+        run: dotnet restore ${{ env.TEST_PROJECT_PATH }} # Restore project dependencies for testing project
+
+      - name: Clean Test
+        run: dotnet clean ${{ env.TEST_PROJECT_PATH }} --configuration Release # Clean the testing project
+
+      - name: Test
+        run: dotnet test ${{ env.TEST_PROJECT_PATH }} --verbosity normal # Build and test
