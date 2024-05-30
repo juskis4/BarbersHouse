@@ -8,13 +8,10 @@ using Xunit;
 using barbershouse.api.Tests.Common.Factories;
 using barbershouse.api.Tests.Common.Helpers;
 using barbershouse.api.Models;
-using System.Collections.Generic;
-using System;
-using System.Threading.Tasks;
 
 namespace barbershouse.api.Tests.Controllers;
 
-public class BookingsControllerTests()
+public class BookingsControllerTests
 {
     private readonly Mock<IBookingService> _mockBookingService;
     private readonly BookingsController _controller;
