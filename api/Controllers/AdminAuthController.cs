@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using barbershouse.api.Services;
 using barbershouse.api.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace barbershouse.api.Controllers;
 
@@ -31,6 +32,7 @@ public class AdminAuthController(IAdminAuthService adminAuthService) : Controlle
     }
 
     [HttpPost("register")]
+    [Authorize(Policy = "IsAdmin")]
     public async Task<IActionResult> Register([FromBody] RegisterAdminViewModel model)
     {
         try

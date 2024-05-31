@@ -85,6 +85,7 @@ public class BarbersController(IBarbersService barbersService) : ControllerBase
     }
 
     [HttpPost("{barberId}/workhours")]
+    [Authorize(Policy = "IsAdmin")]
     public async Task<IActionResult> AddBarberWorkHoursAsync(int barberId, [FromBody] AddBarberWorkHoursViewModel workHours)
     {
         try

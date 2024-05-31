@@ -10,7 +10,6 @@ public interface IBookingService
     Task<GetBookingDetailsViewModel?> GetBookingByIdAsync(int bookingId);
     Task<List<GetBookingsViewModel>> GetBookingsAsync(int? barberId = null, DateTimeOffset? startDate = null, DateTimeOffset? endDate = null);
     Task AddBookingAsync(AddBookingViewModel booking);
-    Task ConfirmBooking(int barberId, int bookingId);
     Task CancelBooking(int barberId, int bookingId);
     Task UpdateBookingAsync(int bookingId, JsonPatchDocument<Booking> patchDoc);
     Task<BookingStatisticsViewModel> GetBookingStatisticsAsync();

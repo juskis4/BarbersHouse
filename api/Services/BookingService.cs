@@ -70,19 +70,6 @@ public class BookingService(IBookingsRepository bookingsRepository, ICustomersSe
         }
     }
 
-    public async Task ConfirmBooking(int barberId, int bookingId)
-    {
-        var booking = await _bookingsRepository.GetBookingByIdAsync(bookingId);
-
-        if (booking == null || booking.BarberId != barberId)
-        {
-            throw new ArgumentException("Booking not found for the specified barber.");
-        }
-
-        booking.Status = "Confirmed";
-        await _bookingsRepository.SaveChangesAsync();
-    }
-
     public async Task CancelBooking(int barberId, int bookingId)
     {
         var booking = await _bookingsRepository.GetBookingByIdAsync(bookingId);
