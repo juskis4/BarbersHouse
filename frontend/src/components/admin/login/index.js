@@ -123,11 +123,6 @@ export default function AdminLogin() {
             Sign In
           </Button>
           <Grid container>
-            <Grid xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
             {error && <Typography color="error">{error}</Typography>}
           </Grid>
         </Box>
