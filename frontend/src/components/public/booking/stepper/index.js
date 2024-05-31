@@ -102,13 +102,11 @@ export default function VerticalLinearStepper() {
                 >
                   {t("common.continue")}
                 </Button>
-                <Button
-                  disabled={activeStep === 0}
-                  onClick={() => handleBack()}
-                  sx={{ mt: 1, mr: 1 }}
-                >
-                  {t("common.back")}
-                </Button>
+                {activeStep > 0 && (
+                  <Button onClick={() => handleBack()} sx={{ mt: 1, mr: 1 }}>
+                    {t("common.back")}
+                  </Button>
+                )}
               </div>
             </Box>
           </StepContent>
@@ -135,11 +133,7 @@ export default function VerticalLinearStepper() {
                 >
                   {t("common.continue")}
                 </Button>
-                <Button
-                  disabled={activeStep === 0}
-                  onClick={() => handleBack()}
-                  sx={{ mt: 1, mr: 1 }}
-                >
+                <Button onClick={() => handleBack()} sx={{ mt: 1, mr: 1 }}>
                   {t("common.back")}
                 </Button>
               </div>
@@ -166,11 +160,7 @@ export default function VerticalLinearStepper() {
                 >
                   {t("common.continue")}
                 </Button>
-                <Button
-                  disabled={activeStep === 0}
-                  onClick={handleBack}
-                  sx={{ mt: 1, mr: 1 }}
-                >
+                <Button onClick={handleBack} sx={{ mt: 1, mr: 1 }}>
                   {t("common.back")}
                 </Button>
               </div>
@@ -189,11 +179,7 @@ export default function VerticalLinearStepper() {
             />
             <Box sx={{ mb: 2 }}>
               <div>
-                <Button
-                  disabled={activeStep === 0}
-                  onClick={handleBack}
-                  sx={{ mt: 1, mr: 1 }}
-                >
+                <Button onClick={handleBack} sx={{ mt: 1, mr: 1 }}>
                   {t("common.back")}
                 </Button>
               </div>
