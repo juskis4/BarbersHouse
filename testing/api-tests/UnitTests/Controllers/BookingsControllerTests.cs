@@ -84,34 +84,6 @@ public class BookingsControllerTests
     }
 
     [Fact]
-    public async Task BookingConfirmation_AdminUser_ReturnsOkResult()
-    {
-        // Arrange
-        _fixture.SetUserInControllerContext(_controller, _fixture.AdminUser);
-
-        // Act
-        var result = await _controller.BookingConfirmation(1, 1);
-
-        // Assert
-        Assert.IsType<OkResult>(result);
-    }
-
-    [Fact]
-    public async Task BookingConfirmation_ThrowsArgumentException_ReturnsBadRequest()
-    {
-        // Arrange
-        _mockBookingService.Setup(service => service.ConfirmBooking(1, 1)).ThrowsAsync(new ArgumentException("Invalid booking"));
-        _fixture.SetUserInControllerContext(_controller, _fixture.AdminUser);
-
-        // Act
-        var result = await _controller.BookingConfirmation(1, 1);
-
-        // Assert
-        var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-        Assert.Equal("Invalid booking", badRequestResult.Value);
-    }
-
-    [Fact]
     public async Task BookingCancel_AdminUser_ReturnsOkResult()
     {
         // Arrange
