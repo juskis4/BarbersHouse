@@ -62,7 +62,7 @@ public class BookingService(IBookingsRepository bookingsRepository, ICustomersSe
         else {
             var customer = await _customersService.GetOrCreateCustomerAsync(bookingViewModel.CustomerName, bookingViewModel.CustomerEmail);
             var booking = _mapper.Map<Booking>(bookingViewModel);
-            booking.Status = "Pending";
+            booking.Status = "Confirmed";
             booking.CustomerId = customer.CustomerID; 
             
             await _bookingsRepository.AddBookingAsync(booking);

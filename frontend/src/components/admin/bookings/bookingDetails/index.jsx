@@ -32,9 +32,8 @@ const BookingDetails = () => {
   const { bookingId } = useParams();
   const [booking, setBooking] = useState(null);
   const [allowedStatuses, setAllowedStatuses] = useState([
-    "Pending",
+    "Confirmed",
     "Canceled",
-    "Completed",
   ]);
   const [isLoading, setIsLoading] = useState(true);
   const [saveSuccess, setSaveSuccess] = useState(false);
@@ -57,7 +56,7 @@ const BookingDetails = () => {
           setAllowedStatuses(
             data.service.title === "Blocked"
               ? ["Blocked", "Canceled"]
-              : ["Pending", "Canceled", "Completed"],
+              : ["Confirmed", "Canceled"],
           );
         }
       } catch (error) {
