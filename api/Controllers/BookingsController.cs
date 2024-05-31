@@ -121,7 +121,7 @@ public class BookingsController(IBookingService bookingService) : ControllerBase
         }
     }
 
-    [HttpDelete("{bookingId}")]
+    [HttpDelete("{barberId:int}/bookings/{bookingId:int}/delete")]
     [Authorize(Policy = "IsAdmin")]
     public async Task<IActionResult> DeleteBooking(int bookingId)
     {
