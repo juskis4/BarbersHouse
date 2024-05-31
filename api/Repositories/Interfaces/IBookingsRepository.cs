@@ -11,5 +11,6 @@ public interface IBookingsRepository
     Task<IEnumerable<Booking?>> GetBookingsAsync(int? barberId = null, DateTimeOffset? startDate = null, DateTimeOffset? endDate = null);
     Task UpdateBookingAsync(Booking booking);
     Task<bool> AnyBookingsWithServiceAsync(int serviceId);
+    Task DeleteBookingAsync(Booking booking);
     Task SaveChangesAsync();
 }

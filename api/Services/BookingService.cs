@@ -140,4 +140,15 @@ public class BookingService(IBookingsRepository bookingsRepository, ICustomersSe
             CurrentMonthRevenue = thisMonthRevenue
         };
     }
+
+    public async Task DeleteBookingAsync(int bookingId)
+    {
+        var booking = await _bookingsRepository.GetBookingByIdAsync(bookingId);
+        if (booking == null)
+        {
+            throw new ArgumentException("Booking not found");
+        }
+
+        await _bookingsRepository.DeleteBookingAsync(booking);
+    }
 }

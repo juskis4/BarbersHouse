@@ -97,6 +97,12 @@ public class BookingsRepository(DbDataContext context) : IBookingsRepository
         return await _context.Bookings.AnyAsync(b => b.ServiceId == serviceId && b.Status != "Canceled");
     }
 
+    public async Task DeleteBookingAsync(Booking booking)
+    {
+        _context.Bookings.Remove(booking);
+        await _context.SaveChangesAsync();
+    }
+
     public async Task SaveChangesAsync()
     {
         await _context.SaveChangesAsync();

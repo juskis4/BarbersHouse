@@ -120,4 +120,24 @@ public class BookingsController(IBookingService bookingService) : ControllerBase
             return StatusCode(500, $"Internal server error: {ex.Message}");
         }
     }
+
+    [HttpDelete("{bookingId}")]
+    [Authorize(Policy = "IsAdmin")]
+    public async Task<IActionResult> DeleteBooking(int bookingId)
+    {
+        try
+        {
+            await _bookingService.DeleteBookingAsync(bookingId);
+
+            return NoContent();
+        }
+        catch (ArgumentException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
 }
