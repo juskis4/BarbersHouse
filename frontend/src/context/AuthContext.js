@@ -12,7 +12,6 @@ function AuthProvider({ children }) {
   const [username, setUsername] = useState(null);
 
   const login = (username) => {
-    console.log("loggin");
     setIsAuthenticated(true);
     setUsername(username);
   };

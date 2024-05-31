@@ -212,7 +212,6 @@ const Scheduler = () => {
         setRefreshKey(refreshKey + 1);
       } catch (error) {
         setError("Error while cancelling a booking.");
-        console.log(error);
       }
     };
 

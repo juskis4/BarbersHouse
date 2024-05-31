@@ -6,7 +6,8 @@ dayjs.extend(utc);
 
 class EmailService {
   constructor() {
-    this.customerTemplateId = process.env.REACT_APP_EMAILJS_CUSTOMER_TEMPLATE_ID;
+    this.customerTemplateId =
+      process.env.REACT_APP_EMAILJS_CUSTOMER_TEMPLATE_ID;
     this.barberTemplateId = process.env.REACT_APP_EMAILJS_BARBER_TEMPLATE_ID;
     this.serviceId = process.env.REACT_APP_EMAILJS_SERVICE_ID;
     this.publicKey = process.env.REACT_APP_EMAILJS_PUBLIC_KEY;
@@ -16,7 +17,6 @@ class EmailService {
 
   async sendBookingConfirmationEmails(bookingData) {
     try {
-      console.log(bookingData);
       const formattedStartTime = dayjs(bookingData.StartTime)
         .utc()
         .format("dddd, MMMM D, YYYY [at] h:mm A");
@@ -38,7 +38,6 @@ class EmailService {
         templateParams,
       );
       await emailjs.send(this.serviceId, this.barberTemplateId, templateParams);
-      console.log("Emails sent successfully");
     } catch (error) {
       console.error("Error sending email:", error);
       throw new Error("Email sending failed");

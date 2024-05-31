@@ -135,7 +135,6 @@ const Bookings = () => {
             : null,
         }));
         setRows(bookingsWithDates);
-        console.log(data);
       } catch (error) {
         console.error(error);
         setError("Error fetching bookings data");
