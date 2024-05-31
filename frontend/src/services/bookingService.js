@@ -4,7 +4,7 @@ import utc from "dayjs/plugin/utc";
 
 dayjs.extend(utc);
 
-const apiUrl = "https://api-zdmjnhdz7q-ew.a.run.app/";
+const apiUrl = process.env.REACT_APP_API_KEY;
 
 export async function createBooking(bookingData) {
   try {
@@ -140,6 +140,32 @@ export async function cancelBooking(barberId, bookingId) {
     } else {
       throw new Error("Error setting up the request");
     }
+  }
+}
+
+export async function deleteBooking(barberId, bookingId) {
+  try {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      const response = await axios.delete(
+        `${apiUrl}/Bookings/${barberId}/bookings/${bookingId}/delete`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (response.status === 204) {
+        return response.data;
+      } else {
+        throw new Error(response.data.message || "Error deleting booking");
+      }
+    }
+  } catch (error) {
+    console.error("Error deleting booking:", error);
+    throw error;
   }
 }
 

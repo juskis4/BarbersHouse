@@ -5,8 +5,10 @@ import { DataGrid } from "@mui/x-data-grid";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 
-import ConfirmationDialog from "../confirmDialog";
-import { getBookings } from "../../../services/bookingService.js";
+import {
+  deleteBooking,
+  getBookings,
+} from "../../../services/bookingService.js";
 
 dayjs.extend(utc);
 const Bookings = () => {
@@ -14,18 +16,23 @@ const Bookings = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const [openDialog, setOpenDialog] = useState(false);
-  const [bookingToDelete, setBookingToDelete] = useState(null);
-
-  const handleDeleteBooking = async (bookingId) => {
-    // ADD ENDPOINT FOR DELETE
-    //bookingToDelete(bookingId);
-    setOpenDialog(true);
-  };
-
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-    setBookingToDelete(null);
+  const handleDeleteBooking = async (barberId, bookingId) => {
+    if (
+      window.confirm(
+        "Are you sure you want to delete this booking? This action cannot be undone.",
+      )
+    ) {
+      try {
+        await deleteBooking(barberId, bookingId);
+        setRows((prevRows) =>
+          prevRows.filter((row) => row.bookingId !== bookingId),
+        );
+        setError(null);
+      } catch (error) {
+        console.error(error);
+        setError("Error deleting booking. Try again");
+      }
+    }
   };
 
   const columns = [
@@ -99,29 +106,15 @@ const Bookings = () => {
               color: "white",
             },
           }}
-          onClick={() => handleDeleteBooking(params.row.bookingId)}
+          onClick={() =>
+            handleDeleteBooking(params.row.barberId, params.row.bookingId)
+          }
         >
           Delete
         </Button>
       ),
     },
   ];
-
-  const handleConfirmDelete = async () => {
-    try {
-      //await deleteBooking(bookingToDelete);
-
-      const updatedRows = rows.filter(
-        (row) => row.bookingId !== bookingToDelete,
-      );
-      setRows(updatedRows);
-
-      handleCloseDialog();
-    } catch (error) {
-      console.error(error);
-      setError("Error deleting booking. Try again");
-    }
-  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -163,13 +156,6 @@ const Bookings = () => {
           />
         </Box>
       )}
-      <ConfirmationDialog
-        open={openDialog}
-        onClose={handleCloseDialog}
-        onConfirm={handleConfirmDelete}
-        title="Confirm Delete"
-        contentText="Are you sure you want to delete this booking? This action cannot be undone."
-      />
     </Box>
   );
 };
