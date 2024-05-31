@@ -71,7 +71,6 @@ public class ServicesService(IServicesRepository servicesRepository, IBarbersRep
             { "/price", s => s.Price },
         };
 
-        // Filter and validate the patch operations (Similar to the barber example)
         var filteredPatchDoc = new JsonPatchDocument<Service>();
         foreach (var op in patchDoc.Operations)
         {
